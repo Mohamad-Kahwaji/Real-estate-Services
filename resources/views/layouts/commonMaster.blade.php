@@ -9,6 +9,7 @@
         @yield('title') | {{ config('variables.templateName') ? config('variables.templateName') : 'TemplateName' }}
         - {{ config('variables.templateSuffix') ? config('variables.templateSuffix') : 'TemplateSuffix' }}
     </title>
+
     <meta name="description" content="{{ config('variables.templateDescription') ? config('variables.templateDescription') : '' }}" />
     <meta name="keywords" content="{{ config('variables.templateKeyword') ? config('variables.templateKeyword') : '' }}" />
     <meta property="og:title" content="{{ config('variables.ogTitle') ? config('variables.ogTitle') : '' }}" />
@@ -18,29 +19,32 @@
     <meta property="og:description" content="{{ config('variables.templateDescription') ? config('variables.templateDescription') : '' }}" />
     <meta property="og:site_name" content="{{ config('variables.creatorName') ? config('variables.creatorName') : '' }}" />
     <meta name="robots" content="noindex, nofollow" />
-    <!-- laravel CRUD token -->
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <!-- Canonical SEO -->
+
     <link rel="canonical" href="{{ config('variables.productPage') ? config('variables.productPage') : '' }}" />
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
 
-    <!-- Include Styles -->
     @include('layouts/sections/styles')
-
-    <!-- Include Scripts for customizer, helper, analytics, config -->
     @include('layouts/sections/scriptsIncludes')
+
+    {{-- Leaflet CSS --}}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 
 <body>
-    <!-- Layout Content -->
     @yield('layoutContent')
-    <!--/ Layout Content -->
+
+    @include('layouts/sections/scripts')
+    @include('_partials.firebase')
+
+    {{-- Leaflet JS --}}
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    {{-- مهم لسكريبتات الصفحات --}}
+    @stack('scripts')
+
 
     
-
-    <!-- Include Scripts -->
-    @include('layouts/sections/scripts')
 </body>
 
 </html>

@@ -11,4 +11,7 @@ class RegisterBasic extends Controller
   {
     return view('content.authentications.auth-register-basic');
   }
+
+
+  
 }

@@ -1,11 +1,21 @@
-@isset($pageConfigs)
-{!! Helper::updatePageConfig($pageConfigs) !!}
-@endisset
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Auth')</title>
 
-@extends('layouts/commonMaster')
+    @hasSection('page-style')
+        @yield('page-style')
+    @endif
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    @yield('content')
 
-@section('layoutContent')
-<!-- Content -->
-@yield('content')
-<!--/ Content -->
-@endsection
+    @hasSection('page-script')
+        @yield('page-script')
+    @endif
+
+</body>
+</html>
