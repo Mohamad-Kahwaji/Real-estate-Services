@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(composer show *)",
+      "Bash(php artisan *)"
+    ]
+  }
+}

@@ -259,7 +259,6 @@ Route::post('register', [RegisteredUserController::class, 'store'])->name('regis
 
     Route::get('dash',[SuperadminController::class,'index'])->name('dash')->middleware('auth:superadmins');
 
-    
+
 
     require __DIR__.'/auth.php';
-

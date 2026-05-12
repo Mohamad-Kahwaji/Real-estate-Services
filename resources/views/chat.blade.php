@@ -6,6 +6,39 @@
 <style>
 * { box-sizing: border-box; }
 
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(20px) scale(.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(10px); }
+}
+.chat-toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: #fff; border-radius: 14px; padding: 14px 18px;
+    box-shadow: 0 8px 32px rgba(105,108,255,.22);
+    border-left: 4px solid #696cff; min-width: 270px; max-width: 340px;
+    display: flex; align-items: center; gap: 12px;
+    animation: toastIn .3s cubic-bezier(.34,1.56,.64,1);
+    cursor: pointer;
+}
+.chat-toast-ava {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #696cff, #9c9eff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800; color: #fff;
+}
+.chat-toast-title  { font-weight: 700; font-size: 13px; color: #1e293b; }
+.chat-toast-body   { font-size: 12px; color: #8592a3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+.notify-btn {
+    position: fixed; bottom: 24px; left: 24px; z-index: 9998;
+    background: #696cff; color: #fff; border: none; border-radius: 30px;
+    padding: 8px 18px; font-size: 12px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(105,108,255,.35);
+    display: none; align-items: center; gap: 6px;
+}
+
 .chat-wrap {
     display: flex;
     flex-direction: column;
@@ -74,10 +107,19 @@
     font-size: 11px; font-weight: 800; color: #fff;
 }
 
+/* wrapper keeps max-width so bubble text doesn't break per-character */
+.msg-wrap {
+    max-width: min(65%, 420px);
+    min-width: 0;
+}
+
 .msg-bubble {
-    max-width: 65%; padding: 10px 14px;
+    display: inline-block;
+    width: 100%;
+    padding: 10px 14px;
     border-radius: 18px; font-size: 14px; line-height: 1.5;
     word-break: break-word;
+    box-sizing: border-box;
 }
 .msg-row.sent .msg-bubble {
     background: linear-gradient(135deg, #696cff, #8a8dff);
@@ -137,6 +179,10 @@
 
 @section('content')
 
+<button id="notif-btn" class="notify-btn" onclick="enableNotifications()">
+    <i class="ri ri-notification-line"></i> تفعيل الإشعارات
+</button>
+
 <div id="chat-data"
      data-auth="{{ auth('users')->id() }}"
      data-receiver="{{ isset($receiver) ? $receiver->id : '' }}"
@@ -174,7 +220,7 @@
                 @if(!$isSent)
                     <div class="msg-ava">{{ $initial }}</div>
                 @endif
-                <div>
+                <div class="msg-wrap">
                     <div class="msg-bubble">{{ $msg->body }}</div>
                     <div class="msg-time">{{ $msg->created_at->format('H:i') }}</div>
                 </div>
@@ -259,7 +305,7 @@ function appendMessage(data, isSent) {
 
     if (isSent) {
         row.innerHTML = `
-            <div>
+            <div class="msg-wrap">
                 <div class="msg-bubble">${escHtml(data.body)}</div>
                 <div class="msg-time">${data.created_at}</div>
             </div>
@@ -267,7 +313,7 @@ function appendMessage(data, isSent) {
     } else {
         row.innerHTML = `
             <div class="msg-ava">${escHtml(initial)}</div>
-            <div>
+            <div class="msg-wrap">
                 <div class="msg-bubble">${escHtml(data.body)}</div>
                 <div class="msg-time">${data.created_at}</div>
             </div>`;
@@ -313,14 +359,87 @@ async function sendMessage() {
     }
 }
 
-if (RECEIVER_ID && window.Echo) {
+// ── Notifications ────────────────────────────────────────────
+function requestNotifPermission() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') {
+        const btn = document.getElementById('notif-btn');
+        if (btn) btn.style.display = 'flex';
+    }
+}
+
+function enableNotifications() {
+    Notification.requestPermission().then(p => {
+        const btn = document.getElementById('notif-btn');
+        if (btn) btn.style.display = 'none';
+    });
+}
+
+function showBrowserNotification(title, body) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        const n = new Notification(title, { body, icon: '/favicon.ico' });
+        n.onclick = () => { window.focus(); n.close(); };
+    }
+}
+
+function showToast(senderName, msgBody) {
+    const old = document.getElementById('chat-toast-el');
+    if (old) { old.remove(); }
+
+    const toast = document.createElement('div');
+    toast.id = 'chat-toast-el';
+    toast.className = 'chat-toast';
+    toast.onclick = () => toast.remove();
+    toast.innerHTML = `
+        <div class="chat-toast-ava">${escHtml(senderName.charAt(0).toUpperCase())}</div>
+        <div>
+            <div class="chat-toast-title">${escHtml(senderName)}</div>
+            <div class="chat-toast-body">${escHtml(msgBody)}</div>
+        </div>`;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        if (!toast.parentNode) return;
+        toast.style.animation = 'toastOut .3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+requestNotifPermission();
+
+function initEchoChannel() {
+    console.log('[Chat] initEchoChannel called — RECEIVER_ID:', RECEIVER_ID, '| window.Echo:', !!window.Echo);
+    if (!RECEIVER_ID || !window.Echo) return;
+
     const ids = [AUTH_ID, RECEIVER_ID].sort((a, b) => a - b);
     const channelName = `chat.${ids[0]}.${ids[1]}`;
+    console.log('[Chat] subscribing to private channel:', channelName);
 
-    window.Echo.private(channelName).listen('.message.sent', data => {
-        if (parseInt(data.sender_id) !== AUTH_ID) {
-            appendMessage(data, false);
-        }
+    window.Echo.private(channelName)
+        .listen('.message.sent', data => {
+            console.log('[Chat] message received via Echo:', data);
+            if (parseInt(data.sender_id) !== AUTH_ID) {
+                appendMessage(data, false);
+
+                const preview = data.body.length > 70 ? data.body.substring(0, 70) + '…' : data.body;
+
+                if (document.hidden) {
+                    showBrowserNotification('رسالة جديدة من ' + data.sender_name, preview);
+                }
+
+                showToast(data.sender_name, data.body);
+            }
+        })
+        .error(err => {
+            console.error('[Chat] channel auth/subscription error:', err);
+        });
+}
+
+// Echo is loaded as a deferred ES module, so we wait for it
+if (window.Echo) {
+    initEchoChannel();
+} else {
+    window.addEventListener('load', () => {
+        setTimeout(initEchoChannel, 300);
     });
 }
 </script>

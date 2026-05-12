@@ -2,22 +2,298 @@
 
 @section('title', 'All Services')
 
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+/* ─── Cards ───────────────────────────────────────── */
+.service-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+    transition: .3s ease;
+    box-shadow: 0 8px 28px rgba(15,23,42,.08);
+    border: 1px solid #f1f5f9;
+}
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 48px rgba(15,23,42,.13);
+}
+
+/* Image */
+.service-img-wrap { position: relative; overflow: hidden; }
+.service-img {
+    height: 220px;
+    object-fit: cover;
+    width: 100%;
+    transition: .4s ease;
+    display: block;
+}
+.service-card:hover .service-img { transform: scale(1.04); }
+
+/* Badges */
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.badge-type {
+    background: rgba(17,24,39,.75);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* Card body */
+.card-body-inner { padding: 18px; display: flex; flex-direction: column; height: 100%; }
+
+.biz-label {
+    font-size: 12px;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 6px;
+}
+.biz-label i { color: #696cff; }
+
+.svc-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.svc-desc {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+/* Creator row */
+.creator-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 9px 12px;
+    margin-bottom: 12px;
+}
+.creator-ava {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #696cff, #9c9eff);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.creator-info { font-size: 12px; line-height: 1.3; }
+.creator-info strong { display: block; color: #111827; }
+.creator-info span { color: #9ca3af; }
+
+/* Stats row */
+.stats-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.stat-chip {
+    flex: 1;
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 11px;
+    color: #6b7280;
+}
+.stat-chip strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 2px;
+}
+.stat-chip strong.price-val { color: #16a34a; }
+
+/* Location chip */
+.loc-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #6b7280;
+    background: #fef2f2;
+    border-radius: 10px;
+    padding: 7px 12px;
+    margin-bottom: 14px;
+}
+.loc-chip i { color: #ef4444; }
+
+/* View btn */
+.btn-view {
+    border-radius: 12px;
+    padding: 11px;
+    font-weight: 700;
+    font-size: 14px;
+    background: linear-gradient(135deg, #696cff, #9c9eff);
+    border: none;
+    color: #fff;
+    transition: .2s ease;
+    width: 100%;
+}
+.btn-view:hover { opacity: .88; transform: scale(1.01); color: #fff; }
+
+/* ─── Modal ─────────────────────────────────────────── */
+.modal-content { border-radius: 24px; border: 0; overflow: hidden; }
+
+.modal-hero {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.info-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+}
+.info-card-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #696cff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.info-row-m {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #e5e7eb;
+    font-size: 13px;
+}
+.info-row-m:last-child { border-bottom: 0; padding-bottom: 0; }
+.info-row-m span { color: #6b7280; }
+.info-row-m strong { color: #111827; text-align: right; max-width: 58%; word-break: break-word; }
+
+/* Creator card in modal */
+.creator-card-modal {
+    background: linear-gradient(135deg, #696cff15, #9c9eff15);
+    border: 1px solid #696cff30;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.creator-ava-lg {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #696cff, #9c9eff);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.creator-card-modal .details strong { font-size: 16px; font-weight: 800; color: #111827; }
+.creator-card-modal .details span { font-size: 12px; color: #6b7280; }
+.creator-card-modal .details p { font-size: 13px; color: #374151; margin: 4px 0 0; }
+
+/* Map */
+.map-box {
+    height: 280px;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.btn-gmap {
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    background: #4285f4;
+    border: none;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: .2s ease;
+}
+.btn-gmap:hover { background: #2563eb; color: #fff; }
+
+/* Page header */
+.page-header {
+    background: linear-gradient(135deg, #696cff, #9c9eff);
+    border-radius: 20px;
+    padding: 28px 32px;
+    color: #fff;
+    margin-bottom: 28px;
+}
+.page-header h4 { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
+.page-header p  { font-size: 14px; opacity: .85; margin: 0; }
+.svc-count-badge {
+    background: rgba(255,255,255,.2);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+@media(max-width:768px){
+    .modal-hero { height: 200px; }
+    .map-box { height: 200px; }
+}
+</style>
+@endpush
+
 @section('content')
 
-<h4 class="mb-1 fw-bold">All Services</h4>
-<p class="mb-4 text-muted">
-    Browse all user services in one page
-</p>
+{{-- Page Header --}}
+<div class="page-header d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div>
+        <h4><i class="ri-service-line me-2"></i>All Services</h4>
+        <p>Browse and inspect all platform services</p>
+    </div>
+    <div class="svc-count-badge">
+        {{ $services->count() }} {{ Str::plural('Service', $services->count()) }}
+    </div>
+</div>
 
 @if(session('success'))
-    <div class="alert alert-success rounded-4 border-0 shadow-sm">
-        {{ session('success') }}
+    <div class="alert alert-success rounded-4 border-0 shadow-sm mb-4">
+        <i class="ri-checkbox-circle-line me-2"></i>{{ session('success') }}
     </div>
 @endif
-
 @if(session('error'))
-    <div class="alert alert-danger rounded-4 border-0 shadow-sm">
-        {{ session('error') }}
+    <div class="alert alert-danger rounded-4 border-0 shadow-sm mb-4">
+        <i class="ri-error-warning-line me-2"></i>{{ session('error') }}
     </div>
 @endif
 
@@ -26,438 +302,272 @@
     @forelse($services as $service)
 
         @php
-            $isFavorite = in_array($service->id, $favorites ?? []);
-
             $statusClass = match($service->status) {
                 'approved' => 'bg-success',
                 'rejected' => 'bg-danger',
-                default => 'bg-warning text-dark',
+                default    => 'bg-warning text-dark',
             };
-
-            $modalId = 'serviceModal'.$service->id;
-            $mapId = 'map'.$service->id;
+            $modalId  = 'svcModal'  . $service->id;
+            $mapId    = 'leafMap'   . $service->id;
+            $creator  = $service->business->user ?? null;
+            $initials = strtoupper(substr($creator->name ?? '?', 0, 1));
+            $price    = $service->currency === 'USD'
+                        ? '$' . $service->price_usd
+                        : number_format($service->price_syp) . ' SYP';
         @endphp
 
+        {{-- ── CARD ── --}}
         <div class="col-sm-6 col-lg-4 col-xl-3">
-
             <div class="card service-card border-0 h-100">
 
-                {{-- IMAGE --}}
-                <div class="position-relative overflow-hidden">
-
+                {{-- Image --}}
+                <div class="service-img-wrap">
                     <img
-                        class="card-img-top service-image"
-                        src="{{ $service->image
-                                ? asset('storage/'.$service->image)
-                                : asset('assets/img/elements/5.png') }}"
+                        class="service-img"
+                        src="{{ $service->image ? asset('storage/'.$service->image) : asset('assets/img/elements/5.png') }}"
                         alt="{{ $service->title }}"
                     >
-
-                    {{-- FAVORITE --}}
-                    <div class="position-absolute top-0 start-0 m-3">
-
-                        <form action="{{ route('favorite.toggle', $service->id) }}" method="POST">
-                            @csrf
-
-                            <button type="submit"
-                                    class="favorite-btn {{ $isFavorite ? 'active' : '' }}">
-                                <i class="ri-star-fill"></i>
-                            </button>
-
-                        </form>
-
-                    </div>
-
-                    {{-- STATUS --}}
-                    <div class="position-absolute top-0 end-0 m-3">
-
-                        <span class="badge {{ $statusClass }} service-badge">
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge {{ $statusClass }} badge-status">
                             {{ ucfirst($service->status) }}
                         </span>
-
                     </div>
-
-                    {{-- TYPE --}}
-                    <div class="position-absolute bottom-0 end-0 m-3">
-
-                        <span class="service-type-badge">
-                            {{ strtoupper($service->services_type) }}
-                        </span>
-
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge-type">{{ strtoupper($service->services_type) }}</span>
                     </div>
-
                 </div>
 
-                <div class="card-body d-flex flex-column">
+                <div class="card-body-inner">
 
-                    {{-- BUSINESS --}}
-                    <div class="business-row mb-2">
-
+                    {{-- Business --}}
+                    <div class="biz-label">
                         <i class="ri-store-2-line"></i>
-
-                        <span>
-                            {{ $service->business->job_name_en ?? '-' }}
-                        </span>
-
+                        {{ $service->business->job_name_en ?? '-' }}
                     </div>
 
-                    {{-- TITLE --}}
-                    <h5 class="service-title">
-                        {{ $service->title }}
-                    </h5>
+                    {{-- Title --}}
+                    <div class="svc-title">{{ $service->title }}</div>
 
-                    {{-- DESCRIPTION --}}
-                    <p class="service-description">
-                        {{ \Illuminate\Support\Str::limit($service->description, 90) }}
-                    </p>
+                    {{-- Description --}}
+                    <div class="svc-desc">{{ $service->description }}</div>
 
-                    {{-- LOCATION --}}
-                    <div class="location-box mb-3">
+                    {{-- Creator --}}
+                    <div class="creator-row">
+                        <div class="creator-ava">{{ $initials }}</div>
+                        <div class="creator-info">
+                            <strong>{{ $creator->name ?? 'Unknown' }}</strong>
+                            <span>{{ $creator->email ?? '' }}</span>
+                        </div>
+                    </div>
 
+                    {{-- Stats --}}
+                    <div class="stats-row">
+                        <div class="stat-chip">
+                            <strong class="price-val">{{ $price }}</strong>
+                            Price
+                        </div>
+                        <div class="stat-chip">
+                            <strong>{{ $service->quantity }}</strong>
+                            Qty
+                        </div>
+                        <div class="stat-chip">
+                            <strong>{{ $service->category->name_en ?? '-' }}</strong>
+                            Category
+                        </div>
+                    </div>
+
+                    {{-- Location --}}
+                    <div class="loc-chip">
                         <i class="ri-map-pin-line"></i>
-
-                        <span>
-                            {{ $service->location_name ?? 'Unknown Location' }}
-                        </span>
-
+                        {{ $service->location_name ?? 'Unknown Location' }}
                     </div>
 
-                    {{-- DETAILS --}}
-                    <div class="service-details-box mb-3">
-
-                        <div class="detail-item">
-
-                            <span>Category</span>
-
-                            <strong>
-                                {{ $service->category->name_en ?? '-' }}
-                            </strong>
-
-                        </div>
-
-                        <div class="detail-item">
-
-                            <span>Price</span>
-
-                            <strong class="price-text">
-
-                                @if($service->currency === 'USD')
-                                    ${{ $service->price_usd }}
-                                @else
-                                    {{ number_format($service->price_syp) }} SYP
-                                @endif
-
-                            </strong>
-
-                        </div>
-
-                        <div class="detail-item">
-
-                            <span>Quantity</span>
-
-                            <strong>
-                                {{ $service->quantity }}
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                    {{-- REQUEST STATUS --}}
-                    <div class="mb-3">
-
-                        @if(($service->user_request_status ?? null) === 'pending')
-
-                            <div class="request-status-box status-pending">
-                                <i class="ri-time-line me-1"></i>
-                                Request Pending
-                            </div>
-
-                        @elseif(($service->user_request_status ?? null) === 'approved')
-
-                            <div class="request-status-box status-approved">
-                                <i class="ri-check-line me-1"></i>
-                                Request Approved
-                            </div>
-
-                        @elseif(($service->user_request_status ?? null) === 'rejected')
-
-                            <div class="request-status-box status-rejected">
-                                <i class="ri-close-line me-1"></i>
-                                Request Rejected
-                            </div>
-
-                        @else
-
-                            <div class="request-status-box status-none">
-                                <i class="ri-information-line me-1"></i>
-                                No Request Yet
-                            </div>
-
-                        @endif
-
-                    </div>
-
-                    {{-- BUTTONS --}}
-                    <div class="mt-auto d-flex flex-column gap-2">
-
-                        {{-- DETAILS BUTTON --}}
+                    {{-- View button ONLY (no request button) --}}
+                    <div class="mt-auto">
                         <button
-                            class="btn btn-dark action-btn"
+                            class="btn-view"
                             data-bs-toggle="modal"
                             data-bs-target="#{{ $modalId }}"
                         >
-                            <i class="ri-eye-line me-1"></i>
-                            View Details
+                            <i class="ri-eye-line me-1"></i> View Full Details
                         </button>
-
-                        {{-- REQUEST BUTTONS --}}
-                        @if(empty($service->user_request_status))
-
-                            <form action="{{ route('pendingserrec', $service->id) }}"
-                                  method="POST">
-
-                                @csrf
-
-                                <button class="btn btn-primary w-100 action-btn">
-                                    <i class="ri-send-plane-line me-1"></i>
-                                    Request Service
-                                </button>
-
-                            </form>
-
-                        @elseif($service->user_request_status === 'pending')
-
-                            <form action="{{ route('service.cancel', $service->id) }}"
-                                  method="POST">
-
-                                @csrf
-
-                                <button class="btn btn-outline-danger w-100 action-btn">
-                                    <i class="ri-close-circle-line me-1"></i>
-                                    Cancel Request
-                                </button>
-
-                            </form>
-
-                        @elseif($service->user_request_status === 'rejected')
-
-                            <form action="{{ route('service.request', $service->id) }}"
-                                  method="POST">
-
-                                @csrf
-
-                                <button class="btn btn-outline-primary w-100 action-btn">
-                                    <i class="ri-restart-line me-1"></i>
-                                    Request Again
-                                </button>
-
-                            </form>
-
-                        @elseif($service->user_request_status === 'approved')
-
-                            <button class="btn btn-success w-100 action-btn" disabled>
-                                <i class="ri-checkbox-circle-line me-1"></i>
-                                Approved
-                            </button>
-
-                        @endif
-
                     </div>
 
                 </div>
-
             </div>
-
         </div>
 
-        {{-- MODAL --}}
-        <div class="modal fade"
-             id="{{ $modalId }}"
-             tabindex="-1">
-
+        {{-- ── MODAL ── --}}
+        <div class="modal fade" id="{{ $modalId }}" tabindex="-1">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
 
-                <div class="modal-content border-0 rounded-4">
-
-                    <div class="modal-header border-0 pb-0">
-
+                    {{-- Header --}}
+                    <div class="modal-header border-0 px-4 pt-4 pb-2">
                         <div>
-
-                            <h3 class="fw-bold mb-2">
-                                {{ $service->title }}
-                            </h3>
-
-                            <div class="d-flex gap-2 align-items-center">
-
-                                <span class="badge {{ $statusClass }}">
-                                    {{ ucfirst($service->status) }}
-                                </span>
-
-                                <span class="service-type-badge">
-                                    {{ strtoupper($service->services_type) }}
-                                </span>
-
+                            <h4 class="fw-bold mb-2">{{ $service->title }}</h4>
+                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                <span class="badge {{ $statusClass }} badge-status">{{ ucfirst($service->status) }}</span>
+                                <span class="badge-type">{{ strtoupper($service->services_type) }}</span>
+                                <span class="badge bg-label-secondary">{{ $service->category->name_en ?? '-' }}</span>
                             </div>
-
                         </div>
-
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal">
-                        </button>
-
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <div class="modal-body">
-
+                    <div class="modal-body px-4 pb-4">
                         <div class="row g-4">
 
-                            {{-- LEFT --}}
+                            {{-- ── LEFT column ── --}}
                             <div class="col-lg-7">
 
                                 <img
-                                    src="{{ $service->image
-                                            ? asset('storage/'.$service->image)
-                                            : asset('assets/img/elements/5.png') }}"
-                                    class="modal-service-image"
+                                    src="{{ $service->image ? asset('storage/'.$service->image) : asset('assets/img/elements/5.png') }}"
+                                    class="modal-hero"
                                     alt="{{ $service->title }}"
                                 >
 
-                                {{-- DESCRIPTION --}}
-                                <div class="details-card mt-4">
-
-                                    <h5 class="section-title">
-                                        Description
-                                    </h5>
-
-                                    <p class="text-muted lh-lg mb-0">
+                                {{-- Description --}}
+                                <div class="info-card">
+                                    <div class="info-card-title">
+                                        <i class="ri-align-left"></i> Description
+                                    </div>
+                                    <p class="text-muted mb-0" style="line-height:1.75;">
                                         {{ $service->description }}
                                     </p>
-
                                 </div>
 
-                                {{-- MAP --}}
-                                <div class="details-card mt-4">
-
-                                    <div class="d-flex justify-content-between mb-3">
-
-                                        <h5 class="section-title mb-0">
-                                            Service Location
-                                        </h5>
-
-                                        <span class="text-muted small">
-                                            {{ $service->latitude }},
-                                            {{ $service->longitude }}
+                                {{-- Map --}}
+                                <div class="info-card">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="info-card-title mb-0">
+                                            <i class="ri-map-pin-line"></i> Service Location
+                                        </div>
+                                        @if($service->latitude && $service->longitude)
+                                        <a
+                                            href="https://www.google.com/maps?q={{ $service->latitude }},{{ $service->longitude }}"
+                                            target="_blank"
+                                            class="btn-gmap"
+                                        >
+                                            <i class="ri-map-2-line"></i> Open in Google Maps
+                                        </a>
+                                        @endif
+                                    </div>
+                                    <div class="mb-2 text-muted small">
+                                        <i class="ri-map-pin-2-line me-1 text-danger"></i>
+                                        <span id="locName{{ $service->id }}">
+                                            {{ $service->location_name ?? 'Loading...' }}
                                         </span>
-
                                     </div>
-
-                                    <div id="{{ $mapId }}"
-                                         class="service-map">
-                                    </div>
-
+                                    <div id="{{ $mapId }}" class="map-box"></div>
                                 </div>
 
                             </div>
 
-                            {{-- RIGHT --}}
+                            {{-- ── RIGHT column ── --}}
+                            <div class="col-lg-5">
 
-<div class="col-lg-5">
+                                {{-- Creator card --}}
+                                <div class="creator-card-modal">
+                                    <div class="creator-ava-lg">{{ $initials }}</div>
+                                    <div class="details">
+                                        <strong>{{ $creator->name ?? 'Unknown' }}</strong>
+                                        <span>{{ $creator->email ?? '-' }}</span>
+                                        <p>{{ $service->business->job_name_en ?? '-' }}</p>
+                                    </div>
+                                </div>
 
-    <div class="details-card">
+                                {{-- Service info --}}
+                                <div class="info-card">
+                                    <div class="info-card-title">
+                                        <i class="ri-file-list-3-line"></i> Service Details
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Business</span>
+                                        <strong>{{ $service->business->job_name_en ?? '-' }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Category</span>
+                                        <strong>{{ $service->category->name_en ?? '-' }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Subcategory</span>
+                                        <strong>{{ $service->subcategory->name_en ?? '-' }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Service Type</span>
+                                        <strong>{{ ucfirst($service->services_type) }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Quantity</span>
+                                        <strong>{{ $service->quantity }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Price</span>
+                                        <strong style="color:#16a34a;">{{ $price }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Currency</span>
+                                        <strong>{{ $service->currency }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Status</span>
+                                        <strong>
+                                            <span class="badge {{ $statusClass }}">
+                                                {{ ucfirst($service->status) }}
+                                            </span>
+                                        </strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Created At</span>
+                                        <strong>{{ $service->created_at?->format('d M Y') }}</strong>
+                                    </div>
+                                </div>
 
-        <h5 class="section-title mb-3">
-            Service Information
-        </h5>
+                                {{-- Creator detailed info --}}
+                                <div class="info-card">
+                                    <div class="info-card-title">
+                                        <i class="ri-user-line"></i> Owner Information
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Full Name</span>
+                                        <strong>{{ $creator->name ?? '-' }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Email</span>
+                                        <strong>{{ $creator->email ?? '-' }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Phone</span>
+                                        <strong>{{ $creator->phone ?? '-' }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Business</span>
+                                        <strong>{{ $service->business->job_name_en ?? '-' }}</strong>
+                                    </div>
+                                    <div class="info-row-m">
+                                        <span>Member Since</span>
+                                        <strong>{{ $creator?->created_at?->format('d M Y') ?? '-' }}</strong>
+                                    </div>
+                                </div>
 
-        <div class="info-list">
-
-            <div class="info-row">
-                <span>Business Name</span>
-                <strong>{{ $service->business->job_name_en ?? '-' }}</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Category</span>
-                <strong>{{ $service->category->name_en ?? '-' }}</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Subcategory</span>
-                <strong>{{ $service->subcategory->name_en ?? '-' }}</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Service Type</span>
-                <strong>{{ ucfirst($service->services_type) }}</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Quantity</span>
-                <strong>{{ $service->quantity }}</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>
-                    {{ $service->price_usd ? '$'.$service->price_usd : $service->price_syp.' SYP' }}
-                </strong>
-            </div>
-
-            <div class="info-row">
-                <span>Currency</span>
-                <strong>{{ $service->currency }}</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Created At</span>
-                <strong>{{ $service->created_at?->format('Y-m-d') }}</strong>
-            </div>
-
-        </div>
-    </div>
-
-    {{-- LOCATION CARD --}}
-    <div class="details-card mt-4">
-
-        <h5 class="section-title mb-3">
-            Location
-        </h5>
-
-        {{-- اسم المنطقة بدل الاحداثيات --}}
-        <div class="mb-3 text-muted small">
-            <i class="ri-map-pin-line me-1"></i>
-            <span id="location-name-{{ $service->id }}">
-                Loading location...
-            </span>
-        </div>
-
-        {{-- MAP فقط --}}
-        <div id="map{{ $service->id }}" class="service-map"></div>
-
-    </div>
-
-</div>
+                            </div>
 
                         </div>
-
                     </div>
 
                 </div>
-
             </div>
-
         </div>
 
     @empty
 
         <div class="col-12">
-
-            <div class="alert alert-info rounded-4 border-0 shadow-sm mb-0">
-                No services found.
+            <div class="text-center py-5">
+                <i class="ri-service-line" style="font-size:64px;color:#dde0f5;"></i>
+                <h5 class="mt-3 fw-bold text-muted">No services found</h5>
+                <p class="text-muted">No services have been added yet.</p>
             </div>
-
         </div>
 
     @endforelse
@@ -466,275 +576,40 @@
 
 @endsection
 
-@push('styles')
-
-<link rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-<style>
-
-.service-card{
-    border-radius:24px;
-    overflow:hidden;
-    background:#fff;
-    transition:.3s ease;
-    box-shadow:0 12px 30px rgba(15,23,42,.07);
-}
-
-.service-card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 20px 45px rgba(15,23,42,.12);
-}
-
-.service-image{
-    height:240px;
-    object-fit:cover;
-    transition:.4s ease;
-}
-
-.service-card:hover .service-image{
-    transform:scale(1.05);
-}
-
-.service-title{
-    font-size:20px;
-    font-weight:800;
-    line-height:1.4;
-    color:#111827;
-    min-height:56px;
-}
-
-.service-description{
-    color:#6b7280;
-    min-height:65px;
-    line-height:1.7;
-}
-
-.business-row{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    color:#6b7280;
-    font-size:14px;
-}
-
-.location-box{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    color:#6b7280;
-    font-size:14px;
-}
-
-.location-box i{
-    color:#ef4444;
-}
-
-.service-details-box{
-    background:#f8fafc;
-    border-radius:18px;
-    padding:14px;
-}
-
-.detail-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 0;
-    border-bottom:1px solid #e5e7eb;
-}
-
-.detail-item:last-child{
-    border-bottom:0;
-}
-
-.price-text{
-    color:#16a34a;
-}
-
-.favorite-btn{
-    width:44px;
-    height:44px;
-    border:none;
-    border-radius:50%;
-    background:#fff;
-    color:#9ca3af;
-    font-size:20px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:.25s ease;
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
-}
-
-.favorite-btn:hover{
-    transform:scale(1.08);
-}
-
-.favorite-btn.active{
-    background:#fff7db;
-    color:#f4b400;
-}
-
-.service-badge{
-    padding:9px 14px;
-    border-radius:999px;
-    font-size:12px;
-}
-
-.service-type-badge{
-    background:#111827;
-    color:#fff;
-    padding:8px 14px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:700;
-}
-
-.action-btn{
-    border-radius:14px;
-    padding:12px;
-    font-weight:700;
-}
-
-.request-status-box{
-    border-radius:14px;
-    padding:13px;
-    font-size:13px;
-    font-weight:600;
-}
-
-.status-none{
-    background:#f3f4f6;
-    color:#6b7280;
-}
-
-.status-pending{
-    background:#fff7db;
-    color:#a16207;
-}
-
-.status-approved{
-    background:#ecfdf3;
-    color:#15803d;
-}
-
-.status-rejected{
-    background:#fef2f2;
-    color:#b91c1c;
-}
-
-.modal-service-image{
-    width:100%;
-    height:380px;
-    object-fit:cover;
-    border-radius:24px;
-}
-
-.details-card{
-    background:#fff;
-    border:1px solid #edf0f7;
-    border-radius:22px;
-    padding:24px;
-}
-
-.section-title{
-    font-size:18px;
-    font-weight:800;
-    color:#111827;
-}
-
-.info-list{
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-}
-
-.info-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding-bottom:10px;
-    border-bottom:1px dashed #e5e7eb;
-}
-
-.service-map{
-    height:350px;
-    border-radius:18px;
-    overflow:hidden;
-}
-
-@media(max-width:768px){
-
-    .modal-service-image{
-        height:240px;
-    }
-
-    .service-map{
-        height:240px;
-    }
-
-}
-
-</style>
-
-@endpush
-
 @push('scripts')
-
-
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-
-document.addEventListener('shown.bs.modal', function (event) {
-
-    const modal = event.target;
+document.addEventListener('shown.bs.modal', function (e) {
+    const modal = e.target;
 
     @foreach($services as $service)
+    if (modal.id === 'svcModal{{ $service->id }}') {
 
-        if(modal.id === 'serviceModal{{ $service->id }}'){
+        const lat   = {{ $service->latitude  ?? 33.5138 }};
+        const lng   = {{ $service->longitude ?? 36.2765 }};
+        const mapId = 'leafMap{{ $service->id }}';
 
-            const lat = {{ $service->latitude ?? 33.5138 }};
-            const lng = {{ $service->longitude ?? 36.2765 }};
+        if (window['_map_' + mapId]) return;
 
-            const mapId = 'map{{ $service->id }}';
+        const map = L.map(mapId).setView([lat, lng], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+        L.marker([lat, lng]).addTo(map).bindPopup('{{ addslashes($service->title) }}').openPopup();
+        window['_map_' + mapId] = map;
+        setTimeout(() => map.invalidateSize(), 300);
 
-            if(window[mapId]) return;
-
-            const map = L.map(mapId).setView([lat, lng], 13);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(map);
-
-            L.marker([lat, lng]).addTo(map);
-
-            window[mapId] = map;
-
-            setTimeout(() => map.invalidateSize(), 300);
-
-            // 🔥 Reverse Geocoding (اسم المنطقة بدل الاحداثيات)
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
-                .then(res => res.json())
-                .then(data => {
-                    const name =
-                        data.address.city ||
-                        data.address.town ||
-                        data.address.village ||
-                        data.address.suburb ||
-                        data.display_name;
-
-                    document.getElementById('location-name-{{ $service->id }}').innerText = name;
-                })
-                .catch(() => {
-                    document.getElementById('location-name-{{ $service->id }}').innerText = "Unknown location";
-                });
-        }
-
+        @if(!$service->location_name)
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+            .then(r => r.json())
+            .then(d => {
+                const name = d.address?.city || d.address?.town || d.address?.village || d.address?.suburb || d.display_name || 'Unknown';
+                const el = document.getElementById('locName{{ $service->id }}');
+                if (el) el.textContent = name;
+            }).catch(() => {});
+        @endif
+    }
     @endforeach
-
 });
 </script>
 @endpush

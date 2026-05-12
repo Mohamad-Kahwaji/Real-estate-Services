@@ -13,28 +13,18 @@ class ChatController extends Controller
     public function index()
     {
         $authUser = Auth::guard('users')->user();
+        $isMenu   = false;
 
-        // Get all users except the current one, with last message and unread count
-        $users = User::where('id', '!=', $authUser->id)->get()->map(function ($user) use ($authUser) {
-            $lastMessage = Message::between($authUser->id, $user->id)->latest('created_at')->first();
-            $unread = Message::where('sender_id', $user->id)
-                             ->where('receiver_id', $authUser->id)
-                             ->whereNull('read_at')
-                             ->count();
-            $user->last_message = $lastMessage;
-            $user->unread_count = $unread;
-            return $user;
-        })->sortByDesc(fn($u) => optional($u->last_message)->created_at)->values();
-
-        return view('chat', compact('authUser', 'users'));
+        return view('chat', compact('authUser', 'isMenu'));
     }
 
     public function show($userId)
     {
         $authUser = Auth::guard('users')->user();
         $receiver = User::findOrFail($userId);
+        $isMenu   = false;
 
-        // Mark messages from receiver as read
+        // Only the two participants can view this conversation
         Message::where('sender_id', $receiver->id)
                ->where('receiver_id', $authUser->id)
                ->whereNull('read_at')
@@ -42,19 +32,7 @@ class ChatController extends Controller
 
         $messages = Message::between($authUser->id, $receiver->id)->get();
 
-        // Build users list for sidebar
-        $users = User::where('id', '!=', $authUser->id)->get()->map(function ($user) use ($authUser) {
-            $lastMessage = Message::between($authUser->id, $user->id)->latest('created_at')->first();
-            $unread = Message::where('sender_id', $user->id)
-                             ->where('receiver_id', $authUser->id)
-                             ->whereNull('read_at')
-                             ->count();
-            $user->last_message = $lastMessage;
-            $user->unread_count = $unread;
-            return $user;
-        })->sortByDesc(fn($u) => optional($u->last_message)->created_at)->values();
-
-        return view('chat', compact('authUser', 'receiver', 'messages', 'users'));
+        return view('chat', compact('authUser', 'receiver', 'messages', 'isMenu'));
     }
 
     public function store(Request $request, $userId)

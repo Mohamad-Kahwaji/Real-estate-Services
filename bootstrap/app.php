@@ -42,6 +42,9 @@ return Application::configure(basePath: dirname(__DIR__))
             return route('login');
         });
     })
+    ->withBroadcasting(
+         __DIR__.'/../routes/channels.php'
+    )
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })
