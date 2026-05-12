@@ -147,11 +147,5 @@ Route::post('login', [AuthenticatedUserController::class, 'store'])->name('login
 Route::get('register', [RegisteredUserController::class, 'create'])->name('register.create');
 Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
 
-Route::get('loginsa', [AuthenticatedSuperAdminSessionController::class, 'create'])->name('loginsa.create');
-Route::post('loginsa', [AuthenticatedSuperAdminSessionController::class, 'store'])->name('loginsa.store');
-
-Route::get('registersa', [RegisteredSuperAdminSessionController::class, 'create'])->name('registersa.create');
-Route::post('registersa', [RegisteredSuperAdminSessionController::class, 'store'])->name('registersa.store');
-
 
 });

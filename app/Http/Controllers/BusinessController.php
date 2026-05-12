@@ -15,14 +15,14 @@ class BusinessController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'status' => true,
-            'data' => [
-                'users' => User::all(),
-                'activetypes' => Activetype::all(),
-                'cities' => City::all(),
-            ]
-        ], 200);
+        $businesses = Business::with(['user', 'city', 'activeType'])->latest()->get();
+        return view('super_admin.businesses', compact('businesses'));
+    }
+
+    public function show($id)
+    {
+        $business = Business::with(['user', 'city', 'activeType'])->findOrFail($id);
+        return view('super_admin.businesses', ['businesses' => collect([$business])]);
     }
 
     public function create()
@@ -112,49 +112,34 @@ class BusinessController extends Controller
     public function approve($id)
     {
         $account = Business::findOrFail($id);
-
-        $account->update([
-            'status' => 'approved',
-        ]);
+        $account->update(['status' => 'approved']);
 
         $account->user->notify(new InvoiceCreated(
             'Business Account Approved',
             'Your business account has been approved.',
-            [
-                'type' => 'business_account',
-                'business_id' => $account->id,
-            ]
+            ['type' => 'business_account', 'business_id' => $account->id]
         ));
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Business account approved successfully.',
-            'data' => $account
-        ], 200);
+        return redirect()->route('business.index')->with('success', 'Business approved successfully.');
     }
 
-    public function rejected($id)
+    public function reject($id)
     {
         $account = Business::findOrFail($id);
-
-        $account->update([
-            'status' => 'rejected',
-        ]);
+        $account->update(['status' => 'rejected']);
 
         $account->user->notify(new UserDatabaseNotification(
             'Business Account Rejected',
             'Your business account has been rejected.',
-            [
-                'type' => 'business_account',
-                'business_id' => $account->id,
-            ]
+            ['type' => 'business_account', 'business_id' => $account->id]
         ));
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Business account rejected successfully.',
-            'data' => $account
-        ], 200);
+        return redirect()->route('business.index')->with('success', 'Business rejected.');
+    }
+
+    public function rejected($id)
+    {
+        return $this->reject($id);
     }
     public function destroy(){
         $user = auth('users')->user();

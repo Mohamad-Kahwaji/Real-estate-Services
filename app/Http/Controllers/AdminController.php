@@ -147,8 +147,40 @@ class AdminController extends Controller
 
     protected $guard_name = 'admin';
 
+    public function updateProfile(Request $request)
+    {
+        $admin = Auth::guard('admins')->user();
 
+        $rules = [
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+        ];
 
+        if ($request->filled('new_password')) {
+            $rules['current_password'] = 'required|string';
+            $rules['new_password']     = 'required|string|min:8|confirmed';
+        }
 
+        $validated = $request->validate($rules);
+
+        if ($request->filled('new_password')) {
+            if (!Hash::check($request->current_password, $admin->password)) {
+                return back()->withErrors(['current_password' => 'Current password is incorrect.'])->withInput();
+            }
+        }
+
+        $data = [
+            'name'  => $validated['name'],
+            'email' => $validated['email'],
+        ];
+
+        if ($request->filled('new_password')) {
+            $data['password'] = Hash::make($validated['new_password']);
+        }
+
+        $admin->update($data);
+
+        return redirect()->route('admin.dashboard')->with('success', 'Profile updated successfully.');
+    }
 
 }

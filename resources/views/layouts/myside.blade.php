@@ -272,42 +272,6 @@
         </li>
         @endif
 
-        {{-- Service Requests (collapsible) --}}
-        @php
-            $reqOpen = request()->routeIs('sentservice') ||
-                       request()->routeIs('servicereceived') ||
-                       request()->routeIs('servicerequest');
-        @endphp
-
-        <li class="menu-item {{ $reqOpen ? 'open active' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ri ri-file-list-3-line"></i>
-                <div>Service Requests</div>
-            </a>
-            <ul class="menu-sub">
-                @if(Route::has('sentservice'))
-                <li class="menu-item {{ request()->routeIs('sentservice') ? 'active' : '' }}">
-                    <a href="{{ route('sentservice') }}" class="menu-link">
-                        <div>Sent</div>
-                    </a>
-                </li>
-                @endif
-                @if(Route::has('servicereceived'))
-                <li class="menu-item {{ request()->routeIs('servicereceived') ? 'active' : '' }}">
-                    <a href="{{ route('servicereceived') }}" class="menu-link">
-                        <div>Received</div>
-                    </a>
-                </li>
-                @endif
-                @if(Route::has('servicerequest'))
-                <li class="menu-item {{ request()->routeIs('servicerequest') ? 'active' : '' }}">
-                    <a href="{{ route('servicerequest') }}" class="menu-link">
-                        <div>Pending</div>
-                    </a>
-                </li>
-                @endif
-            </ul>
-        </li>
 
         {{-- ════ MODERATION ════ --}}
         <li class="menu-header small text-uppercase">

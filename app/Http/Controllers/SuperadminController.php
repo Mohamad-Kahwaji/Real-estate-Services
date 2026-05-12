@@ -11,8 +11,11 @@ use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Models\Subcategory;
 use App\Models\User;
+use App\Notifications\InvoiceCreated;
+use App\Notifications\UserDatabaseNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class SuperadminController extends Controller
 {
@@ -47,8 +50,11 @@ class SuperadminController extends Controller
         $totalSubcategories  = Subcategory::count();
         $totalCities         = City::count();
 
-        $recentBusinesses    = Business::with('user')->latest()->take(5)->get();
+        $recentBusinesses    = Business::with(['user', 'city'])->latest()->take(5)->get();
         $recentReports       = Report::with(['service', 'user'])->latest()->take(5)->get();
+        $pendingServicesList = Service::with(['business', 'category'])->where('status', 'pending')->latest()->take(5)->get();
+        $notifications       = $superadmin->unreadNotifications()->latest()->take(15)->get();
+        $unreadCount         = $superadmin->unreadNotifications()->count();
 
         return view('super_admin.dash', compact(
             'superadmin',
@@ -58,7 +64,8 @@ class SuperadminController extends Controller
             'totalReports', 'pendingReports',
             'totalRequests', 'pendingRequests',
             'totalCategories', 'totalSubcategories', 'totalCities',
-            'recentBusinesses', 'recentReports'
+            'recentBusinesses', 'recentReports', 'pendingServicesList',
+            'notifications', 'unreadCount'
         ));
     }
 
@@ -66,6 +73,77 @@ class SuperadminController extends Controller
       $admins = Admin::with('permissions')->get();
       $allPermissions = \Spatie\Permission\Models\Permission::where('guard_name', 'admins')->get();
       return view('super_admin.admins', compact('admins', 'allPermissions'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $superadmin = Auth::guard('superadmins')->user();
+
+        $rules = [
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:superadmins,email,' . $superadmin->id,
+        ];
+
+        if ($request->filled('new_password')) {
+            $rules['current_password'] = 'required|string';
+            $rules['new_password']     = 'required|string|min:8|confirmed';
+        }
+
+        $validated = $request->validate($rules);
+
+        if ($request->filled('new_password')) {
+            if (!Hash::check($request->current_password, $superadmin->password)) {
+                return back()->withErrors(['current_password' => 'Current password is incorrect.'])->withInput();
+            }
+        }
+
+        $data = [
+            'name'  => $validated['name'],
+            'email' => $validated['email'],
+        ];
+
+        if ($request->filled('new_password')) {
+            $data['password'] = Hash::make($validated['new_password']);
+        }
+
+        $superadmin->update($data);
+
+        return redirect()->route('indexsuperadmin')->with('success', 'Profile updated successfully.');
+    }
+
+    public function serviceRequests()
+    {
+        $requests = ServiceRequest::with(['user', 'service.business', 'service.category', 'business'])
+            ->latest()->get();
+        return view('super_admin.servicerequests', compact('requests'));
+    }
+
+    public function approveServiceRequest($id)
+    {
+        $req = ServiceRequest::with(['user', 'service'])->findOrFail($id);
+        $req->update(['status' => 'approved']);
+
+        $req->user?->notify(new InvoiceCreated(
+            'Service Request Approved',
+            'Your service request has been approved.',
+            ['type' => 'service_request', 'request_id' => $req->id]
+        ));
+
+        return redirect()->route('superadmin.service-requests')->with('success', 'Service request approved successfully.');
+    }
+
+    public function rejectServiceRequest($id)
+    {
+        $req = ServiceRequest::with(['user', 'service'])->findOrFail($id);
+        $req->update(['status' => 'rejected']);
+
+        $req->user?->notify(new UserDatabaseNotification(
+            'Service Request Rejected',
+            'Your service request has been rejected.',
+            ['type' => 'service_request', 'request_id' => $req->id]
+        ));
+
+        return redirect()->route('superadmin.service-requests')->with('success', 'Service request rejected.');
     }
 
 }

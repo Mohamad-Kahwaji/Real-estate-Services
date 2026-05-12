@@ -2,7 +2,7 @@
 
 @section('title', 'All Services')
 
-@push('styles')
+@section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 /* ─── Cards ───────────────────────────────────────── */
@@ -271,7 +271,7 @@
     .map-box { height: 200px; }
 }
 </style>
-@endpush
+@endsection
 
 @section('content')
 
@@ -284,6 +284,52 @@
     <div class="svc-count-badge">
         {{ $services->count() }} {{ Str::plural('Service', $services->count()) }}
     </div>
+</div>
+
+{{-- Status Filter --}}
+@php
+  $allCount      = \App\Models\Service::count();
+  $pendingCount  = \App\Models\Service::where('status','pending')->count();
+  $approvedCount = \App\Models\Service::where('status','approved')->count();
+  $rejectedCount = \App\Models\Service::where('status','rejected')->count();
+@endphp
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="{{ route('allserviesad') }}"
+           class="btn btn-sm {{ !request('status') ? 'btn-primary' : 'btn-outline-secondary' }} rounded-pill fw-bold">
+            All ({{ $allCount }})
+        </a>
+        <a href="{{ route('allserviesad') }}?status=pending{{ request('search') ? '&search='.request('search') : '' }}"
+           class="btn btn-sm {{ request('status')==='pending' ? 'btn-warning text-dark' : 'btn-outline-warning' }} rounded-pill fw-bold">
+            Pending ({{ $pendingCount }})
+        </a>
+        <a href="{{ route('allserviesad') }}?status=approved{{ request('search') ? '&search='.request('search') : '' }}"
+           class="btn btn-sm {{ request('status')==='approved' ? 'btn-success' : 'btn-outline-success' }} rounded-pill fw-bold">
+            Approved ({{ $approvedCount }})
+        </a>
+        <a href="{{ route('allserviesad') }}?status=rejected{{ request('search') ? '&search='.request('search') : '' }}"
+           class="btn btn-sm {{ request('status')==='rejected' ? 'btn-danger' : 'btn-outline-danger' }} rounded-pill fw-bold">
+            Rejected ({{ $rejectedCount }})
+        </a>
+    </div>
+    <form method="GET" action="{{ route('allserviesad') }}" class="d-flex gap-2">
+        @if(request('status'))
+            <input type="hidden" name="status" value="{{ request('status') }}">
+        @endif
+        <input type="text" name="search" value="{{ request('search') }}"
+               class="form-control form-control-sm rounded-pill"
+               style="min-width:220px;"
+               placeholder="Search by title...">
+        <button type="submit" class="btn btn-sm btn-primary rounded-pill fw-bold">
+            <i class="ri-search-line me-1"></i>Search
+        </button>
+        @if(request('search'))
+            <a href="{{ route('allserviesad') }}{{ request('status') ? '?status='.request('status') : '' }}"
+               class="btn btn-sm btn-outline-secondary rounded-pill">
+                <i class="ri-close-line"></i>
+            </a>
+        @endif
+    </form>
 </div>
 
 @if(session('success'))
@@ -382,8 +428,7 @@
                         {{ $service->location_name ?? 'Unknown Location' }}
                     </div>
 
-                    {{-- View button ONLY (no request button) --}}
-                    <div class="mt-auto">
+                    <div class="mt-auto d-flex flex-column gap-2">
                         <button
                             class="btn-view"
                             data-bs-toggle="modal"
@@ -391,6 +436,23 @@
                         >
                             <i class="ri-eye-line me-1"></i> View Full Details
                         </button>
+
+                        @if($service->status === 'pending')
+                        <div class="d-flex gap-2">
+                            <form action="{{ route('approveser', $service->id) }}" method="POST" class="flex-fill">
+                                @csrf
+                                <button type="submit" class="btn btn-success btn-sm w-100 rounded-3 fw-bold">
+                                    <i class="ri-check-line me-1"></i>Approve
+                                </button>
+                            </form>
+                            <form action="{{ route('rejectser', $service->id) }}" method="POST" class="flex-fill">
+                                @csrf
+                                <button type="submit" class="btn btn-danger btn-sm w-100 rounded-3 fw-bold">
+                                    <i class="ri-close-line me-1"></i>Reject
+                                </button>
+                            </form>
+                        </div>
+                        @endif
                     </div>
 
                 </div>
@@ -555,6 +617,23 @@
 
                         </div>
                     </div>
+
+                    @if($service->status === 'pending')
+                    <div class="modal-footer border-0 px-4 pb-4 gap-2">
+                        <form action="{{ route('approveser', $service->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-success rounded-3 fw-bold px-4">
+                                <i class="ri-check-line me-1"></i>Approve Service
+                            </button>
+                        </form>
+                        <form action="{{ route('rejectser', $service->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger rounded-3 fw-bold px-4">
+                                <i class="ri-close-line me-1"></i>Reject Service
+                            </button>
+                        </form>
+                    </div>
+                    @endif
 
                 </div>
             </div>

@@ -30,7 +30,13 @@ class AdminPushNotificationService
                 ->withNotification(Notification::create($title, $body))
                 ->withData(array_map('strval', $data));
 
-            $messaging->send($message);
+            try {
+                $messaging->send($message);
+            } catch (\Kreait\Firebase\Exception\Messaging\NotFound $e) {
+                DeviceToken::where('token', $token)->delete();
+            } catch (\Throwable $e) {
+                // skip other transient errors silently
+            }
         }
     }
 }

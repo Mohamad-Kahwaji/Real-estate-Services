@@ -258,6 +258,11 @@
                 <i class="ri ri-user-settings-line" style="font-size:11px;"></i>
                 Administrator
             </span>
+            <button type="button" class="perm-chip" style="border:none;cursor:pointer;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);"
+                    data-bs-toggle="modal" data-bs-target="#editAdminProfileModal">
+                <i class="ri ri-edit-line" style="font-size:11px;"></i>
+                Edit Profile
+            </button>
         </div>
     </div>
 </div>
@@ -479,6 +484,91 @@
     </div>
     @endif
 </div>
+
+{{-- Edit Profile Modal --}}
+<div class="modal fade" id="editAdminProfileModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:480px;">
+    <div class="modal-content" style="border:0;border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.18);">
+      <div class="modal-header" style="border-bottom:1px solid #f1f3f9;padding:20px 26px;">
+        <h5 class="modal-title" style="font-weight:800;color:#1e293b;">
+          <i class="ri ri-edit-line me-2" style="color:#696cff;"></i>Edit Profile
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ route('admin.profile.update') }}" method="POST">
+        @csrf
+        <div class="modal-body" style="padding:26px;">
+
+          @if($errors->any())
+          <div class="alert alert-danger rounded-3 mb-4" style="font-size:13px;padding:12px 16px;">
+            <ul class="mb-0 ps-3">
+              @foreach($errors->all() as $err)<li>{{ $err }}</li>@endforeach
+            </ul>
+          </div>
+          @endif
+
+          <div class="mb-3">
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">Name</label>
+            <input type="text" name="name" class="form-control mt-1"
+                   style="border-radius:10px;border:1.5px solid #e2e8f0;"
+                   value="{{ old('name', $admin->name) }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">Email</label>
+            <input type="email" name="email" class="form-control mt-1"
+                   style="border-radius:10px;border:1.5px solid #e2e8f0;"
+                   value="{{ old('email', $admin->email) }}" required>
+          </div>
+
+          <hr style="border-color:#f1f3f9;margin:18px 0 14px;">
+          <p style="font-size:12px;color:#8592a3;margin-bottom:14px;">
+            <i class="ri ri-lock-line me-1"></i>Leave blank to keep current password.
+          </p>
+
+          <div class="mb-3">
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">Current Password</label>
+            <input type="password" name="current_password" class="form-control mt-1"
+                   style="border-radius:10px;border:1.5px solid #e2e8f0;"
+                   placeholder="Required only if changing password">
+          </div>
+
+          <div class="mb-3">
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">New Password</label>
+            <input type="password" name="new_password" class="form-control mt-1"
+                   style="border-radius:10px;border:1.5px solid #e2e8f0;"
+                   placeholder="Min 8 characters">
+          </div>
+
+          <div class="mb-0">
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">Confirm New Password</label>
+            <input type="password" name="new_password_confirmation" class="form-control mt-1"
+                   style="border-radius:10px;border:1.5px solid #e2e8f0;"
+                   placeholder="Repeat new password">
+          </div>
+
+        </div>
+        <div class="modal-footer" style="border-top:1px solid #f1f3f9;padding:18px 26px;gap:10px;">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                  style="border-radius:12px;font-weight:700;">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="border-radius:12px;font-weight:700;">
+            <i class="ri ri-save-line me-1"></i>Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+@if($errors->any())
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    new bootstrap.Modal(document.getElementById('editAdminProfileModal')).show();
+});
+</script>
+@endpush
+@endif
 
 @endsection
 

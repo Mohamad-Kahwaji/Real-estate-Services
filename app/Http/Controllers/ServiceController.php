@@ -8,16 +8,22 @@ use App\Models\Order;
 use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Models\Subcategory;
+use App\Models\Superadmin;
 use App\Notifications\InvoiceCreated;
+use App\Notifications\UserDatabaseNotification;
 use App\Services\AdminPushNotificationService;
 use Illuminate\Http\Request;
 use Termwind\Components\Raw;
 
 class ServiceController extends Controller
 {
-public function allser(){
-  $services = Service::with(['business', 'category', 'subcategory'])->where('status', 'approved')->get();
-  return view('super_admin.allservices', compact('services'));
+public function allser(Request $request){
+    $services = Service::with(['business', 'category', 'subcategory'])
+        ->when($request->status, fn($q) => $q->where('status', $request->status))
+        ->when($request->search, fn($q) => $q->where('title', 'like', '%' . $request->search . '%'))
+        ->latest()
+        ->get();
+    return view('super_admin.allservices', compact('services'));
 }
 public function myservice()
 {
@@ -52,11 +58,11 @@ public function sent(){
 public function recevied(){
 
 }
-public function allservices(Request $request){
+public function allservices(){
   $user = auth('users')->user();
   $mybusinesses = $user->businesses()->pluck('id');
-  $services = Service::with(['business', 'category'])
-
+  $services = Service::with(['business', 'category','subcategory'])
+  ->where('status', 'approved')
   ->whereNotIn('business_id',$mybusinesses)
   ->get();
 
@@ -166,6 +172,22 @@ public function allservices(Request $request){
           ]
       ));
 
+      app(AdminPushNotificationService::class)->send(
+          'New Service Request',
+          'A new service is waiting for approval.',
+          [
+              'type' => 'service_request',
+              'service_id' => $service->id,
+          ]
+      );
+
+      $adminNotification = new UserDatabaseNotification(
+          'New Service Request',
+          'User ' . ($service->user->name ?? '') . ' submitted a new service for approval.',
+          ['type' => 'service_request', 'service_id' => $service->id]
+      );
+      Superadmin::all()->each(fn($sa) => $sa->notify($adminNotification));
+
 
     return response()->json([
         'status' => true,
@@ -184,17 +206,13 @@ public function allservices(Request $request){
     }
     public function approve($id){
         $account = Service::findOrFail($id);
-        $account->Update([
-            'status'=>'approved',
-        ]);
-        return redirect()->route('indexsuperadmin',response('accept'));
+        $account->update(['status' => 'approved']);
+        return redirect()->route('allserviesad')->with('success', 'Service approved successfully.');
     }
     public function rejected($id){
         $account = Service::findOrFail($id);
-        $account->Update([
-            'status'=>'rejected',
-        ]);
-        return redirect()->route('indexsuperadmin',response('rejected'));
+        $account->update(['status' => 'rejected']);
+        return redirect()->route('allserviesad')->with('success', 'Service rejected.');
     }
 
       public function pendingrec($id){
@@ -298,6 +316,3 @@ if (!$request) {
       return view('users.servicerequest',compact('requests'));
 }
 }
-
-
-

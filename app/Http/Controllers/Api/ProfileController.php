@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Business;
 use App\Models\Service;
@@ -10,6 +11,25 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+
+public function index(){
+    $user = auth('users')->user();
+    $accouns = Business::with(['activeType', 'city'])
+        ->where('user_id', $user->id)
+        ->where('status', 'approved')
+        ->get();
+    $services = Service::with(['category', 'subcategory', 'business'])
+        ->where('status', 'approved')
+        ->get();
+      return response()->json([
+        'status' => true,
+        'data' => [
+            'user' => $user,
+            'accounts' => $accouns,
+            'services' => $services,
+        ]
+    ], 200);
+}
     public function edit(Request $request)
     {
         $user = auth('users')->user();

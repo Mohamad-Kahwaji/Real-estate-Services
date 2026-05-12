@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npm run *)",
       "Bash(composer show *)",
-      "Bash(php artisan *)"
+      "Bash(php artisan *)",
+      "Bash(Select-String \"business|approve|reject|notification\")",
+      "Bash(python -c ' *)",
+      "Bash(Get-Content storage\\\\logs\\\\laravel.log -Tail 50)"
     ]
   }
 }

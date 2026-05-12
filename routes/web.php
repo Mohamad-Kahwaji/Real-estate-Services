@@ -259,6 +259,27 @@ Route::post('register', [RegisteredUserController::class, 'store'])->name('regis
 
     Route::get('dash',[SuperadminController::class,'index'])->name('dash')->middleware('auth:superadmins');
 
+    Route::middleware('auth:superadmins')->group(function () {
+        Route::post('notifications/read-all', function () {
+            auth('superadmins')->user()->unreadNotifications->markAsRead();
+            return back();
+        })->name('notifications.readAll');
+        Route::post('notifications/{id}/read', function ($id) {
+            auth('superadmins')->user()->notifications()->where('id', $id)->first()?->markAsRead();
+            return back();
+        })->name('notifications.read');
+        Route::post('superadmin/profile/update', [SuperadminController::class, 'updateProfile'])
+            ->name('superadmin.profile.update');
+        Route::get('superadmin/service-requests', [SuperadminController::class, 'serviceRequests'])
+            ->name('superadmin.service-requests');
+        Route::post('superadmin/service-requests/{id}/approve', [SuperadminController::class, 'approveServiceRequest'])
+            ->name('superadmin.service-requests.approve');
+        Route::post('superadmin/service-requests/{id}/reject', [SuperadminController::class, 'rejectServiceRequest'])
+            ->name('superadmin.service-requests.reject');
+    });
 
+    Route::post('admin/profile/update', [AdminController::class, 'updateProfile'])
+        ->name('admin.profile.update')
+        ->middleware('auth:admins');
 
     require __DIR__.'/auth.php';

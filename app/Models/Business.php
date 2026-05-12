@@ -39,5 +39,7 @@ class Business extends Model
       'status',
       'activetype_id',
       'user_id',
+      'latitude',
+      'longitude',
     ];
 }

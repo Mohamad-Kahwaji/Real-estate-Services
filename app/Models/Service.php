@@ -26,7 +26,14 @@ class Service extends Model
         return $this->hasMany(Review::class);
     }
     public function user(){
-        return $this->hasMany(User::class);
+        return $this->hasOneThrough(
+            User::class,
+            Business::class,
+            'id',        // businesses.id (referenced by service.business_id)
+            'id',        // users.id (referenced by business.user_id)
+            'business_id', // service.business_id
+            'user_id'    // business.user_id
+        );
     }
     public function subcategory()
     {

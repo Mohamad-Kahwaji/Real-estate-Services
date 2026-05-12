@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Activetype;
 use App\Models\Business;
 use App\Models\City;
+use App\Models\Superadmin;
 use App\Models\User;
 use App\Notifications\InvoiceCreated;
 use App\Notifications\UserDatabaseNotification;
@@ -70,6 +71,13 @@ class BusinessController extends Controller
                 'business_id' => $business->id,
             ]
         );
+
+        $notification = new UserDatabaseNotification(
+            'New Business Account Request',
+            'User ' . ($business->user->name ?? '') . ' submitted a business account request.',
+            ['type' => 'business_account_request', 'business_id' => $business->id]
+        );
+        Superadmin::all()->each(fn($sa) => $sa->notify($notification));
 
         return response()->json([
             'status' => true,

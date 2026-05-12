@@ -1,45 +1,50 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedUserController extends Controller
 {
-    public function create(): View
+    public function store(Request $request): JsonResponse
     {
-        return view('users.auth_user.auth-login-user');
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        $credentials = $request->validate([
-            'phone' => ['required', 'string', 'max:20'],
+        $request->validate([
+            'phone'    => ['required', 'string', 'max:20'],
             'password' => ['required'],
         ]);
 
-        if (Auth::guard('users')->attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-
-            return redirect()->intended(route('dashi'));
+        if (! Auth::guard('users')->attempt($request->only('phone', 'password'))) {
+            throw ValidationException::withMessages([
+                'phone' => ['بيانات الدخول غير صحيحة'],
+            ]);
         }
 
-        return back()->withErrors([
-            'phone' => 'بيانات الدخول غير صحيحة',
-        ])->onlyInput('phone');
+        $user  = Auth::guard('users')->user();
+        $token = $user->createToken('user-token')->plainTextToken;
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'تم تسجيل الدخول بنجاح',
+            'token'   => $token,
+            'user'    => [
+                'id'    => $user->id,
+                'name'  => $user->name,
+                'phone' => $user->phone,
+            ],
+        ]);
     }
 
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request): JsonResponse
     {
-        Auth::guard('users')->logout();
+        $request->user()->currentAccessToken()->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('login');
+        return response()->json([
+            'status'  => true,
+            'message' => 'تم تسجيل الخروج بنجاح',
+        ]);
     }
 }

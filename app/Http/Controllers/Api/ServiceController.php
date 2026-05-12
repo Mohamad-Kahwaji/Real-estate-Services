@@ -10,7 +10,9 @@ use App\Models\Service;
 use App\Models\ServiceFieldValue;
 use App\Models\ServiceRequest;
 use App\Models\Subcategory;
+use App\Models\Superadmin;
 use App\Notifications\InvoiceCreated;
+use App\Notifications\UserDatabaseNotification;
 use App\Services\AdminPushNotificationService;
 use Illuminate\Http\Request;
 use Termwind\Components\Raw;
@@ -54,58 +56,26 @@ public function recevied(){
 
 }
 public function allservices(Request $request){
-  $user = auth('users')->user();
-  $mybusinesses = $user->businesses()->pluck('id');
-  $services = Service::with(['business', 'category','subcategory','fieldValues.dynamicField'])
+    $user = auth('users')->user();
+    $mybusinesses = $user->businesses()->pluck('id');
 
-  ->whereNotIn('business_id',$mybusinesses)
-  ->get();
+    $services = Service::with(['business', 'category', 'subcategory', 'fieldValues.dynamicField'])
+        ->where('status', 'approved')
+        ->whereNotIn('business_id', $mybusinesses)
+        ->when($request->city_id, fn($q) => $q->whereHas('business', fn($b) => $b->where('city_id', $request->city_id)))
+        ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
+        ->when($request->subcategory_id, fn($q) => $q->where('subcategory_id', $request->subcategory_id))
+        ->when($request->services_type, fn($q) => $q->where('services_type', $request->services_type))
+        ->when($request->price_min, fn($q) => $q->where('price_usd', '>=', $request->price_min))
+        ->when($request->price_max, fn($q) => $q->where('price_usd', '<=', $request->price_max))
+        ->when($request->search, fn($q) => $q->where('title', 'like', '%' . $request->search . '%'))
+        ->latest()
+        ->get();
 
-  return response()->json([
-        'status' => true,
-        'data' => $services
-    ], 200);
-
-
-  /*$services = Service::with(['business', 'category', 'subcategory','city'])->where('status', 'approved')
-//city filter
-    ->where($request->city_id ,function($q) use ($request){
-        $q->where('city_id',$request->city_id);
-        })
-//category filter
-    ->where($request->category_id ,function($q) use ($request){
-        $q->where('category_id',$request->category_id);
-        })
-//subcategory filter
-    ->where($request->subcategory_id ,function($q) use ($request){
-        $q->where('subcategory_id',$request->subcategory_id);
-        })
-//type filter
-    ->where($request->services_type ,function($q) use ($request){
-        $q->where('services_type',$request->services_type);
-        })
-//price filter
-    ->where(function($q) use ($request){
-        if ($request->price_min) {
-            $q->where('price_usd', '>=', $request->price_min)
-              ->orWhere('price_syp', '>=', $request->price_min);
-        }
-        if ($request->price_max) {
-            $q->where('price_usd', '<=', $request->price_max)
-              ->orWhere('price_syp', '<=', $request->price_max);
-        }
-    })
-//name search
-    ->where(function($q) use ($request){
-        if ($request->search) {
-            $q->where('title', 'like', '%' . $request->search . '%');
-        }
-    })
-    ->get();
     return response()->json([
+        'status' => true,
         'data' => $services,
-        'message' => 'Services retrieved successfully',
-    ]);*/
+    ], 200);
 }
   public function create(){
     $businesses = Business::where('user_id', auth()->id())
@@ -179,24 +149,38 @@ public function allservices(Request $request){
             'dynamic_field_id' => $field['field_id'],
             'value' => $field['value'] ?? null,
         ]);
+    }
 
+    $service->user->notify(new InvoiceCreated(
+        'Service Created',
+        'Your service has been created and is pending approval.',
+        [
+            'type' => 'service',
+            'service_id' => $service->id,
+        ]
+    ));
 
-      $business->user->notify(new InvoiceCreated(
-          'Service Created',
-          'Your service has been created and is pending approval.',
-          [
-              'type' => 'service',
-              'service_id' => $service->id,
-          ]
-      ));
+    app(AdminPushNotificationService::class)->send(
+        'New Service Request',
+        'A new service is waiting for approval.',
+        [
+            'type' => 'service_request',
+            'service_id' => $service->id,
+        ]
+    );
 
+    $adminNotification = new UserDatabaseNotification(
+        'New Service Request',
+        'User ' . ($service->user->name ?? '') . ' submitted a new service for approval.',
+        ['type' => 'service_request', 'service_id' => $service->id]
+    );
+    Superadmin::all()->each(fn($sa) => $sa->notify($adminNotification));
 
     return response()->json([
         'status' => true,
         'message' => 'Service created successfully and is pending approval.',
         'data' => $service
     ], 201);
-  }
 
   }
 
