@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -70,36 +71,44 @@ class AdminController extends Controller
     }
 
     public function create(){
-      $permissions = Permission::where('guard_name','admins')->get();
-      return view('super_admin.createadmin',compact('permissions'));
+        $permissions = Permission::where('guard_name', 'admins')->get();
+        $roles       = Role::where('guard_name', 'admins')->with('permissions')->get();
+        return view('super_admin.createadmin', compact('permissions', 'roles'));
     }
 
 
     public function store(Request $request){
-      $val = $request->validate([
-        'name'=> 'required|string|max:255',
-        'email'=>'required|string|max:20',
-        'password'=>'required|string|min:8|confirmed',
-        'permissions' => 'nullable|array',
-        'permissions.*' => 'exists:permissions,name',
+        $val = $request->validate([
+            'name'           => 'required|string|max:255',
+            'email'          => 'required|email|max:255',
+            'password'       => 'required|string|min:8|confirmed',
+            'roles'          => 'nullable|array',
+            'roles.*'        => 'exists:roles,name',
+            'permissions'    => 'nullable|array',
+            'permissions.*'  => 'exists:permissions,name',
         ]);
+
         $admin = Admin::create([
-        'name' => $val['name'],
-        'email' => $val['email'],
-        'password' => Hash::make($val['password']),
-    ]);
-    if (!empty($val['permissions'])) {
-        $admin->syncPermissions($val['permissions']);
-    }
-    return redirect()->route('adminsindex');
+            'name'     => $val['name'],
+            'email'    => $val['email'],
+            'password' => Hash::make($val['password']),
+        ]);
+
+        $admin->syncRoles($val['roles'] ?? []);
+
+        if (!empty($val['permissions'])) {
+            $admin->givePermissionTo($val['permissions']);
+        }
+
+        return redirect()->route('adminsindex')->with('success', 'Admin created successfully.');
     }
 
     public function editpermission($id){
-   $admin = Admin::findOrFail($id);
-    $permissions = Permission::where('guard_name', 'admins')->get();
+        $admin       = Admin::with('roles', 'permissions')->findOrFail($id);
+        $permissions = Permission::where('guard_name', 'admins')->get();
+        $roles       = Role::where('guard_name', 'admins')->with('permissions')->get();
 
-
-    return view('super_admin.editadmin', compact('admin', 'permissions'));
+        return view('super_admin.editadmin', compact('admin', 'permissions', 'roles'));
     }
 
 
@@ -108,26 +117,25 @@ class AdminController extends Controller
     $admin = Admin::findOrFail($admin);
 
     $val = $request->validate([
-        'name'        => 'required|string|max:255',
-        'email'       => 'required|email|max:255',
-        'password'    => 'nullable|string|min:8|confirmed',
-        'permissions' => 'nullable|array',
-        'permissions.*' => 'exists:permissions,name',
+        'name'           => 'required|string|max:255',
+        'email'          => 'required|email|max:255',
+        'password'       => 'nullable|string|min:8|confirmed',
+        'roles'          => 'nullable|array',
+        'roles.*'        => 'exists:roles,name',
+        'permissions'    => 'nullable|array',
+        'permissions.*'  => 'exists:permissions,name',
     ]);
 
-    $data = [
-        'name'  => $val['name'],
-        'email' => $val['email'],
-    ];
-
+    $data = ['name' => $val['name'], 'email' => $val['email']];
     if (!empty($val['password'])) {
         $data['password'] = Hash::make($val['password']);
     }
-
     $admin->update($data);
+
+    $admin->syncRoles($val['roles'] ?? []);
     $admin->syncPermissions($val['permissions'] ?? []);
 
-    return redirect()->route('adminsindex')->with('success', 'Admin updated successfully');
+    return redirect()->route('adminsindex')->with('success', 'Admin updated successfully.');
 }
 
     public function updateadmin(Request $request, $id)

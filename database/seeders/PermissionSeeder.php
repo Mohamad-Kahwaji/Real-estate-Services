@@ -11,7 +11,7 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         // =========================
-        // Superadmin Permissions
+        // Superadmin — ثابت، لا تغيير
         // =========================
         $superadminPermissions = [
             'view analytics',
@@ -25,13 +25,13 @@ class PermissionSeeder extends Seeder
 
         foreach ($superadminPermissions as $permission) {
             Permission::firstOrCreate([
-                'name' => $permission,
+                'name'       => $permission,
                 'guard_name' => 'superadmins',
             ]);
         }
 
         $superadminRole = Role::firstOrCreate([
-            'name' => 'superadmins',
+            'name'       => 'superadmins',
             'guard_name' => 'superadmins',
         ]);
 
@@ -39,7 +39,7 @@ class PermissionSeeder extends Seeder
 
 
         // =========================
-        // Admin Permissions
+        // Admin Permissions — كل الصلاحيات المتاحة للـ admins
         // =========================
         $adminPermissions = [
             'accept business account',
@@ -63,21 +63,64 @@ class PermissionSeeder extends Seeder
 
         foreach ($adminPermissions as $permission) {
             Permission::firstOrCreate([
-                'name' => $permission,
+                'name'       => $permission,
                 'guard_name' => 'admins',
             ]);
         }
 
-        $adminRole = Role::firstOrCreate([
-            'name' => 'admins',
-            'guard_name' => 'admins',
-        ]);
+        // =========================
+        // Admin Roles — كل role مجموعة مهام محددة
+        // =========================
+        $adminRoles = [
 
-        $adminRole->syncPermissions($adminPermissions);
+            'service-manager' => [
+                'pending service',
+                'accept service',
+                'reject service',
+            ],
+
+            'business-manager' => [
+                'accept business account',
+                'reject business account',
+            ],
+
+            'category-manager' => [
+                'add category',
+                'edit category',
+                'delete category',
+                'add subcategory',
+                'edit subcategory',
+                'delete subcategory',
+                'add dynamic field',
+                'edit dynamic field',
+                'delete dynamic field',
+            ],
+
+            'city-manager' => [
+                'add city',
+            ],
+
+            'report-manager' => [
+                'manage report',
+            ],
+
+            'ads-manager' => [
+                'manage slider ads',
+            ],
+
+        ];
+
+        foreach ($adminRoles as $roleName => $permissions) {
+            $role = Role::firstOrCreate([
+                'name'       => $roleName,
+                'guard_name' => 'admins',
+            ]);
+            $role->syncPermissions($permissions);
+        }
 
 
         // =========================
-        // User Permissions
+        // User Permissions — ثابت، role واحد لكل المستخدمين
         // =========================
         $userPermissions = [
             'create user account',
@@ -105,17 +148,16 @@ class PermissionSeeder extends Seeder
 
         foreach ($userPermissions as $permission) {
             Permission::firstOrCreate([
-                'name' => $permission,
+                'name'       => $permission,
                 'guard_name' => 'users',
             ]);
         }
 
         $userRole = Role::firstOrCreate([
-            'name' => 'users',
+            'name'       => 'users',
             'guard_name' => 'users',
         ]);
 
         $userRole->syncPermissions($userPermissions);
     }
 }
-

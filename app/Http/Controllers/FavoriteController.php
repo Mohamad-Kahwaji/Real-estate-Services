@@ -23,11 +23,18 @@ public function toggle($id)
     $user = auth('users')->user();
 
     if ($user->favorites()->where('service_id', $id)->exists()) {
-        $user->favorites()->detach($id); // حذف
+        $user->favorites()->detach($id);
     } else {
-        $user->favorites()->attach($id); // إضافة
+        $user->favorites()->attach($id, ['favorite' => 1]);
     }
 
     return back();
+}
+
+public function index()
+{
+    $user      = auth('users')->user();
+    $favorites = $user->favorites()->with(['business', 'category','subcategory'])->get();
+    return view('users.favorite', compact('favorites'));
 }
 }

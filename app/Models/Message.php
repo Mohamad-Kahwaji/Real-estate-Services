@@ -6,7 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $fillable = ['sender_id', 'receiver_id', 'body', 'read_at'];
+    protected $fillable = ['sender_id', 'receiver_id', 'body', 'read_at', 'file_path', 'file_type', 'file_name'];
+
+    public function fileUrl(): ?string
+    {
+        return $this->file_path ? asset('storage/' . $this->file_path) : null;
+    }
+
+    public function isImage(): bool
+    {
+        return $this->file_type === 'image';
+    }
 
     protected $casts = ['read_at' => 'datetime'];
 

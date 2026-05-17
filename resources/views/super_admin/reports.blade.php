@@ -2,7 +2,7 @@
 
 @section('title', 'Service Reports')
 
-@push('styles')
+@section('page-style')
 <style>
 :root {
     --card-radius: 20px;
@@ -101,7 +101,7 @@
 }
 .empty-state i { font-size: 52px; color: #c8ccda; display: block; margin-bottom: 16px; }
 </style>
-@endpush
+@endsection
 
 @section('content')
 

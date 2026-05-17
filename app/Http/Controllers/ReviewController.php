@@ -2,52 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
 use App\Models\Review;
+use App\Models\ServiceRequest;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function store(Request $request,$orderid){
-      $user = auth('users')->user();
+    public function store(Request $request, $requestId)
+    {
+        $user = auth('users')->user();
 
-    $order = Order::where('id', $orderid)
-        ->where('user_id', $user->id)
-        ->where('status', 'approved')
-        ->first();
+        $serviceRequest = ServiceRequest::where('id', $requestId)
+            ->where('user_id', $user->id)
+            ->where('status', 'approved')
+            ->where('payment_status', 'paid')
+            ->firstOrFail();
 
-    if (!$order) {
-        return back()->with('error', 'Order not found or not eligible for review.');
+        $request->validate([
+            'rating'  => ['required', 'integer', 'min:1', 'max:5'],
+            'comment' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        Review::updateOrCreate(
+            ['user_id' => $user->id, 'service_id' => $serviceRequest->service_id],
+            [
+                'order_id' => null,
+                'rating'   => $request->rating,
+                'comment'  => $request->comment,
+            ]
+        );
+
+        return back()->with('success', 'Your review has been submitted. Thank you!');
     }
 
-    $request->validate([
-        'rating' => ['required', 'integer', 'min:1', 'max:5'],
-        'comment' => ['nullable', 'string'],
-    ]);
+    // Admin: list all reviews
+    public function index()
+    {
+        $reviews = Review::with(['user', 'service.business'])
+            ->latest()
+            ->get();
 
-    Review::updateOrCreate(
-        ['order_id' => $order->id],
-        [
-            'user_id' => $user->id,
-            'service_id' => $order->service_id,
-            'rating' => $request->rating,
-            'comment' => $request->comment,
-        ]
-    );
-
-    return back()->with('success','send review successfully');
+        return view('admin.reviews', compact('reviews'));
     }
 
-    public function index($id){
-      $reviews = Review::with(['user','service.business'])->where('service_id',$id)->get();
-      return response()->json([
-        'status' => 'approved',
-        'service_id' => $id,
-        'average_rating' => $reviews->avg('rating'),
-        'reviews_count' => $reviews->count(),
-        'data' => $reviews,
-        'message' => 'Reviews retrieved successfully',
-      ]);
+    // Admin: delete a review
+    public function destroy(Review $review)
+    {
+        $review->delete();
+        return back()->with('success', 'Review deleted.');
     }
 
+    // API: reviews for a specific service
+    public function byService($serviceId)
+    {
+        $reviews = Review::with('user')
+            ->where('service_id', $serviceId)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'service_id'     => $serviceId,
+            'average_rating' => round($reviews->avg('rating') ?? 0, 1),
+            'reviews_count'  => $reviews->count(),
+            'data'           => $reviews,
+        ]);
+    }
 }

@@ -4,52 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Business;
-use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    public function edit(Request $request)
+    public function edit()
     {
+        /** @var \App\Models\User $user */
         $user = auth('users')->user();
 
         $accounts = Business::with(['activeType', 'city'])
             ->where('user_id', $user->id)
-            ->where('status', 'approved')
             ->get();
 
-        $services = Service::with(['category', 'subcategory', 'business'])
-            ->where('status', 'approved')
-            ->get();
-
-        return response()->json([
-            'status' => true,
-            'data' => [
-                'user' => $user,
-                'accounts' => $accounts,
-                'services' => $services,
-            ]
-        ], 200);
+        return view('users.profile', compact('user', 'accounts'));
     }
 
     public function update(ProfileUpdateRequest $request)
     {
+        /** @var \App\Models\User $user */
         $user = auth('users')->user();
 
-        $user->fill($request->validated());
+        $data = $request->validated();
 
-        if ($user->isDirty('email')) {
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        if (isset($data['email']) && $data['email'] !== $user->email) {
             $user->email_verified_at = null;
         }
 
-        $user->save();
+        $user->fill($data)->save();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Profile updated successfully.',
-            'data' => $user
-        ], 200);
+        return redirect()->route('profile.edit')
+            ->with('success', __('app.profile_updated'));
     }
 
     public function destroy(Request $request)
@@ -58,6 +51,7 @@ class ProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
+        /** @var \App\Models\User $user */
         $user = auth('users')->user();
 
         Auth::guard('users')->logout();

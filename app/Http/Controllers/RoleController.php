@@ -10,10 +10,10 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::with('permissions')
-            ->get();
+        $roles = Role::with('permissions')->get();
+        $permissions = Permission::orderBy('name')->get();
 
-        return view('super_admin.roles', compact('roles'));
+        return view('super_admin.roles', compact('roles', 'permissions'));
     }
 
     public function create()
@@ -38,7 +38,7 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->permissions ?? []);
 
-        return redirect()->route('roles')->with('success', 'Role created successfully');
+        return redirect()->route('roleindex')->with('success', 'Role created successfully.');
     }
 
     public function edit($id)

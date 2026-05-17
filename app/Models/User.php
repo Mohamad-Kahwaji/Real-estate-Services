@@ -22,10 +22,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-
         'phone',
         'password',
-        'fcm_token'
+        'fcm_token',
+        'last_seen_at',
     ];
     protected string $guard_namre = 'users';
 
@@ -48,10 +48,23 @@ class User extends Authenticatable
     {
         return [
             'number_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'last_seen_at'       => 'datetime',
+            'password'           => 'hashed',
         ];
     }
 
+
+    public function isOnline(): bool
+    {
+        return $this->last_seen_at && now()->diffInMinutes($this->last_seen_at) < 3;
+    }
+
+    public function lastSeenLabel(): string
+    {
+        if (!$this->last_seen_at) return 'Never';
+        if ($this->isOnline())   return 'Online';
+        return 'Last seen ' . $this->last_seen_at->diffForHumans();
+    }
 
     public function businesses()
     {

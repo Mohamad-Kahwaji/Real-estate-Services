@@ -6,7 +6,25 @@
       "Bash(php artisan *)",
       "Bash(Select-String \"business|approve|reject|notification\")",
       "Bash(python -c ' *)",
-      "Bash(Get-Content storage\\\\logs\\\\laravel.log -Tail 50)"
+      "Bash(Get-Content storage\\\\logs\\\\laravel.log -Tail 50)",
+      "Bash(Get-ChildItem \"c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\\\\storage\\\\framework\\\\views\" -Filter \"*.php\")",
+      "Bash(Measure-Object)",
+      "Bash(Select-Object -ExpandProperty Count)",
+      "Bash(rm \"c:/Users/Mohamad/Desktop/Laravel/project-final/Real estate services/storage/framework/views/\"*.php && echo \"Done\")",
+      "Bash(Select-String -Pattern \"admins|superadmins|permission|report|categories|roleindex\")",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\\\\app\\\\Models\" -Filter \"*ayment*\" -ErrorAction SilentlyContinue)",
+      "Bash(grep -n 'protected $fillable\\\\|public function' 'c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\\\\app\\\\Models\\\\User.php')",
+      "Bash(grep -n 'protected $fillable\\\\|public function' 'c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\\\\app\\\\Models\\\\Business.php')",
+      "Bash(composer require *)",
+      "Bash(not exist *)",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\\\\resources\\\\views\\\\payment\")",
+      "Bash(grep -v \"^$\")",
+      "Bash(Select-String \"dashi|sentservice|servicereceived|allservices|servicerequest|service\\\\b\")",
+      "Bash(php -r \"require 'vendor/autoload.php'; echo 'OK';\")",
+      "Bash(findstr -i \"report\\\\|ad\\\\|ads\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Mohamad\\Desktop\\Laravel\\project-final\\Real estate services\\storage\\framework\\views"
     ]
   }
 }

@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,7 +19,25 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'admin.lastseen' => \App\Http\Middleware\AdminLastSeen::class,
+            'user.lastseen'  => \App\Http\Middleware\UserLastSeen::class,
         ]);
+
+        $middleware->appendToGroup('web', \App\Http\Middleware\SetLocale::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\AdminLastSeen::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\UserLastSeen::class);
+        $middleware->appendToGroup('api', \App\Http\Middleware\SetLocale::class);
+        $middleware->appendToGroup('api', \App\Http\Middleware\UserLastSeen::class);
+
+        $middleware->redirectUsersTo(function (Request $request) {
+            if (Auth::guard('superadmins')->check()) {
+                return route('dashboard-analytics');
+            }
+            if (Auth::guard('admins')->check()) {
+                return route('admin.dashboard');
+            }
+            return route('dashi');
+        });
 
         $middleware->redirectGuestsTo(function (Request $request) {
             if ($request->expectsJson()) {

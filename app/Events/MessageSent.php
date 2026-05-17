@@ -41,6 +41,9 @@ class MessageSent implements ShouldBroadcastNow
             'sender_id'   => $this->message->sender_id,
             'receiver_id' => $this->message->receiver_id,
             'body'        => $this->message->body,
+            'file_url'    => $this->message->fileUrl(),
+            'file_type'   => $this->message->file_type,
+            'file_name'   => $this->message->file_name,
             'sender_name' => $this->message->sender->name ?? '',
             'created_at'  => $this->message->created_at->format('H:i'),
         ];

@@ -1,12 +1,15 @@
 <?php
 use App\Http\Controllers\Api\Auth\AuthenticatedUserController;
+use App\Http\Controllers\Api\Auth\OtpController as ApiOtpController;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\Auth\PasswordController;
 use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\BusinessController;
+use App\Http\Controllers\Api\ChatController as ApiChatController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\PaymentController as ApiPaymentController;
 use App\Http\Controllers\Api\ServiceRequestController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
 use App\Http\Controllers\FavoriteController;
@@ -27,8 +30,10 @@ Route::get('/user', function (Request $request) {
 // =========================
 // Auth Routes
 // =========================
-Route::post('/register', [RegisteredUserController::class, 'store']);
-Route::post('/login',    [AuthenticatedUserController::class, 'store']);
+Route::post('/register',    [RegisteredUserController::class,    'store']);
+Route::post('/login',       [AuthenticatedUserController::class, 'store']);
+Route::post('/verify-otp',  [ApiOtpController::class,           'verify']);
+Route::post('/resend-otp',  [ApiOtpController::class,           'resend']);
 
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
 Route::post('/reset-password',  [NewPasswordController::class, 'store']);
@@ -63,7 +68,8 @@ Route::group(['as' => 'api.'], function () {
     Route::post('/favorite/{id}', [FavoriteController::class, 'toggle'])->name('favorite.toggle');
 
     //reviews
-    Route::resource('reviews', ReviewController::class);
+    Route::resource('reviews', ReviewController::class)->except(['index']);
+    Route::get('reviews/service/{serviceId}', [ReviewController::class, 'byService'])->name('reviews.by-service');
 
     //business
     Route::resource('business', BusinessController::class)->middleware('auth.basic:users,phone');
@@ -106,8 +112,32 @@ Route::group(['as' => 'api.'], function () {
     Route::post('stoptmyservice/{id}', [ServiceController::class, 'stopmyservice'])->middleware('auth.basic:users,phone');
     Route::put('editservice/{id}', [ServiceController::class, 'editservice'])->middleware('auth.basic:users,phone');
 
+    // ── Chat ──────────────────────────────────────────────────────────────────
+    Route::prefix('chat')->middleware('auth.basic:users,phone')->group(function () {
+        Route::get('conversations',  [ApiChatController::class, 'conversations']);
+        Route::get('unread',         [ApiChatController::class, 'unreadCount']);
+        Route::get('{userId}',       [ApiChatController::class, 'show']);
+        Route::post('{userId}',      [ApiChatController::class, 'store']);
+        Route::delete('{messageId}', [ApiChatController::class, 'destroy']);
+    });
+
+    // ── Payment ───────────────────────────────────────────────────────────────
+    Route::prefix('payment')->middleware('auth.basic:users,phone')->group(function () {
+        Route::get('{requestId}',                    [ApiPaymentController::class, 'show']);
+        Route::post('{requestId}/stripe/intent',     [ApiPaymentController::class, 'createStripeIntent']);
+        Route::post('{requestId}/stripe/confirm',    [ApiPaymentController::class, 'confirmStripe']);
+        Route::post('{requestId}/paypal/create',     [ApiPaymentController::class, 'createPaypalOrder']);
+        Route::post('{requestId}/paypal/capture',    [ApiPaymentController::class, 'capturePaypalOrder']);
+        Route::post('{requestId}/bank-transfer',     [ApiPaymentController::class, 'bankTransfer']);
+        Route::post('{requestId}/test',              [ApiPaymentController::class, 'testPay']);
+    });
+
     //logout for api users
     Route::post('/logout', function () {
+        $user = Auth::guard('users')->user();
+        if ($user) {
+            $user->updateQuietly(['last_seen_at' => null]);
+        }
         Auth::guard('users')->logout();
         return response()->json([
             'status' => true,

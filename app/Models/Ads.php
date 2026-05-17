@@ -11,9 +11,17 @@ class Ads extends Model
     use HasFactory;
 
     protected $fillable = [
-        'description',
         'title',
+        'description',
         'image',
+        'link',
         'is_active',
     ];
+
+    public function getImageUrlAttribute(): string
+    {
+        if (!$this->image) return asset('assets/img/elements/5.png');
+        if (str_starts_with($this->image, 'http')) return $this->image;
+        return asset('storage/' . $this->image);
+    }
 }

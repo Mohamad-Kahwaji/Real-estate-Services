@@ -18,12 +18,39 @@ use Termwind\Components\Raw;
 class ServiceController extends Controller
 {
 public function allser(Request $request){
-    $services = Service::with(['business', 'category', 'subcategory'])
+    $term = $request->search ? '%' . $request->search . '%' : null;
+
+    $query = Service::with(['business.city', 'category', 'subcategory'])
         ->when($request->status, fn($q) => $q->where('status', $request->status))
-        ->when($request->search, fn($q) => $q->where('title', 'like', '%' . $request->search . '%'))
-        ->latest()
-        ->get();
-    return view('super_admin.allservices', compact('services'));
+        ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
+        ->when($request->subcategory_id, fn($q) => $q->where('subcategory_id', $request->subcategory_id))
+        ->when($request->services_type, fn($q) => $q->where('services_type', $request->services_type))
+        ->when($request->city_id, fn($q) => $q->whereHas('business', fn($b) => $b->where('city_id', $request->city_id)))
+        ->when($request->price_min, fn($q) => $q->where('price_usd', '>=', $request->price_min))
+        ->when($request->price_max, fn($q) => $q->where('price_usd', '<=', $request->price_max))
+        ->when($term, fn($q) => $q->where(fn($q2) =>
+            $q2->where('title', 'like', $term)->orWhere('description', 'like', $term)
+        ));
+
+    $services = $query->latest()->paginate(15)->withQueryString();
+
+    // fuzzy fallback — search word by word
+    if ($services->isEmpty() && $request->search) {
+        $words = array_filter(explode(' ', $request->search));
+        $services = Service::with(['business.city', 'category', 'subcategory'])
+            ->where(function($q) use ($words) {
+                foreach ($words as $word) {
+                    $q->orWhere('title', 'like', '%' . $word . '%');
+                }
+            })
+            ->latest()->paginate(15)->withQueryString();
+    }
+
+    $cities       = \App\Models\City::orderBy('name_ar')->get();
+    $categories   = \App\Models\Category::orderBy('name_ar')->get();
+    $subcategories= \App\Models\Subcategory::orderBy('name_ar')->get();
+
+    return view('super_admin.allservices', compact('services', 'cities', 'categories', 'subcategories'));
 }
 public function myservice()
 {

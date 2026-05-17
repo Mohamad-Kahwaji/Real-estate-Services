@@ -68,9 +68,23 @@ public function fieldValues()
         'longitude',
         'price_usd',
         'price_syp',
-
-
     ];
+
+    public function getImageUrlAttribute(): string
+    {
+        if (!$this->image) {
+            return "https://picsum.photos/seed/svc{$this->id}/600/400";
+        }
+        if (str_starts_with($this->image, 'http')) {
+            return $this->image;
+        }
+        return asset('storage/' . $this->image);
+    }
+
+    public function getLocationNameAttribute(): string
+    {
+        return $this->business?->city?->name_en ?? 'Unknown Location';
+    }
 
 
 

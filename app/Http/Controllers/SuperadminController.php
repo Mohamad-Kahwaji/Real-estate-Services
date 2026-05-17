@@ -70,9 +70,10 @@ class SuperadminController extends Controller
     }
 
     public function adminindex(){
-      $admins = Admin::with('permissions')->get();
+      $admins = Admin::with(['roles.permissions', 'permissions'])->get();
       $allPermissions = \Spatie\Permission\Models\Permission::where('guard_name', 'admins')->get();
-      return view('super_admin.admins', compact('admins', 'allPermissions'));
+      $roles = \Spatie\Permission\Models\Role::where('guard_name', 'admins')->with('permissions')->get();
+      return view('super_admin.admins', compact('admins', 'allPermissions', 'roles'));
     }
 
     public function updateProfile(Request $request)

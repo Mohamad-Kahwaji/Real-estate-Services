@@ -1,5 +1,14 @@
+@php $isRtl = app()->getLocale() === 'ar'; @endphp
 <!DOCTYPE html>
-<html lang="en" class="layout-menu-fixed layout-compact" data-assets-path="{{ asset('/assets') . '/' }}" dir="ltr" data-skin="default" data-base-url="{{ url('/') }}" data-framework="laravel" data-bs-theme="light" data-template="vertical-menu-template">
+<html lang="{{ app()->getLocale() }}"
+      class="layout-menu-fixed layout-compact"
+      data-assets-path="{{ asset('/assets') . '/' }}"
+      dir="{{ $isRtl ? 'rtl' : 'ltr' }}"
+      data-skin="default"
+      data-base-url="{{ url('/') }}"
+      data-framework="laravel"
+      data-bs-theme="light"
+      data-template="vertical-menu-template">
 
 <head>
     <meta charset="utf-8" />
@@ -26,6 +35,12 @@
 
     @include('layouts/sections/styles')
     @include('layouts/sections/scriptsIncludes')
+
+    {{-- Arabic font (Cairo) --}}
+    @if($isRtl)
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('css/rtl.css') }}"/>
+    @endif
 
     {{-- Leaflet CSS --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />

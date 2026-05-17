@@ -1,6 +1,15 @@
 @php
 use Illuminate\Support\Facades\Route;
 @endphp
+
+{{-- Role-based sidebar --}}
+@if(auth('superadmins')->check())
+    @include('super_admin.partials.sidebar')
+@elseif(auth('admins')->check())
+    @include('admin.partials.sidebar')
+@elseif(auth('users')->check())
+    @include('users.partials.sidebar')
+@else
 <aside id="layout-menu" class="layout-menu menu-vertical menu">
 
     <!-- ! Hide app brand if navbar-full -->
@@ -75,3 +84,4 @@ use Illuminate\Support\Facades\Route;
     </ul>
 
 </aside>
+@endif {{-- end admin conditional --}}

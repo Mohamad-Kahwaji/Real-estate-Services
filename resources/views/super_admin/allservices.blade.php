@@ -282,7 +282,7 @@
         <p>Browse and inspect all platform services</p>
     </div>
     <div class="svc-count-badge">
-        {{ $services->count() }} {{ Str::plural('Service', $services->count()) }}
+        {{ $services->total() }} {{ Str::plural('Service', $services->total()) }}
     </div>
 </div>
 
@@ -293,44 +293,80 @@
   $approvedCount = \App\Models\Service::where('status','approved')->count();
   $rejectedCount = \App\Models\Service::where('status','rejected')->count();
 @endphp
-<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
-    <div class="d-flex gap-2 flex-wrap">
-        <a href="{{ route('allserviesad') }}"
-           class="btn btn-sm {{ !request('status') ? 'btn-primary' : 'btn-outline-secondary' }} rounded-pill fw-bold">
-            All ({{ $allCount }})
-        </a>
-        <a href="{{ route('allserviesad') }}?status=pending{{ request('search') ? '&search='.request('search') : '' }}"
-           class="btn btn-sm {{ request('status')==='pending' ? 'btn-warning text-dark' : 'btn-outline-warning' }} rounded-pill fw-bold">
-            Pending ({{ $pendingCount }})
-        </a>
-        <a href="{{ route('allserviesad') }}?status=approved{{ request('search') ? '&search='.request('search') : '' }}"
-           class="btn btn-sm {{ request('status')==='approved' ? 'btn-success' : 'btn-outline-success' }} rounded-pill fw-bold">
-            Approved ({{ $approvedCount }})
-        </a>
-        <a href="{{ route('allserviesad') }}?status=rejected{{ request('search') ? '&search='.request('search') : '' }}"
-           class="btn btn-sm {{ request('status')==='rejected' ? 'btn-danger' : 'btn-outline-danger' }} rounded-pill fw-bold">
-            Rejected ({{ $rejectedCount }})
-        </a>
-    </div>
-    <form method="GET" action="{{ route('allserviesad') }}" class="d-flex gap-2">
-        @if(request('status'))
-            <input type="hidden" name="status" value="{{ request('status') }}">
-        @endif
-        <input type="text" name="search" value="{{ request('search') }}"
-               class="form-control form-control-sm rounded-pill"
-               style="min-width:220px;"
-               placeholder="Search by title...">
-        <button type="submit" class="btn btn-sm btn-primary rounded-pill fw-bold">
-            <i class="ri-search-line me-1"></i>Search
-        </button>
-        @if(request('search'))
-            <a href="{{ route('allserviesad') }}{{ request('status') ? '?status='.request('status') : '' }}"
-               class="btn btn-sm btn-outline-secondary rounded-pill">
-                <i class="ri-close-line"></i>
-            </a>
-        @endif
-    </form>
+{{-- Status pills --}}
+<div class="d-flex gap-2 flex-wrap mb-3">
+    <a href="{{ route('allserviesad') }}{{ request()->except('status') ? '?'.http_build_query(request()->except('status')) : '' }}"
+       class="btn btn-sm {{ !request('status') ? 'btn-primary' : 'btn-outline-secondary' }} rounded-pill fw-bold">
+        All ({{ $allCount }})
+    </a>
+    <a href="{{ route('allserviesad') }}?{{ http_build_query(array_merge(request()->except('status'), ['status'=>'pending'])) }}"
+       class="btn btn-sm {{ request('status')==='pending' ? 'btn-warning text-dark' : 'btn-outline-warning' }} rounded-pill fw-bold">
+        Pending ({{ $pendingCount }})
+    </a>
+    <a href="{{ route('allserviesad') }}?{{ http_build_query(array_merge(request()->except('status'), ['status'=>'approved'])) }}"
+       class="btn btn-sm {{ request('status')==='approved' ? 'btn-success' : 'btn-outline-success' }} rounded-pill fw-bold">
+        Approved ({{ $approvedCount }})
+    </a>
+    <a href="{{ route('allserviesad') }}?{{ http_build_query(array_merge(request()->except('status'), ['status'=>'rejected'])) }}"
+       class="btn btn-sm {{ request('status')==='rejected' ? 'btn-danger' : 'btn-outline-danger' }} rounded-pill fw-bold">
+        Rejected ({{ $rejectedCount }})
+    </a>
 </div>
+
+{{-- Active filter tags --}}
+@if(request()->hasAny(['search', 'city_id', 'category_id', 'subcategory_id', 'services_type', 'price_min', 'price_max']))
+<div class="d-flex align-items-center flex-wrap gap-2 mb-3"
+     style="background:#f8f9ff;border-radius:12px;padding:12px 16px;border:1px solid #eef0ff;">
+    <span style="font-size:11px;font-weight:800;color:#b0b8c4;letter-spacing:.08em;text-transform:uppercase;margin-right:4px;">Filters</span>
+    @if(request('search'))
+        <span style="background:#696cff18;color:#696cff;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;">
+            <i class="ri-search-line me-1"></i>"{{ request('search') }}"
+        </span>
+    @endif
+    @if(request('city_id'))
+        @php $ac = $cities->firstWhere('id', request('city_id')); @endphp
+        @if($ac)
+        <span style="background:#00cfe818;color:#00cfe8;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;">
+            <i class="ri-map-pin-line me-1"></i>{{ $ac->name_ar ?? $ac->name_en }}
+        </span>
+        @endif
+    @endif
+    @if(request('category_id'))
+        @php $acc = $categories->firstWhere('id', request('category_id')); @endphp
+        @if($acc)
+        <span style="background:#ff9f4318;color:#ff9f43;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;">
+            <i class="ri-layout-grid-line me-1"></i>{{ $acc->name_ar ?? $acc->name_en }}
+        </span>
+        @endif
+    @endif
+    @if(request('services_type'))
+        <span style="background:#28c76f18;color:#28c76f;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;">
+            <i class="ri-exchange-line me-1"></i>{{ ucfirst(request('services_type')) }}
+        </span>
+    @endif
+    @if(request('price_min') || request('price_max'))
+        <span style="background:#ea545518;color:#ea5455;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;">
+            <i class="ri-money-dollar-circle-line me-1"></i>
+            ${{ request('price_min', '0') }} – ${{ request('price_max', '∞') }}
+        </span>
+    @endif
+    <a href="{{ route('allserviesad') }}{{ request('status') ? '?status='.request('status') : '' }}"
+       style="margin-left:auto;font-size:12px;color:#ea5455;font-weight:700;text-decoration:none;">
+        <i class="ri-close-line me-1"></i>Clear all
+    </a>
+    <span style="font-size:12px;color:#8592a3;">{{ $services->total() }} {{ Str::plural('result', $services->total()) }}</span>
+</div>
+@endif
+
+@if(request('search'))
+    <div class="mb-3" style="font-size:13px;color:#8592a3;">
+        Showing results for <strong style="color:#696cff;">"{{ request('search') }}"</strong>
+        — {{ $services->total() }} {{ Str::plural('result', $services->total()) }}
+        @if($services->total() > 0 && !\App\Models\Service::where('title','like','%'.request('search').'%')->exists())
+            <span class="badge bg-warning text-dark ms-2">Similar results</span>
+        @endif
+    </div>
+@endif
 
 @if(session('success'))
     <div class="alert alert-success rounded-4 border-0 shadow-sm mb-4">
@@ -370,7 +406,7 @@
                 <div class="service-img-wrap">
                     <img
                         class="service-img"
-                        src="{{ $service->image ? asset('storage/'.$service->image) : asset('assets/img/elements/5.png') }}"
+                        src="{{ $service->image_url }}"
                         alt="{{ $service->title }}"
                     >
                     <div class="position-absolute top-0 start-0 m-2">
@@ -484,7 +520,7 @@
                             <div class="col-lg-7">
 
                                 <img
-                                    src="{{ $service->image ? asset('storage/'.$service->image) : asset('assets/img/elements/5.png') }}"
+                                    src="{{ $service->image_url }}"
                                     class="modal-hero"
                                     alt="{{ $service->title }}"
                                 >
@@ -652,6 +688,71 @@
     @endforelse
 
 </div>
+
+{{-- Pagination --}}
+@if($services->hasPages())
+@php
+    $currentPage = $services->currentPage();
+    $lastPage    = $services->lastPage();
+    $startPage   = max(1, $currentPage - 2);
+    $endPage     = min($lastPage, $currentPage + 2);
+@endphp
+<div class="d-flex justify-content-center align-items-center gap-1 mt-4 flex-wrap">
+
+    {{-- Previous --}}
+    @if($services->onFirstPage())
+        <button class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3" disabled>
+            <i class="ri-arrow-left-s-line"></i>
+        </button>
+    @else
+        <a href="{{ $services->previousPageUrl() }}"
+           class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3">
+            <i class="ri-arrow-left-s-line"></i>
+        </a>
+    @endif
+
+    {{-- First page + ellipsis --}}
+    @if($startPage > 1)
+        <a href="{{ $services->url(1) }}" class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3">1</a>
+        @if($startPage > 2)
+            <span class="px-1 text-muted" style="font-size:13px;">…</span>
+        @endif
+    @endif
+
+    {{-- Page window --}}
+    @for($p = $startPage; $p <= $endPage; $p++)
+        @if($p == $currentPage)
+            <button class="btn btn-sm btn-primary rounded-3 fw-bold px-3" disabled>{{ $p }}</button>
+        @else
+            <a href="{{ $services->url($p) }}" class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3">{{ $p }}</a>
+        @endif
+    @endfor
+
+    {{-- Ellipsis + last page --}}
+    @if($endPage < $lastPage)
+        @if($endPage < $lastPage - 1)
+            <span class="px-1 text-muted" style="font-size:13px;">…</span>
+        @endif
+        <a href="{{ $services->url($lastPage) }}" class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3">{{ $lastPage }}</a>
+    @endif
+
+    {{-- Next --}}
+    @if($services->hasMorePages())
+        <a href="{{ $services->nextPageUrl() }}"
+           class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3">
+            <i class="ri-arrow-right-s-line"></i>
+        </a>
+    @else
+        <button class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3" disabled>
+            <i class="ri-arrow-right-s-line"></i>
+        </button>
+    @endif
+
+</div>
+<div class="text-center mt-2" style="font-size:12px;color:#8592a3;">
+    Showing {{ $services->firstItem() }}–{{ $services->lastItem() }} of {{ $services->total() }} services
+</div>
+@endif
 
 @endsection
 

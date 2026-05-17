@@ -27,33 +27,33 @@ class BusinessController extends Controller
 
     public function create()
     {
-        return response()->json([
-            'status' => true,
-            'data' => [
-                'users' => User::all(),
-                'activetypes' => Activetype::all(),
-                'cities' => City::all(),
-            ]
-        ], 200);
+        $activetypes = Activetype::all();
+        $cities      = City::all();
+
+        return view('users.business-account', compact('activetypes', 'cities'));
     }
 
     public function store(Request $request)
     {
         $val = $request->validate([
-            'activetype_id' => 'required|exists:activetypes,id',
+            'activetype_id'  => 'required|exists:activetypes,id',
             'license_number' => 'required|integer',
-            'job_name_ar' => 'required|string',
-            'job_name_en' => 'required|string',
-            'activites' => 'required|string',
-            'details' => 'required|string',
-            'city_id' => 'required|exists:cities,id',
-            'image' => 'nullable|image',
-            'latitude' => ['nullable', 'numeric'],
-            'longitude' => ['nullable', 'numeric'],
+            'job_name_ar'    => 'required|string',
+            'job_name_en'    => 'required|string',
+            'activites'      => 'required|string',
+            'details'        => 'required|string',
+            'city_id'        => 'required|exists:cities,id',
+            'image'          => 'nullable|image|max:4096',
+            'latitude'       => ['nullable', 'numeric'],
+            'longitude'      => ['nullable', 'numeric'],
         ]);
 
+        if ($request->hasFile('image')) {
+            $val['image'] = $request->file('image')->store('businesses', 'public');
+        }
+
         $val['user_id'] = auth('users')->id();
-        $val['status'] = 'pending';
+        $val['status']  = 'pending';
 
         $business = Business::create($val);
 
@@ -61,16 +61,21 @@ class BusinessController extends Controller
             'New Business Account Request',
             'There is a new business account waiting for approval.',
             [
-                'type' => 'business_account_request',
+                'type'        => 'business_account_request',
                 'business_id' => $business->id,
             ]
         );
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Business account request submitted successfully. Please wait for approval.',
-            'data' => $business
-        ], 201);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status'  => true,
+                'message' => 'Business account request submitted successfully. Please wait for approval.',
+                'data'    => $business,
+            ], 201);
+        }
+
+        return redirect()->route('user.business.create')
+            ->with('success', 'Your business account request has been submitted. Please wait for approval.');
     }
 
     public function update(Request $request, $id)

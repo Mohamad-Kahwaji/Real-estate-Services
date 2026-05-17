@@ -10,5 +10,5 @@ class Activetype extends Model
     /** @use HasFactory<\Database\Factories\ActiveTypeFactory> */
     use HasFactory;
 
-    
+    protected $fillable = ['name'];
 }

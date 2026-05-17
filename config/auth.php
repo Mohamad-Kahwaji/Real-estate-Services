@@ -70,15 +70,15 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
         ],
         'admins' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\Admin::class),
+            'model' => App\Models\Admin::class,
         ],
         'superadmins' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\Superadmin::class),
+            'model' => App\Models\Superadmin::class,
         ],
 
         // 'users' => [

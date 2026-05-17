@@ -14,6 +14,11 @@ class Category extends Model
     {
         return $this->hasMany(Subcategory::class);
     }
+
+    public function subcategories()
+    {
+        return $this->hasMany(Subcategory::class);
+    }
     public function dynamicFields()
     {
         return $this->hasMany(DynamicField::class);

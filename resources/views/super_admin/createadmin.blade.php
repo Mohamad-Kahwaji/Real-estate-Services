@@ -2,7 +2,7 @@
 
 @section('title', 'Create Admin')
 
-@push('styles')
+@section('page-style')
 <style>
 :root {
     --accent: #696cff;
@@ -31,10 +31,12 @@
     font-weight: 700;
     letter-spacing: .8px;
     text-transform: uppercase;
-    color: #8592a3;
+    color: #3d4a5c;
     margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #f1f3f9;
+    padding: 10px 14px;
+    border-left: 4px solid var(--accent);
+    background: #f8f9ff;
+    border-radius: 0 10px 10px 0;
 }
 
 .form-control, .form-select {
@@ -113,8 +115,37 @@
 .btn-cancel:hover { background: #e8eaf2; }
 
 .error-msg { font-size: 12px; color: #ea5455; margin-top: 5px; display: block; }
+
+/* ── Role Selection Cards ── */
+.role-card {
+    position:relative; display:flex; align-items:flex-start; gap:14px;
+    background:#fff; border:2px solid #e8eaf2; border-radius:14px;
+    padding:14px 16px; cursor:pointer; width:100%;
+    transition:border-color .2s, background .2s, box-shadow .2s; margin-bottom:8px;
+}
+.role-card:last-child { margin-bottom:0; }
+.role-card:hover { border-color:#9c9eff; background:#fafaff; box-shadow:0 3px 12px rgba(105,108,255,.08); }
+.role-card:has(input:checked) { border-color:var(--accent); background:var(--accent-soft); box-shadow:0 0 0 4px rgba(105,108,255,.12); }
+.role-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+.role-card-icon {
+    width:42px; height:42px; background:#f4f5fa; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; color:#8592a3; flex-shrink:0; transition:all .2s;
+}
+.role-card:has(input:checked) .role-card-icon { background:#dfe0ff; color:var(--accent); }
+.role-card-body { flex:1; min-width:0; }
+.role-card-name { font-size:13px; font-weight:700; color:#1e293b; margin-bottom:7px; }
+.role-card-perms { display:flex; flex-wrap:wrap; gap:5px; }
+.role-perm-tag { background:#f4f5fa; color:#5d6a82; padding:3px 9px; border-radius:6px; font-size:11px; font-weight:600; display:inline-block; transition:all .2s; }
+.role-card:has(input:checked) .role-perm-tag { background:#dfe0ff; color:var(--accent); }
+.role-check {
+    width:24px; height:24px; border-radius:50%; border:2px solid #d5d9e3;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:transparent; flex-shrink:0; margin-top:2px; transition:all .25s;
+}
+.role-card:has(input:checked) .role-check { background:var(--accent); border-color:var(--accent); color:#fff; }
 </style>
-@endpush
+@endsection
 
 @section('content')
 
@@ -181,9 +212,47 @@
                         </div>
                     </div>
 
-                    {{-- Permissions --}}
-                    <div class="form-section-title">Permissions</div>
+                    {{-- Roles (multi-select) --}}
+                    <div class="form-section-title">
+                        Assign Roles
+                        <span style="font-size:11px;font-weight:400;color:#8592a3;text-transform:none;letter-spacing:0;">— يمكن اختيار أكثر من رول</span>
+                    </div>
 
+                    @php $rolePermissionsMap = $roles->mapWithKeys(fn($r) => [$r->name => $r->permissions->pluck('name')]); @endphp
+                    <div id="rolePermissionsData" data-map="{{ json_encode($rolePermissionsMap) }}" style="display:none;"></div>
+
+                    <div class="mb-1">
+                        @foreach($roles as $role)
+                        <label class="role-card" for="role_{{ $role->id }}">
+                            <input type="checkbox" name="roles[]" value="{{ $role->name }}"
+                                   id="role_{{ $role->id }}" class="role-cb"
+                                   {{ in_array($role->name, old('roles', [])) ? 'checked' : '' }}>
+                            <div class="role-card-icon"><i class="ri ri-shield-star-line"></i></div>
+                            <div class="role-card-body">
+                                <div class="role-card-name">{{ $role->name }}</div>
+                                <div class="role-card-perms">
+                                    @forelse($role->permissions as $rp)
+                                        <span class="role-perm-tag">{{ $rp->name }}</span>
+                                    @empty
+                                        <span style="font-size:11px;color:#8592a3;font-style:italic;">No permissions assigned yet</span>
+                                    @endforelse
+                                </div>
+                            </div>
+                            <div class="role-check"><i class="ri ri-check-line"></i></div>
+                        </label>
+                        @endforeach
+                    </div>
+                    @error('roles') <span class="error-msg d-block mt-2">{{ $message }}</span> @enderror
+
+                    {{-- Permissions --}}
+                    <div class="form-section-title" style="margin-top:24px;">
+                        Extra Permissions
+                        <span style="font-size:11px;font-weight:400;color:#8592a3;text-transform:none;letter-spacing:0;">
+                            — optional, added on top of the role
+                        </span>
+                    </div>
+
+                    <div style="background:#fafbff;border-radius:14px;padding:16px;border:1.5px solid #e8eaf2;">
                     @if($permissions->count())
                     <label class="select-all-box">
                         <input class="form-check-input" type="checkbox" id="selectAllCreate">
@@ -207,11 +276,12 @@
                         @endforeach
                     </div>
                     @else
-                    <div class="text-center py-4" style="background:#fafbff;border-radius:14px;">
+                    <div class="text-center py-4">
                         <i class="ri ri-shield-line" style="font-size:36px;color:#c8ccda;"></i>
                         <p class="text-muted small mb-0 mt-2">No permissions available. Create permissions first.</p>
                     </div>
                     @endif
+                    </div>
 
                     @error('permissions') <span class="error-msg">{{ $message }}</span> @enderror
 
@@ -233,19 +303,34 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const selectAll = document.getElementById('selectAllCreate');
+    const selectAll  = document.getElementById('selectAllCreate');
     const checkboxes = document.querySelectorAll('.perm-create-cb');
-    if (!selectAll) return;
+    const roleMap    = JSON.parse(document.getElementById('rolePermissionsData').dataset.map || '{}');
 
-    function syncState() {
+    function syncSelectAll() {
+        if (!selectAll) return;
         const checked = [...checkboxes].filter(c => c.checked).length;
         selectAll.checked       = checkboxes.length > 0 && checked === checkboxes.length;
         selectAll.indeterminate = checked > 0 && checked < checkboxes.length;
     }
 
-    selectAll.addEventListener('change', () => checkboxes.forEach(c => c.checked = selectAll.checked));
-    checkboxes.forEach(c => c.addEventListener('change', syncState));
-    syncState();
+    // Multi-role: merge permissions from all checked roles
+    document.querySelectorAll('.role-cb').forEach(cb => {
+        cb.addEventListener('change', function () {
+            const selectedRoles = [...document.querySelectorAll('.role-cb:checked')].map(c => c.value);
+            const merged = selectedRoles.reduce((acc, name) => {
+                return [...new Set([...acc, ...(roleMap[name] || [])])];
+            }, []);
+            checkboxes.forEach(c => { c.checked = merged.includes(c.value); });
+            syncSelectAll();
+        });
+    });
+
+    if (selectAll) {
+        selectAll.addEventListener('change', () => checkboxes.forEach(c => c.checked = selectAll.checked));
+    }
+    checkboxes.forEach(c => c.addEventListener('change', syncSelectAll));
+    syncSelectAll();
 });
 </script>
 @endpush

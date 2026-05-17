@@ -133,9 +133,14 @@
         <h4><i class="ri ri-shield-star-line me-2" style="color:#696cff;"></i>Roles & Permissions</h4>
         <p>Define roles and assign permissions to control admin access</p>
     </div>
-    <a href="{{ route('permissions.create') }}" class="btn-create">
-        <i class="ri ri-add-line"></i> Create Permission
-    </a>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn-create" data-bs-toggle="modal" data-bs-target="#createRoleModal">
+            <i class="ri ri-shield-star-line"></i> Create Role
+        </button>
+        <a href="{{ route('permissions.create') }}" class="btn-create" style="background:linear-gradient(135deg,#28c76f,#48da89);">
+            <i class="ri ri-add-line"></i> Create Permission
+        </a>
+    </div>
 </div>
 
 {{-- Stats --}}
@@ -276,5 +281,127 @@
         </table>
     </div>
 </div>
+
+{{-- ── Create Role Modal ────────────────────────────────── --}}
+<div class="modal fade" id="createRoleModal" tabindex="-1" aria-labelledby="createRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="border-radius:20px;border:0;box-shadow:0 20px 60px rgba(105,108,255,.18);">
+
+            <div class="modal-header" style="background:linear-gradient(135deg,#696cff,#9c9eff);border-radius:20px 20px 0 0;border:0;padding:20px 28px;">
+                <h5 class="modal-title" id="createRoleModalLabel" style="color:#fff;font-weight:800;font-size:17px;">
+                    <i class="ri ri-shield-star-line me-2"></i>Create New Role
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="{{ route('roles.store') }}" method="POST">
+                @csrf
+                <div class="modal-body" style="padding:28px;">
+
+                    {{-- Role Name --}}
+                    <div class="mb-4">
+                        <label class="form-label" style="font-weight:700;color:#1e293b;font-size:13px;">
+                            <i class="ri ri-shield-star-line me-1" style="color:#696cff;"></i>Role Name <span style="color:#ea5455;">*</span>
+                        </label>
+                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                               placeholder="e.g. content-manager"
+                               value="{{ old('name') }}"
+                               style="border-radius:12px;border:1.5px solid #e8eaf2;padding:12px 16px;font-size:14px;">
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Permissions --}}
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <label class="form-label mb-0" style="font-weight:700;color:#1e293b;font-size:13px;">
+                                <i class="ri ri-key-2-line me-1" style="color:#28c76f;"></i>Permissions
+                            </label>
+                            <div class="d-flex gap-2">
+                                <button type="button" onclick="toggleAll(true)"
+                                        style="font-size:11px;font-weight:700;color:#696cff;background:#eef0ff;border:0;border-radius:8px;padding:4px 12px;cursor:pointer;">
+                                    Select All
+                                </button>
+                                <button type="button" onclick="toggleAll(false)"
+                                        style="font-size:11px;font-weight:700;color:#ea5455;background:#fdeaea;border:0;border-radius:8px;padding:4px 12px;cursor:pointer;">
+                                    Clear All
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="background:#fafbff;border-radius:14px;border:1.5px solid #e8eaf2;padding:16px;max-height:260px;overflow-y:auto;">
+                            @if($permissions->isEmpty())
+                                <p style="color:#8592a3;font-size:13px;text-align:center;margin:0;">No permissions found. Create permissions first.</p>
+                            @else
+                                <div class="row g-2" id="permissionsContainer">
+                                    @foreach($permissions as $perm)
+                                    <div class="col-6 col-md-4">
+                                        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;cursor:pointer;border:1.5px solid #e8eaf2;background:#fff;transition:.15s;width:100%;"
+                                               onmouseover="this.style.borderColor='#696cff';this.style.background='#f2f0ff'"
+                                               onmouseout="if(!this.querySelector('input').checked){this.style.borderColor='#e8eaf2';this.style.background='#fff';}">
+                                            <input type="checkbox" name="permissions[]" value="{{ $perm->name }}"
+                                                   style="accent-color:#696cff;width:16px;height:16px;flex-shrink:0;"
+                                                   onchange="updateLabel(this)"
+                                                   {{ is_array(old('permissions')) && in_array($perm->name, old('permissions')) ? 'checked' : '' }}>
+                                            <span style="font-size:12px;font-weight:600;color:#1e293b;line-height:1.3;">{{ $perm->name }}</span>
+                                        </label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                        <div style="font-size:11px;color:#8592a3;margin-top:8px;">
+                            <span id="selectedCount">0</span> permission(s) selected
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer" style="border-top:1px solid #f0eef8;padding:16px 28px;border-radius:0 0 20px 20px;">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                            style="border-radius:10px;font-weight:700;padding:10px 20px;">Cancel</button>
+                    <button type="submit" class="btn-create" style="padding:10px 24px;">
+                        <i class="ri ri-save-line"></i> Create Role
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+function toggleAll(check) {
+    document.querySelectorAll('#permissionsContainer input[type=checkbox]').forEach(cb => {
+        cb.checked = check;
+        updateLabel(cb);
+    });
+}
+
+function updateLabel(cb) {
+    const label = cb.closest('label');
+    if (cb.checked) {
+        label.style.borderColor = '#696cff';
+        label.style.background  = '#f2f0ff';
+    } else {
+        label.style.borderColor = '#e8eaf2';
+        label.style.background  = '#fff';
+    }
+    document.getElementById('selectedCount').textContent =
+        document.querySelectorAll('#permissionsContainer input:checked').length;
+}
+
+@if($errors->any())
+    document.addEventListener('DOMContentLoaded', () => {
+        new bootstrap.Modal(document.getElementById('createRoleModal')).show();
+    });
+@endif
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#permissionsContainer input:checked').forEach(updateLabel);
+});
+</script>
+@endpush
 
 @endsection

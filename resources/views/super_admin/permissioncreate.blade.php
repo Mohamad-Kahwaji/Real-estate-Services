@@ -259,6 +259,35 @@
                         <div class="invalid-feedback d-block mb-3">{{ $message }}</div>
                     @enderror
 
+                    {{-- Assign to Roles --}}
+                    <div class="section-label" style="margin-top:24px;">Assign to Roles <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></div>
+
+                    @if($roles->count())
+                    <div class="row g-2 mb-4" id="rolesContainer">
+                        @foreach($roles as $role)
+                        <div class="col-6 col-md-4">
+                            <label style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;
+                                          cursor:pointer;border:1.5px solid #e8eaf2;background:#fafbff;transition:.15s;width:100%;"
+                                   onmouseover="this.style.borderColor='#696cff';this.style.background='#f2f0ff'"
+                                   onmouseout="if(!this.querySelector('input').checked){this.style.borderColor='#e8eaf2';this.style.background='#fafbff';}">
+                                <input type="checkbox" name="roles[]" value="{{ $role->name }}"
+                                       style="accent-color:#696cff;width:16px;height:16px;flex-shrink:0;"
+                                       onchange="highlightRole(this)"
+                                       {{ is_array(old('roles')) && in_array($role->name, old('roles')) ? 'checked' : '' }}>
+                                <div>
+                                    <div style="font-size:13px;font-weight:700;color:#1e293b;">{{ $role->name }}</div>
+                                    <div style="font-size:11px;color:#8592a3;">{{ $role->permissions->count() }} perms</div>
+                                </div>
+                            </label>
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div style="background:#fafbff;border-radius:12px;padding:16px;color:#8592a3;font-size:13px;margin-bottom:16px;">
+                        No admin roles found. <a href="{{ route('roleindex') }}" style="color:#696cff;">Create roles first.</a>
+                    </div>
+                    @endif
+
                     {{-- Actions --}}
                     <div class="d-flex align-items-center gap-3 pt-3" style="border-top:1px solid #f0eef8;">
                         <a href="{{ route('roleindex') }}" class="btn-cancel">
@@ -307,5 +336,23 @@
 
     </div>
 </div>
+
+@push('scripts')
+<script>
+function highlightRole(cb) {
+    const label = cb.closest('label');
+    if (cb.checked) {
+        label.style.borderColor = '#696cff';
+        label.style.background  = '#f2f0ff';
+    } else {
+        label.style.borderColor = '#e8eaf2';
+        label.style.background  = '#fafbff';
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#rolesContainer input:checked').forEach(highlightRole);
+});
+</script>
+@endpush
 
 @endsection

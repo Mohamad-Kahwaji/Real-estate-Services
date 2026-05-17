@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Payment;
 
 class ServiceRequest extends Model
 {
@@ -11,6 +12,7 @@ class ServiceRequest extends Model
         'service_id',
         'business_id',
         'status',
+        'payment_status',
         'image',
         'quantity',
         'needed_at',
@@ -30,5 +32,10 @@ class ServiceRequest extends Model
     public function business()
     {
         return $this->belongsTo(Business::class);
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
     }
 }

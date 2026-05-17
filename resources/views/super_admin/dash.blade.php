@@ -7,85 +7,127 @@
   /* ── Profile Hero ── */
   .hero-card {
     background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 28px rgba(105,108,255,.13);
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(105,108,255,.16);
     overflow: hidden;
   }
   .hero-cover {
-    background: linear-gradient(135deg, #696cff 0%, #9c9eff 100%);
-    height: 80px;
+    background: linear-gradient(135deg, #4a50e8 0%, #696cff 45%, #8e6fff 75%, #b06bff 100%);
+    height: 160px;
     position: relative;
+    overflow: hidden;
   }
+  /* large circle top-right */
   .hero-cover::before {
     content: '';
     position: absolute;
-    top: -40px; right: -40px;
-    width: 160px; height: 160px;
-    background: rgba(255,255,255,.08);
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    background: rgba(255,255,255,.07);
     border-radius: 50%;
   }
+  /* medium circle bottom-left */
   .hero-cover::after {
     content: '';
     position: absolute;
-    bottom: -30px; right: 120px;
-    width: 100px; height: 100px;
+    bottom: -50px; left: -30px;
+    width: 170px; height: 170px;
     background: rgba(255,255,255,.05);
     border-radius: 50%;
   }
+  .hero-cover-dot1 {
+    position: absolute; top: 20px; left: 42%;
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,.06);
+    border-radius: 50%;
+  }
+  .hero-cover-dot2 {
+    position: absolute; bottom: 10px; right: 180px;
+    width: 50px; height: 50px;
+    background: rgba(255,255,255,.08);
+    border-radius: 50%;
+  }
+  .hero-cover-label {
+    position: absolute;
+    top: 18px; right: 22px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.18);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 30px;
+    padding: 5px 14px;
+    font-size: 12px; font-weight: 700; color: #fff;
+  }
   .hero-body {
     padding: 0 28px 24px;
+    position: relative;
+  }
+  .hero-ava-wrap {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 14px;
   }
   .hero-ava {
-    width: 88px; height: 88px;
+    width: 100px; height: 100px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #696cff, #9c9eff);
+    background: linear-gradient(135deg, #696cff, #b06bff);
     border: 4px solid #fff;
-    box-shadow: 0 6px 22px rgba(105,108,255,.3);
+    box-shadow: 0 8px 28px rgba(105,108,255,.38);
     display: flex; align-items: center; justify-content: center;
-    font-size: 34px; font-weight: 800; color: #fff;
-    margin-top: -44px;
+    font-size: 32px; font-weight: 800; color: #fff;
+    margin-top: -50px;
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
   }
+  .hero-ava-online {
+    width: 16px; height: 16px;
+    background: #28c76f;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 4px; right: 4px;
+  }
+  .edit-profile-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 18px; border-radius: 12px;
+    font-size: 12px; font-weight: 700;
+    background: #f5f4ff; color: #696cff;
+    border: 1.5px solid #d5d8ff; cursor: pointer;
+    transition: .2s;
+  }
+  .edit-profile-btn:hover { background: #696cff; color: #fff; border-color: #696cff; }
   .hero-name {
-    font-size: 20px; font-weight: 800; color: #312d4b;
-    margin: 0 0 4px;
+    font-size: 22px; font-weight: 800; color: #312d4b;
+    margin: 0 0 3px;
   }
   .hero-email {
     font-size: 13px; color: #97939e; margin: 0 0 10px;
   }
   .hero-role {
     display: inline-flex; align-items: center; gap: 6px;
-    background: #eef0ff; color: #696cff;
-    border-radius: 30px; padding: 5px 14px;
+    background: linear-gradient(90deg,#696cff,#9c6bff);
+    color: #fff;
+    border-radius: 30px; padding: 5px 16px;
     font-size: 12px; font-weight: 700;
-  }
-  .hero-top-row {
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(105,108,255,.3);
   }
   .hero-meta {
-    display: flex; flex-wrap: wrap; gap: 16px;
-    margin-top: 14px;
-    padding-top: 14px;
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
     border-top: 1px solid #f0eef4;
   }
-  .hero-meta-item {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 12px; color: #7c748a; font-weight: 600;
-  }
-  .hero-meta-item i { font-size: 15px; }
-  .hero-divider {
-    width: 1px; background: #f0eef4; align-self: stretch;
-  }
-  .edit-profile-btn {
+  .hero-meta-chip {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 7px 16px; border-radius: 10px;
-    font-size: 12px; font-weight: 700;
-    background: #eef0ff; color: #696cff;
-    border: 1.5px solid #d0d3ff; cursor: pointer;
-    transition: .2s; margin-top: 12px;
+    background: #faf9fc;
+    border: 1px solid #eeecf4;
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-size: 12px; color: #585164; font-weight: 600;
   }
-  .edit-profile-btn:hover { background: #696cff; color: #fff; border-color: #696cff; }
+  .hero-meta-chip i { font-size: 15px; }
   .hero-actions {
     display: flex; gap: 8px; flex-wrap: wrap;
     padding: 14px 28px;
@@ -93,8 +135,8 @@
     background: #faf9fc;
   }
   .hero-action-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 7px 16px; border-radius: 10px;
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 18px; border-radius: 12px;
     font-size: 12px; font-weight: 700;
     text-decoration: none; transition: .2s;
     background: #fff; border: 1.5px solid #e8e6ef;
@@ -103,8 +145,10 @@
   .hero-action-btn:hover {
     border-color: #696cff; color: #696cff;
     background: #eef0ff; text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(105,108,255,.15);
   }
-  .hero-action-btn i { font-size: 15px; }
+  .hero-action-btn i { font-size: 16px; }
 
   /* ── Stat Cards ── */
   .s-card {
@@ -209,7 +253,10 @@
 @endsection
 
 @section('content')
-@php $initials = strtoupper(substr($superadmin->name ?? 'S', 0, 1)); @endphp
+@php
+    $nameParts = array_filter(explode(' ', $superadmin->name ?? 'S'));
+    $initials  = strtoupper(substr($nameParts[0] ?? 'S', 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : ''));
+@endphp
 
 {{-- ═══════════════════════════════════════════════
      1. PROFILE HERO
@@ -217,60 +264,69 @@
 <div class="row g-4 mb-4">
   <div class="col-12">
     <div class="hero-card">
-      <div class="hero-cover"></div>
 
+      {{-- Cover --}}
+      <div class="hero-cover">
+        <div class="hero-cover-dot1"></div>
+        <div class="hero-cover-dot2"></div>
+        <span class="hero-cover-label">
+          <i class="ri ri-shield-star-fill"></i>Super Administrator
+        </span>
+      </div>
+
+      {{-- Body --}}
       <div class="hero-body">
-        <div class="d-flex flex-wrap gap-4 align-items-start">
 
-          {{-- Avatar --}}
-          <div class="hero-ava">{{ $initials }}</div>
-
-          {{-- Name / Email / Role / Meta --}}
-          <div class="flex-grow-1" style="min-width:200px;">
-            <h4 class="hero-name">{{ $superadmin->name ?? 'Super Admin' }}</h4>
-            <p class="hero-email">{{ $superadmin->email }}</p>
-            <div class="hero-top-row">
-              <span class="hero-role">
-                <i class="ri ri-shield-star-fill"></i>Super Administrator
-              </span>
-              <button type="button" class="edit-profile-btn"
-                      data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                <i class="ri ri-edit-line"></i>Edit Profile
-              </button>
-            </div>
-
-            <div class="hero-meta">
-              <span class="hero-meta-item">
-                <i class="ri ri-calendar-check-line" style="color:#28c76f;"></i>
-                Joined {{ $superadmin->created_at?->format('M d, Y') ?? '-' }}
-              </span>
-              <span class="hero-meta-item">
-                <i class="ri ri-time-line" style="color:#696cff;"></i>
-                {{ now()->format('l, F j, Y') }}
-              </span>
-              <span class="hero-meta-item">
-                <i class="ri ri-user-settings-line" style="color:#ff9f43;"></i>
-                {{ $activeAdmins }} active admin{{ $activeAdmins !== 1 ? 's' : '' }}
-                @if($inactiveAdmins > 0)
-                  &middot; {{ $inactiveAdmins }} inactive
-                @endif
-              </span>
-              @if($pendingBusinesses > 0)
-              <span class="hero-meta-item" style="color:#ff9f43;">
-                <i class="ri ri-building-2-line"></i>
-                {{ $pendingBusinesses }} business{{ $pendingBusinesses !== 1 ? 'es' : '' }} awaiting approval
-              </span>
-              @endif
-              @if($pendingReports > 0)
-              <span class="hero-meta-item" style="color:#ea5455;">
-                <i class="ri ri-flag-2-line"></i>
-                {{ $pendingReports }} open report{{ $pendingReports !== 1 ? 's' : '' }}
-              </span>
-              @endif
-            </div>
+        {{-- Avatar row + edit button --}}
+        <div class="hero-ava-wrap">
+          <div class="hero-ava" style="position:relative;">
+            {{ $initials }}
+            <span class="hero-ava-online"></span>
           </div>
-
+          <button type="button" class="edit-profile-btn"
+                  data-bs-toggle="modal" data-bs-target="#editProfileModal">
+            <i class="ri ri-edit-line"></i>Edit Profile
+          </button>
         </div>
+
+        {{-- Name / Email / Role --}}
+        <h4 class="hero-name">{{ $superadmin->name ?? 'Super Admin' }}</h4>
+        <p class="hero-email">{{ $superadmin->email }}</p>
+        <span class="hero-role">
+          <i class="ri ri-shield-star-fill"></i>Super Administrator
+        </span>
+
+        {{-- Meta chips --}}
+        <div class="hero-meta">
+          <span class="hero-meta-chip">
+            <i class="ri ri-calendar-check-line" style="color:#28c76f;"></i>
+            Joined {{ $superadmin->created_at?->format('M d, Y') ?? '-' }}
+          </span>
+          <span class="hero-meta-chip">
+            <i class="ri ri-time-line" style="color:#696cff;"></i>
+            {{ now()->format('l, F j, Y') }}
+          </span>
+          <span class="hero-meta-chip">
+            <i class="ri ri-user-settings-line" style="color:#ff9f43;"></i>
+            {{ $activeAdmins }} active admin{{ $activeAdmins !== 1 ? 's' : '' }}
+            @if($inactiveAdmins > 0)
+              &middot; {{ $inactiveAdmins }} inactive
+            @endif
+          </span>
+          @if($pendingBusinesses > 0)
+          <span class="hero-meta-chip" style="background:#fff8f0;border-color:#ffe4bc;color:#ff9f43;">
+            <i class="ri ri-building-2-line"></i>
+            {{ $pendingBusinesses }} businesses awaiting approval
+          </span>
+          @endif
+          @if($pendingReports > 0)
+          <span class="hero-meta-chip" style="background:#fff5f5;border-color:#ffd5d5;color:#ea5455;">
+            <i class="ri ri-flag-2-line"></i>
+            {{ $pendingReports }} open report{{ $pendingReports !== 1 ? 's' : '' }}
+          </span>
+          @endif
+        </div>
+
       </div>
 
       {{-- Quick Actions Bar --}}
@@ -300,6 +356,7 @@
           <i class="ri ri-layout-grid-line"></i>Categories
         </a>
       </div>
+
     </div>
   </div>
 </div>
