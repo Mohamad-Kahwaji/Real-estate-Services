@@ -54,7 +54,7 @@ class BusinessController extends Controller
             'longitude' => ['nullable', 'numeric'],
         ]);
 
-        $val['user_id'] = auth('users')->id();
+        $val['user_id'] = auth()->id();
         $val['status'] = 'pending';
 
         if ($request->hasFile('image')) {

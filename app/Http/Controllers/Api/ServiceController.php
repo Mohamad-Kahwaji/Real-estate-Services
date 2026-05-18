@@ -24,7 +24,7 @@ class ServiceController extends Controller
 
 public function myservice()
 {
-    $user = auth('users')->user();
+    $user = auth()->user();
 
     if (!$user) {
         return response()->json([
@@ -56,7 +56,7 @@ public function recevied(){
 
 }
 public function allservices(Request $request){
-    $user = auth('users')->user();
+    $user = auth()->user();
     $mybusinesses = $user->businesses()->pluck('id');
 
     $services = Service::with(['business', 'category', 'subcategory', 'fieldValues.dynamicField'])
@@ -212,7 +212,7 @@ public function allservices(Request $request){
         return redirect()->route('allservices',compact('pending'));
     }
     public function approverec($id){
-        $user = auth('users')->user();
+        $user = auth()->user();
 
     if (!$user->businesses) {
         return back()->with('error', 'No business account found.');
@@ -234,7 +234,7 @@ if (!$request) {
         return redirect()->route('approveserrec',response('accept'));
     }
     public function rejectedrec($id){
-        $user = auth('users')->user();
+        $user = auth()->user();
 
     if (!$user || !$user->business) {
         return back()->with('error', 'No business account found.');
@@ -282,7 +282,7 @@ if (!$request) {
 
     public function editservice($id)
 {
-    $user = auth('users')->user();
+    $user = auth()->user();
 
     if (!$user) {
         return response()->json(['message' => 'Unauthenticated.'], 401);
@@ -322,7 +322,7 @@ if (!$request) {
 
 
   public function destroy($id){
-    $user = auth('users')->user();
+    $user = auth()->user();
     if (!$user) {
         return response()->json(['message' => 'Unauthenticated'], 401);
     }
@@ -341,7 +341,7 @@ if (!$request) {
     ]);
 }
     public function stopmyservice($id){
-    $user = auth('users')->user();
+    $user = auth()->user();
     if (!$user) {
         return response()->json(['message' => 'Unauthenticated'], 401);
     }

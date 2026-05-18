@@ -38,8 +38,9 @@
 
   /* Payment badge */
   .pay-badge { display: inline-flex; align-items: center; gap: 5px; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; }
-  .pay-unpaid { background: #fdeaea; color: #ea5455; }
-  .pay-paid   { background: #e8faf0; color: #28c76f; }
+  .pay-unpaid    { background: #fdeaea; color: #ea5455; }
+  .pay-paid      { background: #e8faf0; color: #28c76f; }
+  .pay-refunded  { background: #fff3e0; color: #ff9800; }
 
   /* Details row */
   .req-details { background: #faf9fc; border-radius: 12px; padding: 10px 14px; margin: 12px 0; }
@@ -99,9 +100,25 @@
         {{-- Status + Payment badges --}}
         <div class="d-flex gap-2 flex-wrap mb-2">
           <span class="req-status status-{{ $req->status }}">{{ ucfirst($req->status) }}</span>
-          <span class="pay-badge {{ $req->payment_status === 'paid' ? 'pay-paid' : 'pay-unpaid' }}">
-            <i class="ri {{ $req->payment_status === 'paid' ? 'ri-shield-check-line' : 'ri-error-warning-line' }}"></i>
-            {{ $req->payment_status === 'paid' ? __('app.paid') : __('app.unpaid') }}
+          @php
+            $payClass = match($req->payment_status) {
+                'paid'     => 'pay-paid',
+                'refunded' => 'pay-refunded',
+                default    => 'pay-unpaid',
+            };
+            $payIcon = match($req->payment_status) {
+                'paid'     => 'ri-shield-check-line',
+                'refunded' => 'ri-arrow-go-back-line',
+                default    => 'ri-error-warning-line',
+            };
+            $payLabel = match($req->payment_status) {
+                'paid'     => __('app.paid'),
+                'refunded' => __('app.refunded'),
+                default    => __('app.unpaid'),
+            };
+          @endphp
+          <span class="pay-badge {{ $payClass }}">
+            <i class="ri {{ $payIcon }}"></i>{{ $payLabel }}
           </span>
         </div>
 
@@ -146,7 +163,7 @@
         </div>
 
         {{-- Action --}}
-        @if($req->payment_status === 'unpaid')
+        @if($req->payment_status === 'unpaid' && $req->status !== 'rejected')
           <a href="{{ route('payment.checkout', $req->id) }}" class="pay-now-btn">
             <i class="ri ri-secure-payment-line"></i>{{ __('app.pay_now') }}
           </a>

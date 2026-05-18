@@ -189,6 +189,7 @@ return [
     'pay_now'              => 'Pay Now',
     'paid'                 => 'Paid',
     'unpaid'               => 'Unpaid',
+    'refunded'             => 'Refunded',
     'total'                => 'Total',
     'quantity'             => 'Quantity',
     'price'                => 'Price',

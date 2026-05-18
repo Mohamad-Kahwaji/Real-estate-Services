@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
 use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Models\User;
 use App\Notifications\UserDatabaseNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Stripe\Stripe;
+use Stripe\Refund as StripeRefund;
 
 class ServiceRequestController extends Controller
 {
@@ -118,28 +123,89 @@ class ServiceRequestController extends Controller
             ->with('success', 'Request approved successfully.');
     }
 
-    // Reject a service request
+    // Reject a service request (and refund if already paid)
     public function reject($id)
     {
         /** @var User $user */
         $user        = auth('users')->user();
         $businessIds = $user->businesses()->pluck('id');
 
-        $serviceRequest = ServiceRequest::where('id', $id)
+        $serviceRequest = ServiceRequest::with('payment')
+            ->where('id', $id)
             ->where('status', 'pending')
             ->whereHas('service', fn ($q) => $q->whereIn('business_id', $businessIds))
             ->firstOrFail();
 
         $serviceRequest->update(['status' => 'rejected']);
 
+        // ── Refund if payment was already made ────────────────────────────────
+        $payment = $serviceRequest->payment;
+        if ($payment && $payment->status === 'paid') {
+            $refunded = $this->issueRefund($payment);
+
+            $payment->update(['status' => $refunded ? 'refunded' : 'refund_pending']);
+            $serviceRequest->update(['payment_status' => 'refunded']);
+        }
+
         $serviceRequest->user->notify(new UserDatabaseNotification(
             'Service Rejected',
-            'Your service request has been rejected.',
+            $payment && $payment->status !== 'paid'
+                ? 'Your service request has been rejected. Your payment will be refunded.'
+                : 'Your service request has been rejected.',
             ['type' => 'service', 'service_id' => $serviceRequest->service_id]
         ));
 
         return redirect()->route('incoming.user')
-            ->with('success', 'Request rejected.');
+            ->with('success', 'Request rejected.' . ($payment && $payment->status !== 'pending' ? ' Refund initiated.' : ''));
+    }
+
+    private function issueRefund(Payment $payment): bool
+    {
+        try {
+            if ($payment->payment_method === 'stripe' && $payment->transaction_id) {
+                Stripe::setApiKey(config('services.stripe.secret'));
+                StripeRefund::create(['payment_intent' => $payment->transaction_id]);
+                return true;
+            }
+
+            if ($payment->payment_method === 'paypal' && $payment->transaction_id) {
+                $accessToken = $this->getPaypalAccessToken();
+                $response = Http::withToken($accessToken)
+                    ->post($this->paypalBaseUrl() . "/v2/payments/captures/{$payment->transaction_id}/refund", [
+                        'amount' => [
+                            'value'         => number_format($payment->amount, 2, '.', ''),
+                            'currency_code' => $payment->currency,
+                        ],
+                    ]);
+                return $response->successful();
+            }
+
+            // Bank transfer & test: mark as refunded (manual process for bank)
+            return true;
+
+        } catch (\Throwable $e) {
+            Log::error('Refund failed for payment #' . $payment->id . ': ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function paypalBaseUrl(): string
+    {
+        return config('services.paypal.mode') === 'live'
+            ? 'https://api-m.paypal.com'
+            : 'https://api-m.sandbox.paypal.com';
+    }
+
+    private function getPaypalAccessToken(): string
+    {
+        $response = Http::withBasicAuth(
+            config('services.paypal.client_id'),
+            config('services.paypal.client_secret')
+        )->asForm()->post($this->paypalBaseUrl() . '/v1/oauth2/token', [
+            'grant_type' => 'client_credentials',
+        ]);
+
+        return $response->json('access_token');
     }
 
     // Approved requests received (for service owner)

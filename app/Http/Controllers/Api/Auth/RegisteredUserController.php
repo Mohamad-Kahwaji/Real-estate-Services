@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\OtpCode;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -25,17 +27,15 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('user-token')->plainTextToken;
+        event(new Registered($user));
+
+        OtpCode::sendTo($user->phone);
 
         return response()->json([
             'status'  => true,
-            'message' => 'تم إنشاء الحساب بنجاح',
-            'token'   => $token,
-            'user'    => [
-                'id'    => $user->id,
-                'name'  => $user->name,
-                'phone' => $user->phone,
-            ],
+            'step'    => 'otp_required',
+            'message' => 'تم إنشاء الحساب. تحقق من رقم هاتفك عبر واتساب.',
+            'phone'   => $user->phone,
         ], 201);
     }
 }

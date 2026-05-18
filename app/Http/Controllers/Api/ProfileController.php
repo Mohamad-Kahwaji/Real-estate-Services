@@ -13,7 +13,7 @@ class ProfileController extends Controller
 {
 
 public function index(){
-    $user = auth('users')->user();
+    $user = auth()->user();
     $accouns = Business::with(['activeType', 'city'])
         ->where('user_id', $user->id)
         ->where('status', 'approved')
@@ -32,7 +32,7 @@ public function index(){
 }
     public function edit(Request $request)
     {
-        $user = auth('users')->user();
+        $user = auth()->user();
 
         $accounts = Business::with(['activeType', 'city'])
             ->where('user_id', $user->id)
@@ -55,7 +55,7 @@ public function index(){
 
     public function update(ProfileUpdateRequest $request)
     {
-        $user = auth('users')->user();
+        $user = auth()->user();
 
         $user->fill($request->validated());
 
@@ -78,14 +78,10 @@ public function index(){
             'password' => ['required', 'current_password'],
         ]);
 
-        $user = auth('users')->user();
+        $user = auth()->user();
 
-        Auth::guard('users')->logout();
-
+        $user->tokens()->delete();
         $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
         return response()->json([
             'status' => true,

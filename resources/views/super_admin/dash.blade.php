@@ -607,8 +607,8 @@
             @forelse($recentBusinesses as $biz)
             <tr>
               <td>
-                <div style="font-weight:700;color:#312d4b;">{{ $biz->job_name_en ?? '-' }}</div>
-                <div style="font-size:11px;color:#97939e;">{{ $biz->city?->name_en ?? '' }}</div>
+                <div style="font-weight:700;color:#312d4b;">{{ app()->getLocale() === 'ar' ? ($biz->job_name_ar ?? $biz->job_name_en ?? '-') : ($biz->job_name_en ?? $biz->job_name_ar ?? '-') }}</div>
+                <div style="font-size:11px;color:#97939e;">{{ app()->getLocale() === 'ar' ? ($biz->city?->name_ar ?? '') : ($biz->city?->name_en ?? '') }}</div>
               </td>
               <td style="color:#585164;">{{ $biz->user?->name ?? '-' }}</td>
               <td>
@@ -655,7 +655,7 @@
                 <div style="font-weight:700;color:#312d4b;">{{ $svc->title }}</div>
                 <div style="font-size:11px;color:#97939e;">{{ $svc->category?->name ?? '' }}</div>
               </td>
-              <td style="color:#585164;">{{ $svc->business?->job_name_en ?? '-' }}</td>
+              <td style="color:#585164;">{{ app()->getLocale() === 'ar' ? ($svc->business?->job_name_ar ?? $svc->business?->job_name_en ?? '-') : ($svc->business?->job_name_en ?? $svc->business?->job_name_ar ?? '-') }}</td>
               <td>
                 <span class="sp sp-pending">Pending</span>
               </td>
