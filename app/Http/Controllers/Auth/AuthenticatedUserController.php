@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedUserController extends Controller
 {
+    // Returns the user login form view.
     public function create()
     {
         return view('users.auth_user.auth-login-user');
     }
 
+    // Validates credentials, checks account status, sends an OTP, and redirects to the OTP page.
     public function store(Request $request)
     {
         $request->validate([
@@ -21,27 +23,29 @@ class AuthenticatedUserController extends Controller
             'password' => 'required',
         ]);
 
-        // 1. تحقق من الاسم والباسورد
         if (! Auth::guard('users')->attempt($request->only('phone', 'password'))) {
             return back()->withErrors(['phone' => 'بيانات الدخول غير صحيحة'])->onlyInput('phone');
         }
 
         $user = Auth::guard('users')->user();
-        Auth::guard('users')->logout(); // خروج مؤقت ريثما يتحقق من OTP
+        Auth::guard('users')->logout();
 
-        // 2. أرسل OTP عبر واتساب
+        if (! $user->is_active) {
+            return back()->withErrors(['phone' => 'حسابك موقوف. تواصل مع الدعم.'])->onlyInput('phone');
+        }
+
         $sent = OtpCode::sendTo($user->phone);
 
         if (! $sent) {
             return back()->withErrors(['phone' => 'فشل إرسال رمز التحقق. حاول مجدداً.'])->onlyInput('phone');
         }
 
-        // 3. احفظ الرقم في الجلسة وانتقل لصفحة OTP
         session(['otp_phone' => $user->phone]);
 
         return redirect()->route('otp.show');
     }
 
+    // Logs out the user, clears the session, and redirects to the login page.
     public function destroy(Request $request)
     {
         $user = Auth::guard('users')->user();

@@ -8,27 +8,27 @@ use Illuminate\Support\Facades\Storage;
 
 class AdsController extends Controller
 {
-    // ── Web (user — browse active ads) ────────────────────────────
-
+    // Displays all active ads to browsing users.
     public function browse()
     {
         $ads = Ads::where('is_active', true)->latest()->get();
         return view('users.ads', compact('ads'));
     }
 
-    // ── Web (admin panel) ──────────────────────────────────────────
-
+    // Lists all ads (active and inactive) for the admin management panel.
     public function index()
     {
         $ads = Ads::latest()->get();
         return view('admin.ads.index', compact('ads'));
     }
 
+    // Returns the admin form for creating a new ad.
     public function create()
     {
         return view('admin.ads.create');
     }
 
+    // Validates, stores the uploaded image, and persists a new ad record.
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -48,12 +48,14 @@ class AdsController extends Controller
             ->with('success', __('app.ad_created'));
     }
 
+    // Returns the admin edit form pre-populated with the specified ad's data.
     public function edit(int $id)
     {
         $ad = Ads::findOrFail($id);
         return view('admin.ads.edit', compact('ad'));
     }
 
+    // Validates and updates an ad's details, replacing the image file if a new one is uploaded.
     public function update(Request $request, int $id)
     {
         $ad   = Ads::findOrFail($id);
@@ -78,6 +80,7 @@ class AdsController extends Controller
             ->with('success', __('app.ad_updated'));
     }
 
+    // Deletes an ad and removes its image from public storage.
     public function destroy(int $id)
     {
         $ad = Ads::findOrFail($id);
@@ -88,6 +91,7 @@ class AdsController extends Controller
             ->with('success', __('app.ad_deleted'));
     }
 
+    // Toggles an ad's active/inactive state.
     public function toggle(int $id)
     {
         $ad = Ads::findOrFail($id);

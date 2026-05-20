@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    // List all permissions, roles, and users for the permissions management page.
     public function index()
     {
         $permissions = Permission::with('roles')->get();
@@ -17,6 +18,7 @@ class PermissionController extends Controller
         return view('super_admin.permissioncreate', compact('permissions', 'roles', 'users'));
     }
 
+    // Show the form for creating a new permission.
     public function create()
     {
         $permissions = Permission::with('roles')->get();
@@ -25,6 +27,7 @@ class PermissionController extends Controller
         return view('super_admin.permissioncreate', compact('permissions', 'roles'));
     }
 
+    // Validate, create a permission, and assign it to the specified roles.
     public function store(Request $request)
     {
         $val = $request->validate([
@@ -47,6 +50,7 @@ class PermissionController extends Controller
         return redirect()->route('roleindex')->with('success', 'Permission created successfully.');
     }
 
+    // Permanently delete a permission by ID.
     public function destroy(int $id)
     {
         Permission::findOrFail($id)->delete();

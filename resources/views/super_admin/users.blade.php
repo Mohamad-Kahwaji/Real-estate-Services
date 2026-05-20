@@ -1,4 +1,5 @@
 @extends('layouts/contentNavbarLayout')
+{{-- Users management page: displays all registered users with status stats and allows superadmin to suspend or activate accounts. --}}
 
 @section('title', 'Users')
 
@@ -21,11 +22,7 @@
     box-shadow: var(--shadow); padding: 20px 24px;
     display: flex; align-items: center; gap: 16px;
 }
-.stat-icon {
-    width: 50px; height: 50px; border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-}
+.stat-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
 .stat-label { font-size: 12px; color: #8592a3; font-weight: 600; }
 .stat-value { font-size: 26px; font-weight: 800; line-height: 1; color: #1e293b; }
 
@@ -37,9 +34,7 @@
 }
 .table-card-header h6 { font-weight: 700; color: #1e293b; margin: 0; }
 
-.search-box {
-    position: relative; max-width: 240px;
-}
+.search-box { position: relative; max-width: 240px; }
 .search-box input {
     border-radius: 10px; border: 1.5px solid #e4e4eb;
     padding: 8px 14px 8px 36px; font-size: 13px;
@@ -54,10 +49,7 @@
     text-transform: uppercase; letter-spacing: .7px;
     color: #8592a3; border-bottom: 1px solid #f0eef8; padding: 14px 20px;
 }
-.table tbody td {
-    padding: 14px 20px; vertical-align: middle;
-    border-bottom: 1px solid #f7f7f9; font-size: 14px; color: #1e293b;
-}
+.table tbody td { padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f7f7f9; font-size: 14px; color: #1e293b; }
 .table tbody tr:last-child td { border-bottom: none; }
 .table tbody tr:hover td { background: #fafbff; }
 
@@ -67,13 +59,26 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 15px; font-weight: 800; color: #fff; flex-shrink: 0;
 }
+.user-ava.suspended { background: linear-gradient(135deg, #b0aab8, #c8ccda); }
 
 .badge-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
 .badge-accent   { background: var(--accent-soft); color: var(--accent); }
 .badge-success  { background: var(--success-soft); color: var(--success); }
 .badge-warning  { background: var(--warning-soft); color: var(--warning); }
+.badge-danger   { background: var(--danger-soft); color: var(--danger); }
 .badge-info     { background: var(--info-soft); color: var(--info); }
 .badge-gray     { background: #f1f0f4; color: #585164; }
+
+.btn-toggle-suspend {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700;
+    border: none; cursor: pointer; transition: background .18s, transform .1s;
+}
+.btn-toggle-suspend:active { transform: scale(.97); }
+.btn-suspend  { background: var(--danger-soft); color: var(--danger); }
+.btn-suspend:hover  { background: #f8c0c0; }
+.btn-activate { background: var(--success-soft); color: var(--success); }
+.btn-activate:hover { background: #b8f0d0; }
 
 .empty-state { padding: 60px 20px; text-align: center; }
 .empty-state i { font-size: 48px; color: #c8ccda; display: block; margin-bottom: 14px; }
@@ -81,6 +86,9 @@
 
 .al-alert { border-radius: 12px; padding: 12px 16px; font-size: 13px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 .al-alert-success { background: #e8f8ef; color: #1a7a45; border: 1px solid #c3e9d4; }
+.al-alert-error   { background: #fdeaea; color: #b91c1c; border: 1px solid #f5c6c6; }
+
+tr.row-suspended td { opacity: .65; }
 </style>
 @endsection
 
@@ -94,10 +102,15 @@
     </div>
 </div>
 
-{{-- Alert --}}
+{{-- Alerts --}}
 @if(session('success'))
     <div class="al-alert al-alert-success mb-4">
         <i class="ri ri-checkbox-circle-line"></i> {{ session('success') }}
+    </div>
+@endif
+@if(session('error'))
+    <div class="al-alert al-alert-error mb-4">
+        <i class="ri ri-error-warning-line"></i> {{ session('error') }}
     </div>
 @endif
 
@@ -117,22 +130,33 @@
     <div class="col-6 col-md-3">
         <div class="stat-card">
             <div class="stat-icon" style="background:#e8f8ef;">
-                <i class="ri ri-building-2-line" style="color:#28c76f;"></i>
+                <i class="ri ri-user-follow-line" style="color:#28c76f;"></i>
             </div>
             <div>
-                <div class="stat-label">With Businesses</div>
-                <div class="stat-value">{{ $users->filter(fn($u) => $u->businesses->count() > 0)->count() }}</div>
+                <div class="stat-label">Active</div>
+                <div class="stat-value">{{ $users->where('is_active', true)->count() }}</div>
             </div>
         </div>
     </div>
     <div class="col-6 col-md-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background:#fff4e5;">
-                <i class="ri ri-user-line" style="color:#ff9f43;"></i>
+            <div class="stat-icon" style="background:#fdeaea;">
+                <i class="ri ri-user-forbid-line" style="color:#ea5455;"></i>
             </div>
             <div>
-                <div class="stat-label">No Business</div>
-                <div class="stat-value">{{ $users->filter(fn($u) => $u->businesses->count() === 0)->count() }}</div>
+                <div class="stat-label">Suspended</div>
+                <div class="stat-value">{{ $users->where('is_active', false)->count() }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:#e8f8ef;">
+                <i class="ri ri-building-2-line" style="color:#28c76f;"></i>
+            </div>
+            <div>
+                <div class="stat-label">With Businesses</div>
+                <div class="stat-value">{{ $users->filter(fn($u) => $u->businesses->count() > 0)->count() }}</div>
             </div>
         </div>
     </div>
@@ -155,19 +179,23 @@
                     <th>User</th>
                     <th>Phone</th>
                     <th>Businesses</th>
+                    <th>Status</th>
                     <th>Joined</th>
-                    <th>FCM Token</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($users as $user)
-                <tr>
+                <tr class="{{ ! $user->is_active ? 'row-suspended' : '' }}">
                     <td><span class="badge-pill badge-accent">{{ $user->id }}</span></td>
                     <td>
                         <div class="d-flex align-items-center gap-3">
-                            <div class="user-ava">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>
+                            <div class="user-ava {{ ! $user->is_active ? 'suspended' : '' }}">
+                                {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                            </div>
                             <div>
                                 <div style="font-weight:700;color:#1e293b;">{{ $user->name ?? '—' }}</div>
+                                <div style="font-size:12px;color:#8592a3;">ID: {{ $user->id }}</div>
                             </div>
                         </div>
                     </td>
@@ -190,22 +218,39 @@
                             <span class="badge-pill badge-gray">None</span>
                         @endif
                     </td>
+                    <td>
+                        @if($user->is_active)
+                            <span class="badge-pill badge-success">
+                                <i class="ri ri-checkbox-circle-line"></i> Active
+                            </span>
+                        @else
+                            <span class="badge-pill badge-danger">
+                                <i class="ri ri-forbid-2-line"></i> Suspended
+                            </span>
+                        @endif
+                    </td>
                     <td style="color:#8592a3;font-size:13px;">
                         {{ $user->created_at?->format('M d, Y') ?? '—' }}
                     </td>
                     <td>
-                        @if($user->fcm_token)
-                            <span class="badge-pill badge-accent" title="{{ $user->fcm_token }}">
-                                <i class="ri ri-notification-3-line"></i> Active
-                            </span>
-                        @else
-                            <span style="color:#c8ccda;">—</span>
-                        @endif
+                        <form method="POST" action="{{ route('users.toggle-status', $user->id) }}"
+                              onsubmit="return confirm('{{ $user->is_active ? 'Suspend this user? Their businesses and services will be suspended too.' : 'Activate this user?' }}')">
+                            @csrf
+                            @if($user->is_active)
+                                <button type="submit" class="btn-toggle-suspend btn-suspend">
+                                    <i class="ri ri-forbid-2-line"></i> Suspend
+                                </button>
+                            @else
+                                <button type="submit" class="btn-toggle-suspend btn-activate">
+                                    <i class="ri ri-checkbox-circle-line"></i> Activate
+                                </button>
+                            @endif
+                        </form>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6">
+                    <td colspan="7">
                         <div class="empty-state">
                             <i class="ri ri-group-line"></i>
                             <p>No users found.</p>

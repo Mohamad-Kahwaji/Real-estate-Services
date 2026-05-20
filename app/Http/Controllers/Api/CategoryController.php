@@ -8,30 +8,14 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    // Fetches all categories and passes them to the categories view.
     public function index(){
         $categories = Category::all();
         return view('', compact('categories'));
-     /*   $categories = Category::with('subcategories')->get()->map(function ($category) {
-            return [
-                'id' => $category->id,
-                'name_ar' => $category->name_ar,
-                'name_en' => $category->name_en,
-                'subcategories' => $category->subcategories->map(function ($subcategory) {
-                    return [
-                        'id' => $subcategory->id,
-                        'name_ar' => $subcategory->name_ar,
-                        'name_en' => $subcategory->name_en,
-                    ];
-                }),
-            ];
-        });
-        return response()->json([
-          'data' => $categories,
-          'message' => 'Categories and subcategories retrieved successfully',
-        ]);*/
     }
 
 
+    // Validates and creates a new category, then attaches any submitted dynamic fields to it.
     public function store(Request $request){
         $val = $request->validate([
             'name_ar'=>'required',
@@ -63,6 +47,7 @@ class CategoryController extends Controller
     }
     }
 
+    // Updates the Arabic and English names of the specified category.
     public function update(Request $request,$id){
             $val = $request->validate([
             'name_ar'=>'required',
@@ -77,6 +62,7 @@ class CategoryController extends Controller
         }
 
 
+        // Permanently deletes the specified category and redirects to the super-admin dashboard.
         public function destroy($id){
             $rem = Category::findOrFail($id);
             $rem->delete();

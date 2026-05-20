@@ -17,7 +17,13 @@ class BusinessFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'job_name_ar'    => $this->faker->word() . '_ar',
+            'job_name_en'    => $this->faker->word() . '_en',
+            'license_number' => $this->faker->numerify('LIC-####'),
+            'activites'      => $this->faker->sentence(),
+            'details'        => $this->faker->paragraph(),
+            'status'         => 'approved',
+            'user_id'        => \App\Models\User::factory(),
         ];
     }
 }

@@ -15,16 +15,25 @@ use Illuminate\Http\Request;
 
 class BusinessController extends Controller
 {
-    public function index()
+    // List businesses with optional search (job_name_ar, job_name_en) and filter by status, city_id.
+    public function index(Request $request)
     {
+        $term = $request->search ? '%' . $request->search . '%' : null;
+
+        $businesses = Business::with(['user:id,name,phone', 'city:id,name_ar,name_en', 'activeType:id,name'])
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($request->city_id, fn($q) => $q->where('city_id', $request->city_id))
+            ->when($term, fn($q) => $q->where(fn($q2) =>
+                $q2->where('job_name_ar', 'like', $term)
+                   ->orWhere('job_name_en', 'like', $term)
+            ))
+            ->latest()
+            ->paginate(15);
+
         return response()->json([
             'status' => true,
-            'data' => [
-                'users' => User::all(),
-                'activetypes' => Activetype::all(),
-                'cities' => City::all(),
-            ]
-        ], 200);
+            'data'   => $businesses,
+        ]);
     }
 
     public function create()
@@ -32,9 +41,8 @@ class BusinessController extends Controller
         return response()->json([
             'status' => true,
             'data' => [
-                'users' => User::all(),
                 'activetypes' => Activetype::all(),
-                'cities' => City::all(),
+                'cities'      => City::all(),
             ]
         ], 200);
     }

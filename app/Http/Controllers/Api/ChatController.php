@@ -10,20 +10,18 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-    // ─── GET /api/chat/conversations ─────────────────────────────────────────
-    // List all conversations with last message + unread count
+    // Returns all conversations for the authenticated user, including last message and unread count per partner.
     public function conversations(Request $request)
     {
         $user = $request->user();
 
         $userId = (int) $user->id;
 
-        // Get all unique partner IDs using pluck on sender+receiver then filter self
         $senderIds   = Message::where('receiver_id', $userId)->pluck('sender_id');
         $receiverIds = Message::where('sender_id', $userId)->pluck('receiver_id');
         $partnerIds  = $senderIds->merge($receiverIds)->unique()->values();
 
-        $conversations = $partnerIds->map(function ($partnerId) use ($userId) {
+        $conversations = $partnerIds->map(function ($partnerId) use ($userId, $user) {
             $pid     = (int) $partnerId;
             $partner = User::find($pid);
             if (!$partner) return null;
@@ -62,14 +60,12 @@ class ChatController extends Controller
         ]);
     }
 
-    // ─── GET /api/chat/{userId} ───────────────────────────────────────────────
-    // Get messages with a specific user — also marks incoming as read
+    // Returns the full message thread with a given user and marks all incoming messages as read.
     public function show(Request $request, $userId)
     {
         $user     = $request->user();
         $receiver = User::findOrFail($userId);
 
-        // Mark messages from receiver as read
         Message::where('sender_id', $receiver->id)
             ->where('receiver_id', $user->id)
             ->whereNull('read_at')
@@ -98,8 +94,7 @@ class ChatController extends Controller
         ]);
     }
 
-    // ─── POST /api/chat/{userId} ──────────────────────────────────────────────
-    // Send a message
+    // Validates and persists a new message to the specified user, then broadcasts the MessageSent event.
     public function store(Request $request, $userId)
     {
         $request->validate(['body' => 'required|string|max:1000']);
@@ -135,8 +130,7 @@ class ChatController extends Controller
         ], 201);
     }
 
-    // ─── GET /api/chat/unread ─────────────────────────────────────────────────
-    // Total unread messages count (for badge in app)
+    // Returns the total count of unread messages for use as a badge counter in the app.
     public function unreadCount(Request $request)
     {
         $user  = $request->user();
@@ -150,8 +144,7 @@ class ChatController extends Controller
         ]);
     }
 
-    // ─── DELETE /api/chat/{messageId} ────────────────────────────────────────
-    // Delete own message
+    // Deletes a message that was sent by the authenticated user.
     public function destroy(Request $request, $messageId)
     {
         $user    = $request->user();

@@ -19,8 +19,18 @@ use Termwind\Components\Raw;
 
 class ServiceController extends Controller
 {
+    // Returns a single approved service by ID with its category, subcategory, and business details.
+    public function show($id)
+    {
+        $service = Service::with(['business.city', 'category', 'subcategory'])
+            ->where('status', 'approved')
+            ->findOrFail($id);
 
-
+        return response()->json([
+            'status' => true,
+            'data'   => $service,
+        ]);
+    }
 
 public function myservice()
 {

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class OtpController extends Controller
 {
-    // POST /api/verify-otp   { phone, code }
+    // Validates the submitted OTP code and returns a Sanctum token on success, with remaining-attempt info on failure.
     public function verify(Request $request)
     {
         $request->validate([
@@ -20,7 +20,15 @@ class OtpController extends Controller
         $result = OtpCode::check($request->phone, $request->code);
 
         if ($result === 'ok') {
-            $user  = User::where('phone', $request->phone)->firstOrFail();
+            $user = User::where('phone', $request->phone)->firstOrFail();
+
+            if (! $user->is_active) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Your account has been suspended. Please contact support.',
+                ], 403);
+            }
+
             $token = $user->createToken('user-token')->plainTextToken;
 
             return response()->json([
@@ -54,7 +62,7 @@ class OtpController extends Controller
         ], 422);
     }
 
-    // POST /api/resend-otp   { phone }
+    // Generates and sends a fresh OTP to the given phone number if it belongs to a registered user.
     public function resend(Request $request)
     {
         $request->validate(['phone' => 'required|string|max:20']);

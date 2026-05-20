@@ -1,4 +1,5 @@
 @extends('layouts/contentNavbarLayout')
+{{-- Business accounts page: lists all business registrations filterable by status, with approve/reject actions and a detail modal per business. --}}
 
 @section('title', 'Business Accounts')
 
@@ -46,6 +47,7 @@
 </div>
 @endif
 
+{{-- Table: filterable list of business accounts with status filter tabs and approve/reject actions --}}
 <div class="biz-card">
   <div class="biz-hdr">
     <span class="biz-title">
@@ -53,29 +55,43 @@
     </span>
 
     <div class="d-flex gap-2 flex-wrap">
-      <a href="{{ route('business.index') }}?status=pending"
-         class="filter-btn {{ request('status', 'pending') === 'pending' ? 'active' : '' }}">
-        Pending ({{ $businesses->where('status','pending')->count() }})
-      </a>
-      <a href="{{ route('business.index') }}?status=approved"
-         class="filter-btn {{ request('status') === 'approved' ? 'active' : '' }}">
-        Approved ({{ $businesses->where('status','approved')->count() }})
-      </a>
-      <a href="{{ route('business.index') }}?status=rejected"
-         class="filter-btn {{ request('status') === 'rejected' ? 'active' : '' }}">
-        Rejected ({{ $businesses->where('status','rejected')->count() }})
-      </a>
-      <a href="{{ route('business.index') }}?status=all"
-         class="filter-btn {{ request('status') === 'all' ? 'active' : '' }}">
-        All ({{ $businesses->count() }})
-      </a>
+      @php $curStatus = request('status', 'pending'); @endphp
+      @foreach(['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', 'all' => 'All'] as $val => $label)
+        <a href="{{ route('business.index', array_merge(request()->except('status','page'), ['status' => $val])) }}"
+           class="filter-btn {{ $curStatus === $val ? 'active' : '' }}">
+          {{ $label }} ({{ $statusCounts[$val] }})
+        </a>
+      @endforeach
     </div>
   </div>
 
-  @php
-    $statusFilter = request('status', 'pending');
-    $filtered = $statusFilter === 'all' ? $businesses : $businesses->where('status', $statusFilter);
-  @endphp
+  {{-- Search & city filter --}}
+  <form method="GET" action="{{ route('business.index') }}" class="d-flex gap-2 flex-wrap align-items-center px-3 py-3" style="border-bottom:1px solid #f0eef4;">
+    <input type="hidden" name="status" value="{{ $curStatus }}">
+    <div style="position:relative;flex:1;min-width:200px;max-width:320px;">
+      <i class="ri ri-search-line" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#8592a3;font-size:16px;"></i>
+      <input type="text" name="search" value="{{ request('search') }}"
+             placeholder="Search name, license, owner..."
+             style="width:100%;border-radius:10px;border:1.5px solid #e4e4eb;padding:8px 14px 8px 36px;font-size:13px;background:#fafbff;">
+    </div>
+    <select name="city_id" style="border-radius:10px;border:1.5px solid #e4e4eb;padding:8px 14px;font-size:13px;background:#fafbff;min-width:150px;">
+      <option value="">All Cities</option>
+      @foreach($cities as $city)
+        <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
+          {{ $city->name_ar ?? $city->name_en }}
+        </option>
+      @endforeach
+    </select>
+    <button type="submit" style="padding:8px 18px;border-radius:10px;background:#696cff;color:#fff;border:none;font-size:13px;font-weight:700;">
+      <i class="ri ri-filter-line me-1"></i>Filter
+    </button>
+    @if(request('search') || request('city_id'))
+      <a href="{{ route('business.index', ['status' => $curStatus]) }}"
+         style="padding:8px 14px;border-radius:10px;background:#f1f0f4;color:#585164;font-size:13px;font-weight:700;text-decoration:none;">
+        <i class="ri ri-close-line me-1"></i>Clear
+      </a>
+    @endif
+  </form>
 
   <div class="table-responsive">
     <table class="table biz-table mb-0">
@@ -93,7 +109,7 @@
         </tr>
       </thead>
       <tbody>
-        @forelse($filtered as $biz)
+        @forelse($businesses as $biz)
         <tr>
           <td style="color:#b0aab8;font-weight:700;">#{{ $biz->id }}</td>
           <td>
@@ -101,11 +117,11 @@
             <div style="font-size:11px;color:#97939e;">{{ $biz->user?->phone ?? $biz->user?->email ?? '' }}</div>
           </td>
           <td>
-            <div style="font-weight:700;color:#312d4b;">{{ $biz->job_name_en ?? '-' }}</div>
-            <div style="font-size:11px;color:#97939e;">{{ $biz->job_name_ar ?? '' }}</div>
+            <div style="font-weight:700;color:#312d4b;">{{ app()->getLocale() === 'ar' ? ($biz->job_name_ar ?? $biz->job_name_en ?? '-') : ($biz->job_name_en ?? $biz->job_name_ar ?? '-') }}</div>
+            <div style="font-size:11px;color:#97939e;">{{ app()->getLocale() === 'ar' ? ($biz->job_name_en ?? '') : ($biz->job_name_ar ?? '') }}</div>
           </td>
           <td style="color:#585164;">{{ $biz->activeType?->name ?? '-' }}</td>
-          <td style="color:#585164;">{{ $biz->city?->name_en ?? '-' }}</td>
+          <td style="color:#585164;">{{ app()->getLocale() === 'ar' ? ($biz->city?->name_ar ?? $biz->city?->name_en ?? '-') : ($biz->city?->name_en ?? $biz->city?->name_ar ?? '-') }}</td>
           <td style="font-family:monospace;color:#585164;">{{ $biz->license_number ?? '-' }}</td>
           <td><span class="sp sp-{{ $biz->status ?? 'pending' }}">{{ ucfirst($biz->status ?? 'pending') }}</span></td>
           <td style="color:#b0aab8;font-size:12px;">{{ $biz->created_at?->format('M d, Y') }}</td>
@@ -161,8 +177,15 @@
   </div>
 </div>
 
-{{-- Modals placed OUTSIDE the table for valid HTML + correct Bootstrap behaviour --}}
-@foreach($filtered as $biz)
+{{-- Pagination --}}
+@if($businesses->hasPages())
+<div class="d-flex justify-content-center py-3">
+  {{ $businesses->links() }}
+</div>
+@endif
+
+{{-- Modals: per-business detail modal with map, image, and approve/reject actions --}}
+@foreach($businesses as $biz)
 <div class="modal fade" id="bizModal{{ $biz->id }}" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content" style="border:0;border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.18);">
@@ -255,7 +278,7 @@
 <script>
 (function () {
   var maps = {};
-  @foreach($filtered as $biz)
+  @foreach($businesses as $biz)
   @if($biz->latitude && $biz->longitude)
   document.getElementById('bizModal{{ $biz->id }}').addEventListener('shown.bs.modal', function () {
     var id = {{ $biz->id }};

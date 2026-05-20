@@ -17,7 +17,8 @@ class CityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name_ar' => $this->faker->word() . '_ar',
+            'name_en' => $this->faker->word() . '_en',
         ];
     }
 }

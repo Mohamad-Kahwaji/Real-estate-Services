@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
+    // List all roles with their assigned permissions for the admin panel.
     public function index()
     {
         $roles = Role::with('permissions')->get();
@@ -16,6 +17,7 @@ class RoleController extends Controller
         return view('super_admin.roles', compact('roles', 'permissions'));
     }
 
+    // Show the form to create a new role.
     public function create()
     {
         $permissions = Permission::get();
@@ -23,6 +25,7 @@ class RoleController extends Controller
         return view('super_admin.rolecreate', compact('permissions'));
     }
 
+    // Validate and persist a new role with its selected permissions.
     public function store(Request $request)
     {
         $val = $request->validate([
@@ -41,6 +44,7 @@ class RoleController extends Controller
         return redirect()->route('roleindex')->with('success', 'Role created successfully.');
     }
 
+    // Show the edit form for a specific admin-guard role.
     public function edit($id)
     {
         $role = Role::with('permissions')
@@ -52,6 +56,7 @@ class RoleController extends Controller
         return view('roles.edit', compact('role', 'permissions'));
     }
 
+    // Validate and apply updates to a role's name and permissions.
     public function update(Request $request, $id)
     {
         $role = Role::where('guard_name', 'admin')->findOrFail($id);
@@ -71,6 +76,7 @@ class RoleController extends Controller
         return redirect()->route('roles.index')->with('success', 'Role updated successfully');
     }
 
+    // Permanently delete an admin-guard role.
     public function destroy($id)
     {
         $role = Role::where('guard_name', 'admin')->findOrFail($id);

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
+    // Builds a list of conversation partners with their last message and unread count for the given user.
     private function getConversations($authUser)
     {
         $partnerIds = Message::where('sender_id', $authUser->id)
@@ -22,23 +23,25 @@ class ChatController extends Controller
             $partner = User::find($partnerId);
             if (!$partner) return null;
 
-            $last   = Message::where(function ($q) use ($authUser, $partnerId) {
+            $last = Message::where(function ($q) use ($authUser, $partnerId) {
                             $q->where('sender_id', $authUser->id)->where('receiver_id', $partnerId);
                         })->orWhere(function ($q) use ($authUser, $partnerId) {
                             $q->where('sender_id', $partnerId)->where('receiver_id', $authUser->id);
                         })->latest('created_at')->first();
+
             $unread = Message::where('sender_id', $partnerId)
                 ->where('receiver_id', $authUser->id)
                 ->whereNull('read_at')->count();
 
             return (object)[
-                'user'        => $partner,
-                'last_message'=> $last,
-                'unread'      => $unread,
+                'user'         => $partner,
+                'last_message' => $last,
+                'unread'       => $unread,
             ];
         })->filter()->sortByDesc(fn($c) => optional($c->last_message)->created_at)->values();
     }
 
+    // Loads the chat inbox view with all conversations for the authenticated user.
     public function index()
     {
         $authUser      = Auth::guard('users')->user();
@@ -48,6 +51,7 @@ class ChatController extends Controller
         return view('chat', compact('authUser', 'conversations', 'isMenu'));
     }
 
+    // Opens a conversation thread with a specific user and marks all their incoming messages as read.
     public function show($userId)
     {
         $authUser = Auth::guard('users')->user();
@@ -65,6 +69,7 @@ class ChatController extends Controller
         return view('chat', compact('authUser', 'receiver', 'messages', 'conversations', 'isMenu'));
     }
 
+    // Validates and sends a text or file message to the specified user, broadcasting the MessageSent event.
     public function store(Request $request, $userId)
     {
         $request->validate([
@@ -87,7 +92,7 @@ class ChatController extends Controller
             $file     = $request->file('file');
             $fileName = $file->getClientOriginalName();
             $filePath = $file->store('chat-files', 'public');
-            $fileType = in_array($file->extension(), ['jpeg','png','jpg','gif','webp'])
+            $fileType = in_array($file->extension(), ['jpeg', 'png', 'jpg', 'gif', 'webp'])
                 ? 'image' : 'file';
         }
 

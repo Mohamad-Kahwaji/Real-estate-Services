@@ -10,17 +10,13 @@ use Illuminate\View\View;
 
 class AuthenticatedAdminSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
+    // Returns the admin login form view.
     public function create(): View
     {
         return view('super_admin.auth_admin.auth-login-admin');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
+    // Authenticates the admin, checks account activation status, and redirects to the dashboard.
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -46,20 +42,20 @@ class AuthenticatedAdminSessionController extends Controller
 
         $request->session()->regenerate();
 
+        /** @var \App\Models\Admin $admin */
+        $admin = Auth::guard('admins')->user();
+        $admin->updateQuietly(['last_seen_at' => now()]);
+
         return redirect()->route('admin.dashboard');
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
+    // Logs out the admin, invalidates the session, and redirects to the admin login page.
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
-
+        Auth::guard('admins')->logout();
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('dashi');
+        return redirect()->route('logina.create');
     }
 }

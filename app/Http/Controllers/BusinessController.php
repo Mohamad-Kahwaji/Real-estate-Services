@@ -13,18 +13,45 @@ use Illuminate\Http\Request;
 
 class BusinessController extends Controller
 {
-    public function index()
+    // List all businesses with server-side search (name, license) and filter by status and city.
+    public function index(Request $request)
     {
-        $businesses = Business::with(['user', 'city', 'activeType'])->latest()->get();
-        return view('super_admin.businesses', compact('businesses'));
+        $term   = $request->search ? '%' . $request->search . '%' : null;
+        $status = $request->input('status', 'pending');
+
+        $businesses = Business::with(['user', 'city', 'activeType'])
+            ->when($status !== 'all', fn($q) => $q->where('status', $status))
+            ->when($request->city_id, fn($q) => $q->where('city_id', $request->city_id))
+            ->when($term, fn($q) => $q->where(fn($q2) =>
+                $q2->where('job_name_ar', 'like', $term)
+                   ->orWhere('job_name_en', 'like', $term)
+                   ->orWhere('license_number', 'like', $term)
+                   ->orWhereHas('user', fn($u) => $u->where('name', 'like', $term))
+            ))
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        $statusCounts = [
+            'pending'  => Business::where('status', 'pending')->count(),
+            'approved' => Business::where('status', 'approved')->count(),
+            'rejected' => Business::where('status', 'rejected')->count(),
+            'all'      => Business::count(),
+        ];
+
+        $cities = City::orderBy('name_ar')->get();
+
+        return view('super_admin.businesses', compact('businesses', 'cities', 'statusCounts'));
     }
 
+    // Show a single business in the superadmin businesses view.
     public function show($id)
     {
         $business = Business::with(['user', 'city', 'activeType'])->findOrFail($id);
         return view('super_admin.businesses', ['businesses' => collect([$business])]);
     }
 
+    // Render the form for a user to create a new business account application.
     public function create()
     {
         $activetypes = Activetype::all();
@@ -33,6 +60,7 @@ class BusinessController extends Controller
         return view('users.business-account', compact('activetypes', 'cities'));
     }
 
+    // Validate and persist a new business account request, then notify admins.
     public function store(Request $request)
     {
         $val = $request->validate([
@@ -78,6 +106,7 @@ class BusinessController extends Controller
             ->with('success', 'Your business account request has been submitted. Please wait for approval.');
     }
 
+    // Update an existing business account's details via JSON API.
     public function update(Request $request, $id)
     {
         $val = $request->validate([
@@ -102,6 +131,7 @@ class BusinessController extends Controller
         ], 200);
     }
 
+    // Return all businesses with a pending status as a JSON response.
     public function pending()
     {
         $accounts = Business::with(['user', 'city'])
@@ -114,6 +144,7 @@ class BusinessController extends Controller
         ], 200);
     }
 
+    // Approve a pending business account and notify its owner.
     public function approve($id)
     {
         $account = Business::findOrFail($id);
@@ -128,6 +159,7 @@ class BusinessController extends Controller
         return redirect()->route('business.index')->with('success', 'Business approved successfully.');
     }
 
+    // Reject a pending business account and notify its owner.
     public function reject($id)
     {
         $account = Business::findOrFail($id);
@@ -142,10 +174,13 @@ class BusinessController extends Controller
         return redirect()->route('business.index')->with('success', 'Business rejected.');
     }
 
+    // Alias for reject() — rejects a business account by ID.
     public function rejected($id)
     {
         return $this->reject($id);
     }
+
+    // Delete the authenticated user's own business account.
     public function destroy(){
         $user = auth('users')->user();
         $business = $user->businesses()->pluck('id');

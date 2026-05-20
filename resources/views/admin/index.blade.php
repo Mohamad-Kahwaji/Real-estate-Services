@@ -1,4 +1,5 @@
 ﻿@extends('layouts/contentNavbarLayout')
+{{-- Admin dashboard: welcome banner with permissions summary, platform stats, quick-action links, and pending business approval table. --}}
 
 @section('title', 'Admin Dashboard')
 
@@ -236,8 +237,9 @@
         <div class="welcome-avatar">{{ $initials }}</div>
         <div>
             <div class="welcome-name">Welcome, {{ $admin->name ?? 'Admin' }}</div>
-            <div class="welcome-sub">{{ $admin->email }}</div>
+            <div class="welcome-sub">{{ $admin->email ?? '' }}</div>
             <div class="welcome-date">{{ now()->format('l, F j, Y') }}</div>
+            @if($admin)
             @php $perms = $admin->getAllPermissions(); @endphp
             @if($perms->count())
             <div class="d-flex flex-wrap gap-2 mt-2">
@@ -251,6 +253,7 @@
                 <span class="perm-chip">+{{ $perms->count() - 4 }} more</span>
                 @endif
             </div>
+            @endif
             @endif
         </div>
         <div class="ms-auto d-none d-md-flex align-items-center gap-2">

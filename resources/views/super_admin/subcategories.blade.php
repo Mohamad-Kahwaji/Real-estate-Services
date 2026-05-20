@@ -1,4 +1,5 @@
 @extends('layouts/contentNavbarLayout')
+{{-- Subcategories management page: lists subcategories under their parent categories with dynamic field management via add/edit modals. --}}
 
 @section('title', 'Subcategories')
 
@@ -201,31 +202,38 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name (Arabic)</th>
-                    <th>Name (English)</th>
-                    <th>Parent Category</th>
-                    <th>Dynamic Fields</th>
-                    <th>Actions</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الاسم' : 'Name' }}</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'التصنيف الرئيسي' : 'Parent Category' }}</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الحقول الديناميكية' : 'Dynamic Fields' }}</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الإجراءات' : 'Actions' }}</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($subcategories as $sub)
                 <tr>
                     <td><span class="badge-pill badge-accent">{{ $sub->id }}</span></td>
-                    <td><strong>{{ $sub->name_ar }}</strong></td>
-                    <td>{{ $sub->name_en }}</td>
+                    <td>
+                        <strong>{{ app()->getLocale() === 'ar' ? $sub->name_ar : $sub->name_en }}</strong>
+                    </td>
                     <td>
                         <span class="badge-pill badge-warning">
                             <i class="ri ri-layout-grid-line"></i>
-                            {{ $sub->category->name_en ?? 'N/A' }}
+                            {{ app()->getLocale() === 'ar'
+                                ? ($sub->category->name_ar ?? $sub->category->name_en ?? 'N/A')
+                                : ($sub->category->name_en ?? $sub->category->name_ar ?? 'N/A') }}
                         </span>
                     </td>
                     <td>
                         @if($sub->dynamicFields->count() > 0)
                             <div class="d-flex flex-wrap gap-1">
                                 @foreach($sub->dynamicFields as $f)
-                                    <span class="type-badge type-{{ $f->type }}" title="{{ $f->label }}">
-                                        {{ $f->label }}
+                                    @php
+                                        $fieldLabel = app()->getLocale() === 'ar'
+                                            ? ($f->label_ar ?: $f->label)
+                                            : ($f->label_en ?: $f->label_ar ?: $f->label);
+                                    @endphp
+                                    <span class="type-badge type-{{ $f->type }}" title="{{ $fieldLabel }}">
+                                        {{ $fieldLabel }}
                                     </span>
                                 @endforeach
                             </div>
@@ -371,11 +379,18 @@
                                 </button>
                                 <div class="field-row-grid">
                                     <div>
-                                        <label class="form-label" style="font-size:12px;">Label (display name)</label>
+                                        <label class="form-label" style="font-size:12px;">Label (Arabic)</label>
                                         <input type="text" class="form-control form-control-sm"
-                                               name="fields[{{ $fi }}][label]"
-                                               value="{{ $field->label }}"
-                                               placeholder="e.g. تاريخ الانتهاء" required>
+                                               name="fields[{{ $fi }}][label_ar]"
+                                               value="{{ $field->label_ar ?: $field->label }}"
+                                               placeholder="e.g. المساحة" required dir="rtl">
+                                    </div>
+                                    <div>
+                                        <label class="form-label" style="font-size:12px;">Label (English)</label>
+                                        <input type="text" class="form-control form-control-sm"
+                                               name="fields[{{ $fi }}][label_en]"
+                                               value="{{ $field->label_en }}"
+                                               placeholder="e.g. Area" required>
                                     </div>
                                     <div>
                                         <label class="form-label" style="font-size:12px;">Field Key (no spaces)</label>
@@ -448,10 +463,16 @@ function addField(containerId, idx) {
         </button>
         <div class="field-row-grid">
             <div>
-                <label class="form-label" style="font-size:12px;">Label (display name)</label>
+                <label class="form-label" style="font-size:12px;">Label (Arabic)</label>
                 <input type="text" class="form-control form-control-sm"
-                       name="fields[new_${idx}][label]"
-                       placeholder="e.g. تاريخ الانتهاء" required>
+                       name="fields[new_${idx}][label_ar]"
+                       placeholder="e.g. المساحة" required dir="rtl">
+            </div>
+            <div>
+                <label class="form-label" style="font-size:12px;">Label (English)</label>
+                <input type="text" class="form-control form-control-sm"
+                       name="fields[new_${idx}][label_en]"
+                       placeholder="e.g. Area" required>
             </div>
             <div>
                 <label class="form-label" style="font-size:12px;">Field Key (no spaces)</label>

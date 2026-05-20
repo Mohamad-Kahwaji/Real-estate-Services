@@ -12,7 +12,7 @@ use Stripe\Webhook as StripeWebhook;
 
 class PaymentController extends Controller
 {
-    // ─── Show checkout page ───────────────────────────────────────────────────
+    // Loads the payment checkout page for an unpaid service request belonging to the authenticated user.
     public function checkout($requestId)
     {
         $user           = auth('users')->user();
@@ -27,7 +27,7 @@ class PaymentController extends Controller
         return view('payment.checkout', compact('serviceRequest', 'payment'));
     }
 
-    // ─── Stripe: create checkout session ─────────────────────────────────────
+    // Creates a Stripe hosted-checkout session for the service request and redirects the user to it.
     public function createStripeSession($requestId)
     {
         $user           = auth('users')->user();
@@ -79,7 +79,7 @@ class PaymentController extends Controller
         return redirect($session->url);
     }
 
-    // ─── Stripe: handle return after hosted checkout ──────────────────────────
+    // Retrieves the Stripe session after redirect, marks payment as paid if successful, and routes accordingly.
     public function stripeSuccess(Request $request, $requestId)
     {
         $sessionId = $request->get('session_id');
@@ -101,7 +101,7 @@ class PaymentController extends Controller
         return redirect()->route('payment.failed', $requestId);
     }
 
-    // ─── PayPal: create order (AJAX) ─────────────────────────────────────────
+    // Creates a PayPal order for the service request and returns the PayPal order ID as JSON.
     public function createPaypalOrder($requestId)
     {
         $user           = auth('users')->user();
@@ -130,19 +130,19 @@ class PaymentController extends Controller
         Payment::updateOrCreate(
             ['service_request_id' => $requestId],
             [
-                'user_id'          => $user->id,
-                'amount'           => $service->price_usd * $serviceRequest->quantity,
-                'currency'         => 'USD',
-                'payment_method'   => 'paypal',
-                'status'           => 'pending',
-                'paypal_order_id'  => $orderId,
+                'user_id'         => $user->id,
+                'amount'          => $service->price_usd * $serviceRequest->quantity,
+                'currency'        => 'USD',
+                'payment_method'  => 'paypal',
+                'status'          => 'pending',
+                'paypal_order_id' => $orderId,
             ]
         );
 
         return response()->json(['id' => $orderId]);
     }
 
-    // ─── PayPal: capture order (AJAX) ────────────────────────────────────────
+    // Captures an approved PayPal order and marks the payment and service request as paid.
     public function capturePaypalOrder(Request $request, $requestId)
     {
         $orderId     = $request->input('orderID');
@@ -168,7 +168,7 @@ class PaymentController extends Controller
         return response()->json(['success' => false], 422);
     }
 
-    // ─── Bank Transfer: upload proof ─────────────────────────────────────────
+    // Accepts a bank transfer proof image, records the payment as paid, and redirects to the success page.
     public function processBankTransfer(Request $request, $requestId)
     {
         $user           = auth('users')->user();
@@ -194,13 +194,13 @@ class PaymentController extends Controller
         Payment::updateOrCreate(
             ['service_request_id' => $requestId],
             [
-                'user_id'          => $user->id,
-                'amount'           => $amount,
-                'currency'         => $currency,
-                'payment_method'   => 'bank_transfer',
-                'status'           => 'paid',
-                'proof_image'      => $proofPath,
-                'paid_at'          => now(),
+                'user_id'         => $user->id,
+                'amount'          => $amount,
+                'currency'        => $currency,
+                'payment_method'  => 'bank_transfer',
+                'status'          => 'paid',
+                'proof_image'     => $proofPath,
+                'paid_at'         => now(),
             ]
         );
 
@@ -209,7 +209,7 @@ class PaymentController extends Controller
         return redirect()->route('payment.success', $requestId);
     }
 
-    // ─── Test payment (bypasses real gateway) ────────────────────────────────
+    // Simulates a completed payment in test mode, bypassing real gateways, and marks the request as paid.
     public function processTest(Request $request, $requestId)
     {
         abort_unless(config('payment.test_mode'), 403, 'Test mode is disabled.');
@@ -233,13 +233,13 @@ class PaymentController extends Controller
         Payment::updateOrCreate(
             ['service_request_id' => $requestId],
             [
-                'user_id'          => $user->id,
-                'amount'           => $amount,
-                'currency'         => $currency,
-                'payment_method'   => 'test',
-                'status'           => 'paid',
-                'transaction_id'   => 'TEST-' . strtoupper(uniqid()),
-                'paid_at'          => now(),
+                'user_id'         => $user->id,
+                'amount'          => $amount,
+                'currency'        => $currency,
+                'payment_method'  => 'test',
+                'status'          => 'paid',
+                'transaction_id'  => 'TEST-' . strtoupper(uniqid()),
+                'paid_at'         => now(),
             ]
         );
 
@@ -248,7 +248,7 @@ class PaymentController extends Controller
         return redirect()->route('payment.success', $requestId);
     }
 
-    // ─── Stripe webhook ───────────────────────────────────────────────────────
+    // Handles Stripe webhook events, marking the associated payment and service request as paid on completion.
     public function stripeWebhook(Request $request)
     {
         $payload   = $request->getContent();
@@ -276,7 +276,7 @@ class PaymentController extends Controller
         return response('OK', 200);
     }
 
-    // ─── Success / Failed pages ───────────────────────────────────────────────
+    // Loads the payment success page for a completed service request.
     public function success($requestId)
     {
         $user           = auth('users')->user();
@@ -288,6 +288,7 @@ class PaymentController extends Controller
         return view('payment.success', compact('serviceRequest'));
     }
 
+    // Loads the payment failure page for a service request whose payment did not complete.
     public function failed($requestId)
     {
         $user           = auth('users')->user();
@@ -299,7 +300,7 @@ class PaymentController extends Controller
         return view('payment.failed', compact('serviceRequest'));
     }
 
-    // ─── PayPal helpers ───────────────────────────────────────────────────────
+    // Returns the correct PayPal API base URL depending on live or sandbox mode.
     private function paypalBaseUrl(): string
     {
         return config('services.paypal.mode') === 'live'
@@ -307,6 +308,7 @@ class PaymentController extends Controller
             : 'https://api-m.sandbox.paypal.com';
     }
 
+    // Fetches a short-lived PayPal OAuth access token using client credentials.
     private function getPaypalAccessToken(): string
     {
         $response = Http::withBasicAuth(

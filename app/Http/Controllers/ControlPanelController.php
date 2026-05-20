@@ -11,12 +11,13 @@ use Illuminate\Http\Request;
 
 class ControlPanelController extends Controller
 {
+    // Loads the control panel overview with categories, subcategories, cities, and pending business accounts.
     public function index()
     {
-        $categories = Category::get();
+        $categories    = Category::get();
         $subcategories = Subcategory::with('category')->latest()->get();
-        $cities = City::latest()->get();
-        $account = Business::with(['user', 'city'])
+        $cities        = City::latest()->get();
+        $accounts      = Business::with(['user', 'city'])
             ->where('status', 'pending')
             ->latest()
             ->get();
@@ -28,5 +29,4 @@ class ControlPanelController extends Controller
             'accounts'
         ));
     }
-
 }

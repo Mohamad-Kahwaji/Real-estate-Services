@@ -1,4 +1,5 @@
 @extends('layouts/contentNavbarLayout')
+{{-- All services page: paginated card grid of every platform service with status filters, search, and per-service approve/reject modals. --}}
 
 @section('title', 'All Services')
 
@@ -327,7 +328,7 @@
         @php $ac = $cities->firstWhere('id', request('city_id')); @endphp
         @if($ac)
         <span style="background:#00cfe818;color:#00cfe8;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;">
-            <i class="ri-map-pin-line me-1"></i>{{ $ac->name_ar ?? $ac->name_en }}
+            <i class="ri-map-pin-line me-1"></i>{{ app()->getLocale() === 'ar' ? ($ac->name_ar ?? $ac->name_en) : ($ac->name_en ?? $ac->name_ar) }}
         </span>
         @endif
     @endif
@@ -335,7 +336,7 @@
         @php $acc = $categories->firstWhere('id', request('category_id')); @endphp
         @if($acc)
         <span style="background:#ff9f4318;color:#ff9f43;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;">
-            <i class="ri-layout-grid-line me-1"></i>{{ $acc->name_ar ?? $acc->name_en }}
+            <i class="ri-layout-grid-line me-1"></i>{{ app()->getLocale() === 'ar' ? ($acc->name_ar ?? $acc->name_en) : ($acc->name_en ?? $acc->name_ar) }}
         </span>
         @endif
     @endif
@@ -379,6 +380,7 @@
     </div>
 @endif
 
+{{-- Service cards grid: one card per service with image, stats, and inline approve/reject; each card has a full-detail modal --}}
 <div class="row g-4">
 
     @forelse($services as $service)
@@ -424,7 +426,7 @@
                     {{-- Business --}}
                     <div class="biz-label">
                         <i class="ri-store-2-line"></i>
-                        {{ $service->business->job_name_en ?? '-' }}
+                        {{ app()->getLocale() === 'ar' ? ($service->business?->job_name_ar ?? $service->business?->job_name_en ?? '-') : ($service->business?->job_name_en ?? $service->business?->job_name_ar ?? '-') }}
                     </div>
 
                     {{-- Title --}}
@@ -453,7 +455,7 @@
                             Qty
                         </div>
                         <div class="stat-chip">
-                            <strong>{{ $service->category->name_en ?? '-' }}</strong>
+                            <strong>{{ app()->getLocale() === 'ar' ? ($service->category?->name_ar ?? $service->category?->name_en ?? '-') : ($service->category?->name_en ?? $service->category?->name_ar ?? '-') }}</strong>
                             Category
                         </div>
                     </div>
@@ -507,7 +509,7 @@
                             <div class="d-flex flex-wrap gap-2 align-items-center">
                                 <span class="badge {{ $statusClass }} badge-status">{{ ucfirst($service->status) }}</span>
                                 <span class="badge-type">{{ strtoupper($service->services_type) }}</span>
-                                <span class="badge bg-label-secondary">{{ $service->category->name_en ?? '-' }}</span>
+                                <span class="badge bg-label-secondary">{{ app()->getLocale() === 'ar' ? ($service->category?->name_ar ?? $service->category?->name_en ?? '-') : ($service->category?->name_en ?? $service->category?->name_ar ?? '-') }}</span>
                             </div>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -571,7 +573,7 @@
                                     <div class="details">
                                         <strong>{{ $creator->name ?? 'Unknown' }}</strong>
                                         <span>{{ $creator->email ?? '-' }}</span>
-                                        <p>{{ $service->business->job_name_en ?? '-' }}</p>
+                                        <p>{{ app()->getLocale() === 'ar' ? ($service->business?->job_name_ar ?? $service->business?->job_name_en ?? '-') : ($service->business?->job_name_en ?? $service->business?->job_name_ar ?? '-') }}</p>
                                     </div>
                                 </div>
 
@@ -582,15 +584,15 @@
                                     </div>
                                     <div class="info-row-m">
                                         <span>Business</span>
-                                        <strong>{{ $service->business->job_name_en ?? '-' }}</strong>
+                                        <strong>{{ app()->getLocale() === 'ar' ? ($service->business?->job_name_ar ?? $service->business?->job_name_en ?? '-') : ($service->business?->job_name_en ?? $service->business?->job_name_ar ?? '-') }}</strong>
                                     </div>
                                     <div class="info-row-m">
                                         <span>Category</span>
-                                        <strong>{{ $service->category->name_en ?? '-' }}</strong>
+                                        <strong>{{ app()->getLocale() === 'ar' ? ($service->category?->name_ar ?? $service->category?->name_en ?? '-') : ($service->category?->name_en ?? $service->category?->name_ar ?? '-') }}</strong>
                                     </div>
                                     <div class="info-row-m">
                                         <span>Subcategory</span>
-                                        <strong>{{ $service->subcategory->name_en ?? '-' }}</strong>
+                                        <strong>{{ app()->getLocale() === 'ar' ? ($service->subcategory?->name_ar ?? $service->subcategory?->name_en ?? '-') : ($service->subcategory?->name_en ?? $service->subcategory?->name_ar ?? '-') }}</strong>
                                     </div>
                                     <div class="info-row-m">
                                         <span>Service Type</span>
@@ -641,7 +643,7 @@
                                     </div>
                                     <div class="info-row-m">
                                         <span>Business</span>
-                                        <strong>{{ $service->business->job_name_en ?? '-' }}</strong>
+                                        <strong>{{ app()->getLocale() === 'ar' ? ($service->business?->job_name_ar ?? $service->business?->job_name_en ?? '-') : ($service->business?->job_name_en ?? $service->business?->job_name_ar ?? '-') }}</strong>
                                     </div>
                                     <div class="info-row-m">
                                         <span>Member Since</span>
@@ -689,7 +691,7 @@
 
 </div>
 
-{{-- Pagination --}}
+{{-- Pagination: custom numbered pagination with previous/next and ellipsis --}}
 @if($services->hasPages())
 @php
     $currentPage = $services->currentPage();

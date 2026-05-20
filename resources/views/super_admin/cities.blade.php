@@ -1,4 +1,5 @@
 @extends('layouts/contentNavbarLayout')
+{{-- Cities management page: lists all available cities (bilingual) and provides add/edit/delete modals for location management. --}}
 
 @section('title', 'Cities')
 
@@ -133,17 +134,18 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name (Arabic)</th>
-                    <th>Name (English)</th>
-                    <th>Actions</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الاسم' : 'Name' }}</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الإجراءات' : 'Actions' }}</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($cities as $city)
                 <tr>
                     <td><span class="badge-pill badge-accent">{{ $city->id }}</span></td>
-                    <td><strong>{{ $city->name_ar }}</strong></td>
-                    <td>{{ $city->name_en }}</td>
+                    <td>
+                        <strong>{{ app()->getLocale() === 'ar' ? $city->name_ar : $city->name_en }}</strong>
+                        <div style="font-size:11px;color:#8592a3;">{{ app()->getLocale() === 'ar' ? $city->name_en : $city->name_ar }}</div>
+                    </td>
                     <td>
                         <div class="d-flex gap-2">
                             <button class="action-btn btn-edit"

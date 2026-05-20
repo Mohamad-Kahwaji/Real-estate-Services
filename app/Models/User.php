@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'phone',
         'password',
+        'is_active',
         'fcm_token',
         'last_seen_at',
     ];
@@ -50,6 +51,7 @@ class User extends Authenticatable
             'number_verified_at' => 'datetime',
             'last_seen_at'       => 'datetime',
             'password'           => 'hashed',
+            'is_active'          => 'boolean',
         ];
     }
 

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OtpController extends Controller
 {
-    // عرض صفحة إدخال OTP
+    // Returns the OTP entry page, redirecting to login if no pending OTP session exists.
     public function show(Request $request)
     {
         if (! session('otp_phone')) {
@@ -22,7 +22,7 @@ class OtpController extends Controller
         ]);
     }
 
-    // التحقق من الكود
+    // Verifies the submitted OTP code and logs the user in, or returns an error with remaining attempts.
     public function verify(Request $request)
     {
         $phone = session('otp_phone');
@@ -34,12 +34,17 @@ class OtpController extends Controller
 
         if ($result === 'ok') {
             $user = User::where('phone', $phone)->firstOrFail();
+
+            if (! $user->is_active) {
+                session()->forget('otp_phone');
+                return redirect()->route('login')->withErrors(['phone' => 'حسابك موقوف. تواصل مع الدعم.']);
+            }
+
             Auth::guard('users')->login($user);
             session()->forget('otp_phone');
             return redirect()->route('dashi');
         }
 
-        // إذا انتهت الصلاحية أو استنفدت المحاولات → عود للـ login
         if (in_array($result, ['expired', 'exhausted'])) {
             session()->forget('otp_phone');
             $msg = $result === 'expired'
@@ -48,14 +53,13 @@ class OtpController extends Controller
             return redirect()->route('login')->withErrors(['phone' => $msg]);
         }
 
-        // رمز خاطئ — أظهر المحاولات المتبقية
         $otp       = OtpCode::where('phone', $phone)->latest()->first();
         $remaining = $otp ? 3 - $otp->attempts : 0;
 
         return back()->withErrors(['code' => "الرمز غير صحيح. متبقي {$remaining} محاولات."]);
     }
 
-    // إعادة إرسال OTP
+    // Re-sends the OTP to the phone number stored in the current session.
     public function resend(Request $request)
     {
         $phone = session('otp_phone');

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class BusinessDashboardController extends Controller
 {
+    // Loads the business dashboard with service stats, request counts, favorites, review averages, and recent activity.
     public function index()
     {
         $user     = auth('users')->user();

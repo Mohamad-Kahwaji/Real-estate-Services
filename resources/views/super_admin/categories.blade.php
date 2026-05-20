@@ -1,4 +1,5 @@
 @extends('layouts/contentNavbarLayout')
+{{-- Categories management page: shows all service categories with subcategory counts and provides add/edit/delete modals. --}}
 
 @section('title', 'Categories')
 
@@ -175,18 +176,19 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name (Arabic)</th>
-                    <th>Name (English)</th>
-                    <th>Subcategories</th>
-                    <th>Actions</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الاسم' : 'Name' }}</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'التصنيفات الفرعية' : 'Subcategories' }}</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الإجراءات' : 'Actions' }}</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($categories as $category)
                 <tr>
                     <td><span class="badge-pill badge-accent">{{ $category->id }}</span></td>
-                    <td><strong>{{ $category->name_ar }}</strong></td>
-                    <td>{{ $category->name_en }}</td>
+                    <td>
+                        <strong>{{ app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en }}</strong>
+                        <div style="font-size:11px;color:#8592a3;">{{ app()->getLocale() === 'ar' ? $category->name_en : $category->name_ar }}</div>
+                    </td>
                     <td>
                         <span class="badge-pill badge-success">
                             <i class="ri ri-list-check-2"></i> {{ $category->subcategory_count }}

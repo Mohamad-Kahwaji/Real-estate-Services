@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
+    // Searches services, businesses, and users by keyword, with a word-by-word fuzzy fallback, returning JSON results.
     public function search(Request $request)
     {
         $q = trim($request->get('q', ''));
@@ -41,7 +42,8 @@ class SearchController extends Controller
 
         $businesses = Business::with('city')
             ->where(fn($query) => $query
-                ->where('name', 'like', $term)
+                ->where('job_name_ar', 'like', $term)
+                ->orWhere('job_name_en', 'like', $term)
                 ->orWhere('details', 'like', $term)
             )
             ->limit(5)
@@ -50,7 +52,7 @@ class SearchController extends Controller
                 'type'     => 'Business',
                 'icon'     => 'ri-building-2-line',
                 'color'    => '#ff9f43',
-                'title'    => $b->name,
+                'title'    => $b->job_name_en ?? $b->job_name_ar ?? '—',
                 'subtitle' => $b->city->name_ar ?? $b->city->name_en ?? '—',
                 'badge'    => $b->status,
                 'url'      => route('business.index') . '?search=' . urlencode($q),
@@ -95,6 +97,7 @@ class SearchController extends Controller
         return response()->json(['results' => $results->unique('title')->values()]);
     }
 
+    // Returns all cities, categories, and subcategories as JSON for populating search filter dropdowns.
     public function filters()
     {
         return response()->json([

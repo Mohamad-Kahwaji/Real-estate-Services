@@ -19,11 +19,13 @@ use Illuminate\Support\Facades\Hash;
 
 class SuperadminController extends Controller
 {
-     public function showLoginForm()
+    // Render the superadmin login page.
+    public function showLoginForm()
     {
         return view('auth.login-admin');
     }
 
+    // Load the superadmin dashboard with aggregated stats, recent activity, and unread notifications.
     public function index(){
         $superadmin = Auth::guard('superadmins')->user();
 
@@ -69,6 +71,7 @@ class SuperadminController extends Controller
         ));
     }
 
+    // List all admins with their roles and permissions for the superadmin management view.
     public function adminindex(){
       $admins = Admin::with(['roles.permissions', 'permissions'])->get();
       $allPermissions = \Spatie\Permission\Models\Permission::where('guard_name', 'admins')->get();
@@ -76,6 +79,7 @@ class SuperadminController extends Controller
       return view('super_admin.admins', compact('admins', 'allPermissions', 'roles'));
     }
 
+    // Update the superadmin's name, email, and optionally their password after verifying the current one.
     public function updateProfile(Request $request)
     {
         $superadmin = Auth::guard('superadmins')->user();
@@ -112,6 +116,7 @@ class SuperadminController extends Controller
         return redirect()->route('indexsuperadmin')->with('success', 'Profile updated successfully.');
     }
 
+    // Display all service requests with their related user, service, and business data.
     public function serviceRequests()
     {
         $requests = ServiceRequest::with(['user', 'service.business', 'service.category', 'business'])
@@ -119,6 +124,7 @@ class SuperadminController extends Controller
         return view('super_admin.servicerequests', compact('requests'));
     }
 
+    // Approve a service request and notify the requesting user.
     public function approveServiceRequest($id)
     {
         $req = ServiceRequest::with(['user', 'service'])->findOrFail($id);
@@ -133,6 +139,7 @@ class SuperadminController extends Controller
         return redirect()->route('superadmin.service-requests')->with('success', 'Service request approved successfully.');
     }
 
+    // Reject a service request and notify the requesting user.
     public function rejectServiceRequest($id)
     {
         $req = ServiceRequest::with(['user', 'service'])->findOrFail($id);

@@ -36,13 +36,19 @@ class OtpCode extends Model
         // إرسال فعلي عبر UltraMsg (نفس كود الكورس)
         $instanceId = config('services.ultramsg.instance_id');
         $token      = config('services.ultramsg.token');
-        $to         = str_starts_with($phone, '+') ? $phone : '+' . $phone;
+
+        // Convert local Syrian format (0xxxxxxxxx) to international (+963xxxxxxxxx)
+        $to = str_starts_with($phone, '+') ? $phone : '+963' . ltrim($phone, '0');
 
         $response = Http::post("https://api.ultramsg.com/{$instanceId}/messages/chat", [
             'token' => $token,
             'to'    => $to,
             'body'  => "🔐 رمز التحقق: *{$code}*\nصالح 10 دقائق.",
         ]);
+
+        if (! $response->successful()) {
+            Log::error("[OTP] UltraMsg failed for {$phone} → {$to}: " . $response->body());
+        }
 
         return $response->successful();
     }

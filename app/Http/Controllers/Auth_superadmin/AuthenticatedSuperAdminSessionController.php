@@ -10,11 +10,13 @@ use Illuminate\View\View;
 
 class AuthenticatedSuperAdminSessionController extends Controller
 {
+    // Returns the super-admin login form view.
     public function create(): View
     {
         return view('super_admin.auth_superadmin.auth-login-superadmin');
     }
 
+    // Attempts login as superadmin then as admin, redirecting to the appropriate dashboard on success.
     public function store(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
@@ -37,6 +39,7 @@ class AuthenticatedSuperAdminSessionController extends Controller
         ])->onlyInput('email');
     }
 
+    // Logs out the active superadmin or admin guard, invalidates the session, and redirects to the login page.
     public function destroy(Request $request): RedirectResponse
     {
         if (Auth::guard('superadmin')->check()) {

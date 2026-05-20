@@ -7,27 +7,32 @@ use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {
+    // Adds a service to the authenticated user's favorites without removing existing ones.
     public function add($service){
-      $user = auth('users')->user();
-      $user->favorites()->syncWithoutDetaching([$service]);
-      return back()->with('success', 'Service added to favorites successfully.');
+        $user = auth('users')->user();
+        $user->favorites()->syncWithoutDetaching([$service]);
+        return back()->with('success', 'Service added to favorites successfully.');
     }
+
+    // Removes a service from the authenticated user's favorites.
     public function remove($service)
-{
-    $user = auth('users')->user();
-    $user->favorites()->detach([$service]);
-    return back()->with('success', 'Service removed from favorites');
-}
-public function toggle($id)
-{
-    $user = auth('users')->user();
-
-    if ($user->favorites()->where('service_id', $id)->exists()) {
-        $user->favorites()->detach($id); // حذف
-    } else {
-        $user->favorites()->attach($id); // إضافة
+    {
+        $user = auth('users')->user();
+        $user->favorites()->detach([$service]);
+        return back()->with('success', 'Service removed from favorites');
     }
 
-    return back();
-}
+    // Toggles a service in or out of the authenticated user's favorites.
+    public function toggle($id)
+    {
+        $user = auth('users')->user();
+
+        if ($user->favorites()->where('service_id', $id)->exists()) {
+            $user->favorites()->detach($id);
+        } else {
+            $user->favorites()->attach($id);
+        }
+
+        return back();
+    }
 }

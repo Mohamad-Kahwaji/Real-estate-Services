@@ -15,19 +15,13 @@ use Illuminate\View\View;
 
 class RegisteredSuperAdminSessionController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
+    // Returns the super-admin registration form view.
     public function create(): View
     {
         return view('super_admin.auth_superadmin.auth-register-superadmin');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws ValidationException
-     */
+    // Validates input, creates a new user, fires the Registered event, and logs them in.
     public function store(Request $request): RedirectResponse
     {
         $request->validate([

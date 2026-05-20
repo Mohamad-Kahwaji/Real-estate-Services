@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+    // Submit or update a review for a completed and paid service request.
     public function store(Request $request, $requestId)
     {
         $user = auth('users')->user();
@@ -35,7 +36,7 @@ class ReviewController extends Controller
         return back()->with('success', 'Your review has been submitted. Thank you!');
     }
 
-    // Admin: list all reviews
+    // List all reviews with user and service details for the admin panel.
     public function index()
     {
         $reviews = Review::with(['user', 'service.business'])
@@ -45,14 +46,14 @@ class ReviewController extends Controller
         return view('admin.reviews', compact('reviews'));
     }
 
-    // Admin: delete a review
+    // Delete a review from the system.
     public function destroy(Review $review)
     {
         $review->delete();
         return back()->with('success', 'Review deleted.');
     }
 
-    // API: reviews for a specific service
+    // Return all reviews and aggregate rating stats for a given service (API).
     public function byService($serviceId)
     {
         $reviews = Review::with('user')

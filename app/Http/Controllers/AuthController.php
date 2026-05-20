@@ -11,21 +11,23 @@ class AuthController extends Controller
 {
     public function __construct(protected AuthService $auth_service)
     {
-
     }
+
+    // Delegates registration to AuthService and returns a success response with the new user data.
     public function register(RegisterRequest $request){
-      $response = $this->auth_service->register($request->validated());
-      return $this->successResponse(data::$data);
+        $response = $this->auth_service->register($request->validated());
+        return $this->successResponse(data::$data);
     }
 
+    // Delegates login to AuthService and returns a JSON error on failure or a success response on success.
     public function login(LoginRequest $request){
-      $response = $this->auth_service->login($request->validated());
-      if($response == "failed"){
-        return response()->json([
-          'message'=>"unauth",
-          'data'=>[],
-        ]);
-      }
-      return $this->successResponse(data:$response);
+        $response = $this->auth_service->login($request->validated());
+        if ($response == "failed") {
+            return response()->json([
+                'message' => "unauth",
+                'data'    => [],
+            ]);
+        }
+        return $this->successResponse(data: $response);
     }
 }

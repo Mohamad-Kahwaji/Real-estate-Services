@@ -1,4 +1,5 @@
 @extends('layouts/contentNavbarLayout')
+{{-- Admins management page: lists all admins with their roles/permissions, and provides view/edit/delete/toggle-status actions. --}}
 
 @section('title', 'Admins Management')
 
@@ -330,8 +331,11 @@
                 <div class="info-row">
                     <span class="label">Last Seen</span>
                     @if($admin->last_seen_at)
-                        @php $diffHours = now()->diffInHours($admin->last_seen_at); @endphp
-                        @if($diffHours < 1)
+                        @php
+                            $diffMins  = now()->diffInMinutes($admin->last_seen_at);
+                            $diffHours = now()->diffInHours($admin->last_seen_at);
+                        @endphp
+                        @if($diffMins < 5)
                             <span style="color:#28c76f;font-weight:700;font-size:12px;">
                                 <i class="ri ri-circle-fill me-1" style="font-size:7px;"></i>Online
                             </span>
@@ -462,8 +466,11 @@
                         <div style="background:#fafbff;border-radius:14px;padding:16px;border:1.5px solid #f1f3f9;">
                             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8592a3;margin-bottom:10px;">Last Seen</div>
                             @if($admin->last_seen_at)
-                                @php $diffHours = now()->diffInHours($admin->last_seen_at); @endphp
-                                @if($diffHours < 1)
+                                @php
+                                    $diffMins  = now()->diffInMinutes($admin->last_seen_at);
+                                    $diffHours = now()->diffInHours($admin->last_seen_at);
+                                @endphp
+                                @if($diffMins < 5)
                                     <div style="font-size:15px;font-weight:700;color:#28c76f;">
                                         <i class="ri ri-circle-fill me-1" style="font-size:9px;"></i>Online Now
                                     </div>

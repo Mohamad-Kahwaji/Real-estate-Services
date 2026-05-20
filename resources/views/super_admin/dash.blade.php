@@ -1,4 +1,5 @@
 @extends('layouts/contentNavbarLayout')
+{{-- Super admin overview dashboard: profile hero, platform-wide stats, notifications, and recent activity tables. --}}
 
 @section('title', 'Super Admin Dashboard')
 

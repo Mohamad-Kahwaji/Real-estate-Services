@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    // Returns a searchable list of all users with their business count and join date.
     public function index(Request $request)
     {
         $users = User::with('businesses')
@@ -32,6 +33,7 @@ class UserController extends Controller
         ]);
     }
 
+    // Returns a single user's profile along with their associated businesses and cities.
     public function show($id)
     {
         $user = User::with('businesses.city')->findOrFail($id);

@@ -11,6 +11,8 @@ class DynamicField extends Model
         'subcategory_id',
         'name',
         'label',
+        'label_ar',
+        'label_en',
         'type',
         'is_required',
         'options'

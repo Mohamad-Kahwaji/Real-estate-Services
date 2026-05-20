@@ -1,3 +1,4 @@
+{{-- Super admin sidebar navigation partial: renders the vertical menu with active-state detection for all super-admin routes. --}}
 @php
     $currentRoute = Route::currentRouteName();
     $active = fn(string $prefix) =>
@@ -35,14 +36,14 @@
         <li class="menu-header mt-4">
             <span class="menu-header-text">{{ __('app.administration') }}</span>
         </li>
-        <li class="menu-item {{ $active('indexadmin') }}">
-            <a href="{{ route('indexadmin.index') }}" class="menu-link">
+        <li class="menu-item {{ $is('adminsindex') }}">
+            <a href="{{ route('adminsindex') }}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-shield-user-line"></i>
                 <span class="menu-text">{{ __('app.admins') }}</span>
             </a>
         </li>
-        <li class="menu-item {{ $is('adminsindex') }}">
-            <a href="{{ route('adminsindex') }}" class="menu-link">
+        <li class="menu-item {{ $active('allindex') }}">
+            <a href="{{ route('allindex.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-group-line"></i>
                 <span class="menu-text">{{ __('app.users') }}</span>
             </a>

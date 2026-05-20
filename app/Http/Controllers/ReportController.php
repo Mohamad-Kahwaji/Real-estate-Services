@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    // Submits or updates a report for a service, guards against self-reporting, and notifies admins via push.
     public function store(Request $request, $serviceId)
     {
         $user = auth('users')->user();
@@ -43,12 +44,28 @@ class ReportController extends Controller
         return back()->with('success', 'Report submitted. We will review it shortly.');
     }
 
-    public function index()
+    // Lists all reports with optional search (service title, reason) and status filter.
+    public function index(Request $request)
     {
-        $reports = Report::with(['service.business', 'user'])->latest()->get();
+        $term = $request->search ? '%' . $request->search . '%' : null;
+
+        $reports = Report::with(['service.business', 'user'])
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($term, fn($q) => $q->where(fn($q2) =>
+                $q2->where('reason', 'like', $term)
+                   ->orWhereHas('service', fn($s) => $s->where('title', 'like', $term))
+            ))
+            ->latest()
+            ->get();
+
+        if ($request->expectsJson()) {
+            return response()->json(['status' => true, 'data' => $reports]);
+        }
+
         return view('super_admin.reports', compact('reports'));
     }
 
+    // Updates the review status of a report (pending, reviewed, or resolved).
     public function updateStatus(Request $request, $id)
     {
         $report = Report::findOrFail($id);
@@ -57,6 +74,7 @@ class ReportController extends Controller
         return back()->with('success', 'Report status updated.');
     }
 
+    // Permanently deletes a report by ID.
     public function destroy($id)
     {
         Report::findOrFail($id)->delete();

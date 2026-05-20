@@ -15,7 +15,7 @@ use Stripe\Refund as StripeRefund;
 
 class ServiceRequestController extends Controller
 {
-    // All services available to request
+    // Returns all approved services not belonging to the user's own businesses, with favorites pre-loaded.
     public function allservices()
     {
         /** @var User $user */
@@ -33,7 +33,7 @@ class ServiceRequestController extends Controller
         return view('users.allservice', compact('services', 'favorites'));
     }
 
-    // Create a new service request → redirect to payment
+    // Validates and creates a service request for an approved service, then redirects to payment checkout.
     public function requestservice(Request $request, $id)
     {
         $user = auth('users')->user();
@@ -68,7 +68,7 @@ class ServiceRequestController extends Controller
         return redirect()->route('payment.checkout', $serviceRequest->id);
     }
 
-    // Sent requests (by current user)
+    // Lists all service requests sent by the authenticated user along with payment status.
     public function sentservice()
     {
         /** @var User $user */
@@ -81,7 +81,7 @@ class ServiceRequestController extends Controller
         return view('users.sentservice', compact('requests'));
     }
 
-    // Incoming requests for business owner — only paid ones
+    // Lists paid, pending service requests directed at the authenticated user's businesses.
     public function incoming()
     {
         /** @var User $user */
@@ -98,7 +98,7 @@ class ServiceRequestController extends Controller
         return view('users.servicerequest', compact('requests'));
     }
 
-    // Approve a service request (only if payment_status = paid)
+    // Approves a paid service request belonging to the user's business and notifies the requester.
     public function approve($id)
     {
         /** @var User $user */
@@ -123,7 +123,7 @@ class ServiceRequestController extends Controller
             ->with('success', 'Request approved successfully.');
     }
 
-    // Reject a service request (and refund if already paid)
+    // Rejects a pending service request and automatically issues a refund if the payment was already captured.
     public function reject($id)
     {
         /** @var User $user */
@@ -138,7 +138,6 @@ class ServiceRequestController extends Controller
 
         $serviceRequest->update(['status' => 'rejected']);
 
-        // ── Refund if payment was already made ────────────────────────────────
         $payment = $serviceRequest->payment;
         if ($payment && $payment->status === 'paid') {
             $refunded = $this->issueRefund($payment);
@@ -159,6 +158,7 @@ class ServiceRequestController extends Controller
             ->with('success', 'Request rejected.' . ($payment && $payment->status !== 'pending' ? ' Refund initiated.' : ''));
     }
 
+    // Attempts a gateway refund (Stripe or PayPal) for the given payment, returning true on success.
     private function issueRefund(Payment $payment): bool
     {
         try {
@@ -189,6 +189,7 @@ class ServiceRequestController extends Controller
         }
     }
 
+    // Returns the PayPal API base URL for either live or sandbox mode.
     private function paypalBaseUrl(): string
     {
         return config('services.paypal.mode') === 'live'
@@ -196,6 +197,7 @@ class ServiceRequestController extends Controller
             : 'https://api-m.sandbox.paypal.com';
     }
 
+    // Fetches a short-lived PayPal OAuth access token using client credentials.
     private function getPaypalAccessToken(): string
     {
         $response = Http::withBasicAuth(
@@ -208,7 +210,7 @@ class ServiceRequestController extends Controller
         return $response->json('access_token');
     }
 
-    // Approved requests received (for service owner)
+    // Lists approved service requests received by the user's business (completed transactions).
     public function received()
     {
         /** @var User $user */
@@ -224,7 +226,7 @@ class ServiceRequestController extends Controller
         return view('users.servicereceived', compact('requests'));
     }
 
-    // Approved service requests sent by this user
+    // Lists the current user's own service requests that have been approved.
     public function approverequest()
     {
         /** @var User $user */
@@ -238,7 +240,7 @@ class ServiceRequestController extends Controller
         return view('users.servicereceived', compact('requests'));
     }
 
-    // Admin: approve a received service request
+    // Approves a paid service request by ID (admin/superadmin action) and notifies the requesting user.
     public function approverec($id)
     {
         $serviceRequest = ServiceRequest::where('id', $id)
