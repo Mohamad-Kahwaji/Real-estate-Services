@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Business;
 use App\Models\Category;
 use App\Models\Order;
@@ -185,6 +186,7 @@ public function allservices(Request $request){
         ['type' => 'service_request', 'service_id' => $service->id]
     );
     Superadmin::all()->each(fn($sa) => $sa->notify($adminNotification));
+    Admin::all()->each(fn($a) => $a->notify($adminNotification));
 
     return response()->json([
         'status' => true,

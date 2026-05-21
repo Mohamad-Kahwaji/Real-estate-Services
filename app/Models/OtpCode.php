@@ -18,7 +18,8 @@ class OtpCode extends Model
         // احذف أي OTP قديم لنفس الرقم
         static::where('phone', $phone)->delete();
 
-        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $devMode = ! config('services.ultramsg.enabled', false);
+        $code = $devMode ? '123456' : str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         static::create([
             'phone'      => $phone,

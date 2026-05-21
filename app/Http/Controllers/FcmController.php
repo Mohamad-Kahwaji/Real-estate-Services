@@ -27,9 +27,8 @@ class FcmController extends Controller
         ]);
 
         DB::table('device_tokens')->updateOrInsert(
-            ['user_id' => auth('users')->id()],
+            ['user_id' => auth('users')->id(), 'token' => $request->token],
             [
-                'token'      => $request->token,
                 'updated_at' => now(),
                 'created_at' => now(),
             ]

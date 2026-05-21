@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activetype;
+use App\Models\Admin;
 use App\Models\Business;
 use App\Models\City;
+use App\Models\Superadmin;
 use App\Models\User;
 use App\Notifications\InvoiceCreated;
 use App\Notifications\UserDatabaseNotification;
@@ -60,6 +62,19 @@ class BusinessController extends Controller
         return view('users.business-account', compact('activetypes', 'cities'));
     }
 
+    // Show the edit form for a user's own business account.
+    public function edit($id)
+    {
+        $business = Business::where('id', $id)
+            ->where('user_id', auth('users')->id())
+            ->firstOrFail();
+
+        $activetypes = Activetype::all();
+        $cities      = City::all();
+
+        return view('users.business-account', compact('business', 'activetypes', 'cities'));
+    }
+
     // Validate and persist a new business account request, then notify admins.
     public function store(Request $request)
     {
@@ -94,6 +109,14 @@ class BusinessController extends Controller
             ]
         );
 
+        $dbNotification = new UserDatabaseNotification(
+            'New Business Account Request',
+            'There is a new business account waiting for approval.',
+            ['type' => 'business_account_request', 'business_id' => $business->id]
+        );
+        Superadmin::all()->each(fn ($sa) => $sa->notify($dbNotification));
+        Admin::all()->each(fn ($a) => $a->notify($dbNotification));
+
         if ($request->wantsJson()) {
             return response()->json([
                 'status'  => true,
@@ -106,29 +129,34 @@ class BusinessController extends Controller
             ->with('success', 'Your business account request has been submitted. Please wait for approval.');
     }
 
-    // Update an existing business account's details via JSON API.
+    // Update the authenticated user's own business account.
     public function update(Request $request, $id)
     {
+        $business = Business::where('id', $id)
+            ->where('user_id', auth('users')->id())
+            ->firstOrFail();
+
         $val = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'active' => 'required|boolean',
+            'activetype_id'  => 'required|exists:activetypes,id',
             'license_number' => 'required|integer',
-            'job_name_ar' => 'required|string',
-            'job_name_en' => 'required|string',
-            'activites' => 'required|string',
-            'details' => 'required|string',
-            'city_id' => 'required|exists:cities,id',
-            'image' => 'nullable|image',
+            'job_name_ar'    => 'required|string',
+            'job_name_en'    => 'required|string',
+            'activites'      => 'required|string',
+            'details'        => 'required|string',
+            'city_id'        => 'required|exists:cities,id',
+            'image'          => 'nullable|image|max:4096',
+            'latitude'       => 'nullable|numeric',
+            'longitude'      => 'nullable|numeric',
         ]);
 
-        $business = Business::findOrFail($id);
+        if ($request->hasFile('image')) {
+            $val['image'] = $request->file('image')->store('businesses', 'public');
+        }
+
         $business->update($val);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Business account updated successfully.',
-            'data' => $business
-        ], 200);
+        return redirect()->route('business.dashboard')
+            ->with('success', 'Business account updated successfully.');
     }
 
     // Return all businesses with a pending status as a JSON response.

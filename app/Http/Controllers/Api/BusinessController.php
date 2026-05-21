@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activetype;
+use App\Models\Admin;
 use App\Models\Business;
 use App\Models\City;
 use App\Models\Superadmin;
@@ -65,6 +66,18 @@ class BusinessController extends Controller
         $val['user_id'] = auth()->id();
         $val['status'] = 'pending';
 
+        $exists = Business::where('user_id', auth()->id())
+            ->where('activetype_id', $val['activetype_id'])
+            ->whereIn('status', ['pending', 'approved'])
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'You already have a business account with this activity type.',
+            ], 422);
+        }
+
         if ($request->hasFile('image')) {
           $val['image'] = $request->file('image')->store('businesses', 'public');
   }
@@ -86,6 +99,7 @@ class BusinessController extends Controller
             ['type' => 'business_account_request', 'business_id' => $business->id]
         );
         Superadmin::all()->each(fn($sa) => $sa->notify($notification));
+        Admin::all()->each(fn($a) => $a->notify($notification));
 
         return response()->json([
             'status' => true,

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Report;
 use App\Models\Service;
+use App\Models\Superadmin;
+use App\Notifications\UserDatabaseNotification;
 use App\Services\AdminPushNotificationService;
 use Illuminate\Http\Request;
 
@@ -40,6 +43,14 @@ class ReportController extends Controller
                 ['type' => 'service_report', 'service_id' => $service->id]
             );
         } catch (\Throwable) {}
+
+        $dbNotification = new UserDatabaseNotification(
+            'New Service Report',
+            'A user reported a service: ' . $service->title,
+            ['type' => 'service_report', 'service_id' => $service->id]
+        );
+        Superadmin::all()->each(fn ($sa) => $sa->notify($dbNotification));
+        Admin::all()->each(fn ($a) => $a->notify($dbNotification));
 
         return back()->with('success', 'Report submitted. We will review it shortly.');
     }

@@ -3,47 +3,40 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\OtpCode;
 use App\Models\User;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 
 class NewPasswordController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'token'    => ['required'],
-            'email'    => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'phone'    => 'required|string',
+            'code'     => 'required|digits:6',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user) use ($request) {
-                $user->forceFill([
-                    'password'       => Hash::make($request->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
+        $result = OtpCode::check($request->phone, $request->code);
 
-                event(new PasswordReset($user));
-            }
-        );
+        if ($result !== 'ok') {
+            $message = match ($result) {
+                'expired'   => 'The verification code has expired.',
+                'exhausted' => 'Too many attempts. Please request a new code.',
+                default     => 'The verification code is invalid.',
+            };
 
-        if ($status !== Password::PASSWORD_RESET) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
-            ]);
+            return response()->json(['status' => false, 'message' => $message], 422);
         }
+
+        $user = User::where('phone', $request->phone)->firstOrFail();
+        $user->update(['password' => Hash::make($request->password)]);
 
         return response()->json([
             'status'  => true,
-            'message' => __($status),
+            'message' => 'Password reset successfully.',
         ]);
     }
 }

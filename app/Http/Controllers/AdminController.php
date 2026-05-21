@@ -64,16 +64,15 @@ class AdminController extends Controller
         $pendingServices    = Service::where('status', 'pending')->count();
         $totalServices      = Service::count();
 
-        $recentPending = Business::with('user','city')
-            ->where('status','pending')
-            ->latest()->take(8)->get();
+        $notifications = $admin->notifications()->latest()->take(15)->get();
+        $unreadCount   = $admin->unreadNotifications()->count();
 
         return view('admin.index', compact(
             'admin',
             'pendingBusinesses','totalBusinesses','approvedBusinesses',
             'totalCategories','totalSubcategories','totalCities',
             'pendingServices','totalServices',
-            'recentPending'
+            'notifications', 'unreadCount'
         ));
     }
 
@@ -161,6 +160,13 @@ class AdminController extends Controller
         $admin->save();
 
         return redirect()->route('adminsindex');
+    }
+
+    // Mark all unread notifications as read for the authenticated admin.
+    public function markAllNotificationsRead()
+    {
+        Auth::guard('admins')->user()->unreadNotifications->markAsRead();
+        return back()->with('success', 'All notifications marked as read.');
     }
 
     protected $guard_name = 'admin';

@@ -105,6 +105,7 @@
                             <span class="badge bg-warning text-dark service-badge">Pending</span>
                         @endif
                     </div>
+
                 </div>
 
                 <div class="card-body d-flex flex-column">
@@ -116,9 +117,38 @@
                     </div>
 
                     {{-- عنوان الخدمة --}}
-                    <h5 class="card-title mb-2">
+                    <h5 class="card-title mb-1">
                         {{ $service->title }}
                     </h5>
+
+                    {{-- التقييم --}}
+                    @php
+                        $avgRating   = round($service->review_avg_rating ?? 0, 1);
+                        $reviewCount = $service->review_count ?? 0;
+                        $fullStars   = (int) floor($avgRating);
+                        $halfStar    = ($avgRating - $fullStars) >= 0.5;
+                    @endphp
+                    <div class="svc-rating-row mb-2">
+                        @if($avgRating > 0)
+                            <div class="d-flex align-items-center gap-1">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= $fullStars)
+                                        <i class="ri-star-fill svc-star filled"></i>
+                                    @elseif($i == $fullStars + 1 && $halfStar)
+                                        <i class="ri-star-half-fill svc-star filled"></i>
+                                    @else
+                                        <i class="ri-star-line svc-star empty"></i>
+                                    @endif
+                                @endfor
+                                <span class="svc-rating-score">{{ number_format($avgRating, 1) }}</span>
+                                @if($reviewCount > 0)
+                                    <span class="svc-rating-count">({{ $reviewCount }} {{ $reviewCount == 1 ? 'review' : 'reviews' }})</span>
+                                @endif
+                            </div>
+                        @else
+                            <span class="svc-no-rating"><i class="ri-star-line me-1"></i>No reviews yet</span>
+                        @endif
+                    </div>
 
                     {{-- الوصف --}}
                     <p class="card-text text-muted small mb-3 service-description">
@@ -585,6 +615,45 @@
 #mapFilterPanel .card-header { border-bottom: 1px solid #f0f0f7; }
 .filter-marker-popup strong { font-size: 13px; }
 .leaflet-popup-content-wrapper { border-radius: 12px !important; }
+
+/* بادج التقييم */
+.svc-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ── تقييم النجوم ── */
+.svc-rating-row {
+    min-height: 22px;
+}
+.svc-star {
+    font-size: 15px;
+    line-height: 1;
+}
+.svc-star.filled  { color: #f59e0b; }
+.svc-star.empty   { color: #d1d5db; }
+.svc-rating-score {
+    font-size: 13px;
+    font-weight: 800;
+    color: #1f2937;
+    margin-left: 3px;
+}
+.svc-rating-count {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-left: 1px;
+}
+.svc-no-rating {
+    font-size: 12px;
+    color: #9ca3af;
+}
 
 /* زر النجمة */
 .favorite-btn {

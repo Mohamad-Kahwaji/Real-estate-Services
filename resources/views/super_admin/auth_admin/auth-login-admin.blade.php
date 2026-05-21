@@ -310,7 +310,7 @@ body { margin: 0; padding: 0; }
                 </div>
 
                 <div class="al-forgot">
-                    <a href="{{ url('auth/forgot-password-basic') }}">Forgot password?</a>
+                    <a href="{{ route('admin.forgot-password') }}">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="btn-al-login">

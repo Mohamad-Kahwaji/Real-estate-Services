@@ -23,6 +23,8 @@ class ServiceRequestController extends Controller
         $businessIds = $user->businesses()->pluck('id');
 
         $services = Service::with(['business.user', 'business.activeType', 'business.city', 'category'])
+            ->withAvg('review', 'rating')
+            ->withCount('review')
             ->where('status', 'approved')
             ->whereNotIn('business_id', $businessIds)
             ->latest()

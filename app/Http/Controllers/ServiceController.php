@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Business;
 use App\Models\Category;
 use App\Models\Order;
@@ -22,6 +23,7 @@ class ServiceController extends Controller
         $term = $request->search ? '%' . $request->search . '%' : null;
 
         $query = Service::with(['business.city', 'category', 'subcategory'])
+            ->withAvg('review', 'rating')
             ->when($request->status, fn($q) => $q->where('status', $request->status))
             ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
             ->when($request->subcategory_id, fn($q) => $q->where('subcategory_id', $request->subcategory_id))
@@ -39,6 +41,7 @@ class ServiceController extends Controller
         if ($services->isEmpty() && $request->search) {
             $words = array_filter(explode(' ', $request->search));
             $services = Service::with(['business.city', 'category', 'subcategory'])
+                ->withAvg('review', 'rating')
                 ->where(function($q) use ($words) {
                     foreach ($words as $word) {
                         $q->orWhere('title', 'like', '%' . $word . '%');
@@ -177,6 +180,7 @@ class ServiceController extends Controller
             ['type' => 'service_request', 'service_id' => $service->id]
         );
         Superadmin::all()->each(fn($sa) => $sa->notify($adminNotification));
+        Admin::all()->each(fn($a) => $a->notify($adminNotification));
 
         return response()->json([
             'status'  => true,

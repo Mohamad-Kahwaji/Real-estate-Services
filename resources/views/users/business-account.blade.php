@@ -1,6 +1,8 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Create Business Account')
+@php $editing = isset($business); @endphp
+
+@section('title', $editing ? 'Edit Business Account' : 'Create Business Account')
 
 @section('content')
 <div class="row justify-content-center">
@@ -8,8 +10,10 @@
 
         <div class="card shadow-sm">
             <div class="card-header border-bottom">
-                <h5 class="mb-0">Create Business Account</h5>
-                <small class="text-muted">Fill in the details below and wait for admin approval</small>
+                <h5 class="mb-0">{{ $editing ? 'Edit Business Account' : 'Create Business Account' }}</h5>
+                <small class="text-muted">
+                    {{ $editing ? 'Update your business details below' : 'Fill in the details below and wait for admin approval' }}
+                </small>
             </div>
 
             <div class="card-body pt-4">
@@ -23,13 +27,13 @@
                 @endif
 
                 @if(session('success'))
-                    <div class="alert alert-success mb-4">
-                        {{ session('success') }}
-                    </div>
+                    <div class="alert alert-success mb-4">{{ session('success') }}</div>
                 @endif
 
-                <form action="{{ route('user.business.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ $editing ? route('user.business.update', $business->id) : route('user.business.store') }}"
+                      method="POST" enctype="multipart/form-data">
                     @csrf
+                    @if($editing) @method('PUT') @endif
 
                     <div class="row g-4">
 
@@ -39,15 +43,14 @@
                                 <select class="form-select @error('activetype_id') is-invalid @enderror" name="activetype_id">
                                     <option value="">Select Activity Type</option>
                                     @foreach($activetypes as $type)
-                                        <option value="{{ $type->id }}" {{ old('activetype_id') == $type->id ? 'selected' : '' }}>
+                                        <option value="{{ $type->id }}"
+                                            {{ old('activetype_id', $editing ? $business->activetype_id : '') == $type->id ? 'selected' : '' }}>
                                             {{ $type->name }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <label>Activity Type</label>
-                                @error('activetype_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('activetype_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
@@ -57,12 +60,10 @@
                                 <input type="number"
                                        class="form-control @error('license_number') is-invalid @enderror"
                                        name="license_number"
-                                       value="{{ old('license_number') }}"
+                                       value="{{ old('license_number', $editing ? $business->license_number : '') }}"
                                        placeholder="License Number">
                                 <label>License Number</label>
-                                @error('license_number')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('license_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
@@ -72,12 +73,10 @@
                                 <input type="text"
                                        class="form-control @error('job_name_ar') is-invalid @enderror"
                                        name="job_name_ar"
-                                       value="{{ old('job_name_ar') }}"
+                                       value="{{ old('job_name_ar', $editing ? $business->job_name_ar : '') }}"
                                        placeholder="Job Name Arabic">
                                 <label>Job Name (Arabic)</label>
-                                @error('job_name_ar')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('job_name_ar') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
@@ -87,12 +86,10 @@
                                 <input type="text"
                                        class="form-control @error('job_name_en') is-invalid @enderror"
                                        name="job_name_en"
-                                       value="{{ old('job_name_en') }}"
+                                       value="{{ old('job_name_en', $editing ? $business->job_name_en : '') }}"
                                        placeholder="Job Name English">
                                 <label>Job Name (English)</label>
-                                @error('job_name_en')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('job_name_en') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
@@ -102,12 +99,10 @@
                                 <input type="text"
                                        class="form-control @error('activites') is-invalid @enderror"
                                        name="activites"
-                                       value="{{ old('activites') }}"
+                                       value="{{ old('activites', $editing ? $business->activites : '') }}"
                                        placeholder="Activities">
                                 <label>Activities</label>
-                                @error('activites')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('activites') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
@@ -115,13 +110,10 @@
                         <div class="col-12">
                             <div class="form-floating form-floating-outline">
                                 <textarea class="form-control @error('details') is-invalid @enderror"
-                                          name="details"
-                                          placeholder="Details"
-                                          style="height: 120px">{{ old('details') }}</textarea>
+                                          name="details" placeholder="Details"
+                                          style="height: 120px">{{ old('details', $editing ? $business->details : '') }}</textarea>
                                 <label>Details</label>
-                                @error('details')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('details') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
@@ -131,28 +123,30 @@
                                 <select class="form-select @error('city_id') is-invalid @enderror" name="city_id">
                                     <option value="">Select City</option>
                                     @foreach($cities as $city)
-                                        <option value="{{ $city->id }}" {{ old('city_id') == $city->id ? 'selected' : '' }}>
+                                        <option value="{{ $city->id }}"
+                                            {{ old('city_id', $editing ? $business->city_id : '') == $city->id ? 'selected' : '' }}>
                                             {{ $city->name_en }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <label>City</label>
-                                @error('city_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('city_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
                         {{-- Image --}}
                         <div class="col-12 col-md-6">
                             <label class="form-label">Business Image <span class="text-muted">(optional)</span></label>
-                            <input type="file"
-                                   class="form-control @error('image') is-invalid @enderror"
-                                   name="image"
-                                   accept="image/*">
-                            @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            @if($editing && $business->image)
+                                <div class="mb-2">
+                                    <img src="{{ asset('storage/' . $business->image) }}"
+                                         style="height:60px;border-radius:8px;object-fit:cover;" alt="Current image">
+                                    <small class="text-muted ms-2">Current image</small>
+                                </div>
+                            @endif
+                            <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                   name="image" accept="image/*">
+                            @error('image') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Map --}}
@@ -164,13 +158,13 @@
                         {{-- Lat / Lng --}}
                         <div class="col-12 col-md-6">
                             <label class="form-label">Latitude</label>
-                            <input type="text" name="latitude" id="latitude"
-                                   class="form-control" value="{{ old('latitude') }}" readonly>
+                            <input type="text" name="latitude" id="latitude" class="form-control"
+                                   value="{{ old('latitude', $editing ? $business->latitude : '') }}" readonly>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label">Longitude</label>
-                            <input type="text" name="longitude" id="longitude"
-                                   class="form-control" value="{{ old('longitude') }}" readonly>
+                            <input type="text" name="longitude" id="longitude" class="form-control"
+                                   value="{{ old('longitude', $editing ? $business->longitude : '') }}" readonly>
                         </div>
 
                         <div class="col-12">
@@ -182,9 +176,10 @@
                         {{-- Buttons --}}
                         <div class="col-12">
                             <div class="d-flex justify-content-end gap-2 border-top pt-4 mt-2">
-                                <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                                <a href="{{ route('business.dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="ri ri-send-plane-line me-1"></i> Submit for Approval
+                                    <i class="ri {{ $editing ? 'ri-save-line' : 'ri-send-plane-line' }} me-1"></i>
+                                    {{ $editing ? 'Save Changes' : 'Submit for Approval' }}
                                 </button>
                             </div>
                         </div>
@@ -201,8 +196,8 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const defaultLat = 33.5138;
-    const defaultLng = 36.2765;
+    const defaultLat = {{ old('latitude', isset($business) && $business->latitude ? $business->latitude : 33.5138) }};
+    const defaultLng = {{ old('longitude', isset($business) && $business->longitude ? $business->longitude : 36.2765) }};
 
     const map = L.map('business-map').setView([defaultLat, defaultLng], 12);
 
@@ -215,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function setLocation(lat, lng) {
         document.getElementById('latitude').value  = lat;
         document.getElementById('longitude').value = lng;
-
         if (marker) {
             marker.setLatLng([lat, lng]);
         } else {
@@ -229,9 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
         map.setView([lat, lng], 15);
     }
 
-    map.on('click', function (e) {
-        setLocation(e.latlng.lat, e.latlng.lng);
-    });
+    map.on('click', function (e) { setLocation(e.latlng.lat, e.latlng.lng); });
 
     window.useMyLocation = function () {
         if (!navigator.geolocation) { alert('Geolocation not supported'); return; }
@@ -241,8 +233,8 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     };
 
-    @if(old('latitude') && old('longitude'))
-        setLocation({{ old('latitude') }}, {{ old('longitude') }});
+    @if(old('latitude', isset($business) && $business->latitude ? $business->latitude : null))
+        setLocation({{ old('latitude', $business->latitude ?? 0) }}, {{ old('longitude', $business->longitude ?? 0) }});
     @endif
 });
 </script>

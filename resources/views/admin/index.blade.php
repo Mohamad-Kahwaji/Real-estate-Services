@@ -395,95 +395,63 @@
     </div>
 </div>
 
-{{-- â”€â”€ Pending Business Requests â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
-<div class="section-title">Pending Business Account Requests</div>
-<div class="main-card">
+{{-- ── Notifications ──────────────────────────────────────────── --}}
+<div class="section-title mt-2">
+    Notifications
+    @if($unreadCount > 0)
+    <span class="cnt-badge cb-orange ms-2">{{ $unreadCount }} unread</span>
+    @endif
+</div>
+<div class="main-card mb-4">
     <div class="main-card-header">
         <span class="main-card-title">
-            <i class="ri ri-building-2-line me-2" style="color:var(--orange);"></i>
-            Awaiting Approval
+            <i class="ri ri-notification-3-line me-2" style="color:var(--accent);"></i>
+            Recent Notifications
         </span>
-        @if($pendingBusinesses > 0)
-        <span class="cnt-badge cb-orange">{{ $pendingBusinesses }} pending</span>
-        @else
-        <span class="cnt-badge cb-green"><i class="ri ri-checkbox-circle-line me-1" style="font-size:11px;"></i>All clear</span>
+        @if($unreadCount > 0)
+        <form action="{{ route('admin.notifications.read-all') }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="submit" style="border:none;background:none;font-size:12px;color:#696cff;font-weight:700;cursor:pointer;padding:0;">
+                <i class="ri ri-check-double-line me-1"></i>Mark all as read
+            </button>
+        </form>
         @endif
     </div>
 
-    @if($recentPending->count())
-    <div class="table-responsive">
-        <table class="table bt">
-            <thead>
-                <tr>
-                    <th>Business</th>
-                    <th>Owner</th>
-                    <th>License</th>
-                    <th>City</th>
-                    <th>Status</th>
-                    <th class="text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($recentPending as $biz)
-                <tr>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="biz-initials bi-{{ $biz->id % 5 }}">
-                                {{ strtoupper(substr($biz->job_name_en ?? 'B', 0, 1)) }}
-                            </div>
-                            <div>
-                                <div class="fw-bold" style="color:#1e293b;">{{ $biz->job_name_en ?? '-' }}</div>
-                                <div class="text-muted" style="font-size:11px;">{{ $biz->job_name_ar ?? '' }}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="fw-semibold">{{ $biz->user->name ?? '-' }}</div>
-                    </td>
-                    <td>
-                        <span class="text-muted" style="font-family:monospace;font-size:12px;">
-                            {{ $biz->license_number ?? '-' }}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="d-inline-flex align-items-center gap-1 text-muted" style="font-size:13px;">
-                            <i class="ri ri-map-pin-line" style="font-size:12px;"></i>
-                            {{ $biz->city->name_en ?? '-' }}
-                        </span>
-                    </td>
-                    <td>
-                        @php $s = $biz->status ?? 'pending'; @endphp
-                        <span class="status-pill pill-{{ $s }}">
-                            <i class="ri ri-checkbox-blank-circle-fill" style="font-size:7px;"></i>
-                            {{ ucfirst($s) }}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="d-flex align-items-center justify-content-center gap-2">
-                            <form action="{{ route('approve', $biz->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="action-btn btn-approve">
-                                    <i class="ri ri-check-line"></i> Approve
-                                </button>
-                            </form>
-                            <form action="{{ route('reject', $biz->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="action-btn btn-reject">
-                                    <i class="ri ri-close-line"></i> Reject
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    @if($notifications->count())
+    <div style="divide-y:1px solid #f1f3f9;">
+        @foreach($notifications as $notif)
+        @php $d = $notif->data; @endphp
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 20px;border-bottom:1px solid #f8f9fc;">
+            <div style="width:40px;height:40px;border-radius:12px;background:
+                @if(($d['data']['type'] ?? '') === 'business_account_request') #fff4e5
+                @elseif(($d['data']['type'] ?? '') === 'service_request') #eef0ff
+                @else #fdeaea @endif
+                ;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="ri
+                    @if(($d['data']['type'] ?? '') === 'business_account_request') ri-building-2-line" style="color:#ff9f43;
+                    @elseif(($d['data']['type'] ?? '') === 'service_request') ri-tools-line" style="color:#696cff;
+                    @else ri-flag-line" style="color:#ea5455; @endif
+                    font-size:18px;"></i>
+            </div>
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:14px;font-weight:700;color:#1e293b;">{{ $d['title'] ?? '' }}</div>
+                <div style="font-size:13px;color:#64748b;margin-top:2px;">{{ $d['message'] ?? '' }}</div>
+                <div style="font-size:11px;color:#b0aab8;margin-top:4px;">
+                    <i class="ri ri-time-line me-1"></i>{{ $notif->created_at->diffForHumans() }}
+                </div>
+            </div>
+            @if(! $notif->read_at)
+            <div style="width:8px;height:8px;border-radius:50%;background:#696cff;margin-top:6px;flex-shrink:0;"></div>
+            @endif
+        </div>
+        @endforeach
     </div>
     @else
     <div class="empty-state">
-        <i class="ri ri-checkbox-circle-line" style="color:#28c76f;"></i>
-        <p class="fw-bold mb-1" style="color:#1e293b;">No Pending Requests</p>
-        <p class="small mb-0">All business account requests have been reviewed</p>
+        <i class="ri ri-notification-off-line"></i>
+        <p class="fw-bold mb-1" style="color:#1e293b;">No Notifications</p>
+        <p class="small mb-0">You're all caught up</p>
     </div>
     @endif
 </div>

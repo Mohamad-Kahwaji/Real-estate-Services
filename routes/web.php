@@ -252,6 +252,8 @@ Route::middleware('auth:admins,superadmins')->group(function () {
     Route::get('admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     // Update the admin's own profile
     Route::post('admin/profile/update', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+    // Mark all admin notifications as read
+    Route::post('admin/notifications/read-all', [AdminController::class, 'markAllNotificationsRead'])->name('admin.notifications.read-all');
 
     // Approve a business account (requires accept business account permission)
     Route::post('approve/{id}', [BusinessController::class, 'approve'])->name('approve')

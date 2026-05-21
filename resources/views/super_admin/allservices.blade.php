@@ -20,6 +20,19 @@
     box-shadow: 0 20px 48px rgba(15,23,42,.13);
 }
 
+/* Rating badge */
+.svc-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0,0,0,.6);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
 /* Image */
 .service-img-wrap { position: relative; overflow: hidden; }
 .service-img {
@@ -418,6 +431,15 @@
                     </div>
                     <div class="position-absolute top-0 end-0 m-2">
                         <span class="badge-type">{{ strtoupper($service->services_type) }}</span>
+                    </div>
+
+                    {{-- متوسط التقييم --}}
+                    @php $avgRating = round($service->review_avg_rating ?? 0, 1); @endphp
+                    <div class="position-absolute bottom-0 start-0 m-2">
+                        <div class="svc-rating-badge">
+                            <i class="ri-star-fill me-1" style="color:#fbbf24;font-size:12px;"></i>
+                            <span>{{ $avgRating > 0 ? number_format($avgRating, 1) : 'No rating' }}</span>
+                        </div>
                     </div>
                 </div>
 
