@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_active')->default(true)->after('phone');
+            $table->boolean('is_active')->default(true);
         });
 
         DB::statement("ALTER TABLE `businesses` MODIFY `status` ENUM('pending','approved','rejected','suspended') NOT NULL DEFAULT 'pending'");
