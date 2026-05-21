@@ -12,11 +12,11 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\PaymentController as ApiPaymentController;
 use App\Http\Controllers\Api\ServiceRequestController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
-use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\FcmController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 

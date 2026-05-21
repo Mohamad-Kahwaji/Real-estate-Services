@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Review;
 use Illuminate\Http\Request;
@@ -40,15 +41,19 @@ class ReviewController extends Controller
     }
 
     // Returns all reviews and aggregate rating stats for the specified service as JSON.
-    public function index($id){
-        $reviews = Review::with(['user', 'service.business'])->where('service_id', $id)->get();
+    public function index($id = null){
+        $reviews = Review::with(['user', 'service.business'])->get();
+        return response()->json(['status' => true, 'data' => $reviews]);
+    }
+
+    public function byService($serviceId){
+        $reviews = Review::with(['user', 'service.business'])->where('service_id', $serviceId)->get();
         return response()->json([
-            'status'         => 'approved',
-            'service_id'     => $id,
-            'average_rating' => $reviews->avg('rating'),
+            'status'         => true,
+            'service_id'     => $serviceId,
+            'average_rating' => round($reviews->avg('rating'), 1),
             'reviews_count'  => $reviews->count(),
             'data'           => $reviews,
-            'message'        => 'Reviews retrieved successfully',
         ]);
     }
 }
