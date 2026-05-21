@@ -116,8 +116,8 @@
         <li class="menu-header mt-4">
             <span class="menu-header-text">{{ __('app.monitoring') }}</span>
         </li>
-        <li class="menu-item {{ $active('reports') }}">
-            <a href="{{ route('reports.index') }}" class="menu-link">
+        <li class="menu-item {{ $active('superadmin.reports') }}">
+            <a href="{{ route('superadmin.reports.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-flag-2-line"></i>
                 <span class="menu-text">{{ __('app.reports') }}</span>
             </a>

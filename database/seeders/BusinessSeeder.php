@@ -12,12 +12,7 @@ class BusinessSeeder extends Seeder
 {
     public function run(): void
     {
-        $typeOffice   = Activetype::where('name', 'Real Estate Office')->first();
-        $typeAgent    = Activetype::where('name', 'Real Estate Agent')->first();
-        $typeDeveloper= Activetype::where('name', 'Real Estate Developer')->first();
-        $typeInvestor = Activetype::where('name', 'Real Estate Investor')->first();
-        $typeMgmt     = Activetype::where('name', 'Property Management Company')->first();
-        $typeConsult  = Activetype::where('name', 'Real Estate Consultancy')->first();
+        $typeRealEstate = Activetype::where('name', 'Real Estate')->first();
 
         $damascus  = City::where('name_en', 'Damascus')->first();
         $aleppo    = City::where('name_en', 'Aleppo')->first();
@@ -34,7 +29,7 @@ class BusinessSeeder extends Seeder
         $businesses = [
             [
                 'user_id'        => $ahmad->id,
-                'activetype_id'  => $typeOffice->id,
+                'activetype_id'  => $typeRealEstate->id,
                 'city_id'        => $damascus->id,
                 'job_name_ar'    => 'مكتب النور للعقارات',
                 'job_name_en'    => 'Al Nour Real Estate Office',
@@ -47,7 +42,7 @@ class BusinessSeeder extends Seeder
             ],
             [
                 'user_id'        => $sara->id,
-                'activetype_id'  => $typeAgent->id,
+                'activetype_id'  => $typeRealEstate->id,
                 'city_id'        => $aleppo->id,
                 'job_name_ar'    => 'وكالة حلب العقارية',
                 'job_name_en'    => 'Aleppo Real Estate Agency',
@@ -60,7 +55,7 @@ class BusinessSeeder extends Seeder
             ],
             [
                 'user_id'        => $omar->id,
-                'activetype_id'  => $typeDeveloper->id,
+                'activetype_id'  => $typeRealEstate->id,
                 'city_id'        => $latakia->id,
                 'job_name_ar'    => 'المنازل الساحلية للتطوير',
                 'job_name_en'    => 'Coastal Homes Development',
@@ -73,7 +68,7 @@ class BusinessSeeder extends Seeder
             ],
             [
                 'user_id'        => $layla->id,
-                'activetype_id'  => $typeInvestor->id,
+                'activetype_id'  => $typeRealEstate->id,
                 'city_id'        => $tartus->id,
                 'job_name_ar'    => 'استثمارات طرطوس العقارية',
                 'job_name_en'    => 'Tartus Property Investments',
@@ -86,7 +81,7 @@ class BusinessSeeder extends Seeder
             ],
             [
                 'user_id'        => $khaled->id,
-                'activetype_id'  => $typeMgmt->id,
+                'activetype_id'  => $typeRealEstate->id,
                 'city_id'        => $homs->id,
                 'job_name_ar'    => 'شركة عقارات حمص للإدارة',
                 'job_name_en'    => 'Homs Estates Management Co.',

@@ -236,6 +236,11 @@ Route::middleware('auth:superadmins')->group(function () {
 
     // Update the superadmin's own profile
     Route::post('superadmin/profile/update', [SuperadminController::class, 'updateProfile'])->name('superadmin.profile.update');
+
+    // Reports management (superadmin has full access without permission middleware)
+    Route::get('superadmin/reports',                  [ReportController::class, 'index'])->name('superadmin.reports.index');
+    Route::post('superadmin/updatereport/{id}',        [ReportController::class, 'updateStatus'])->name('superadmin.report.updateStatus');
+    Route::delete('superadmin/deletereport/{id}',      [ReportController::class, 'destroy'])->name('superadmin.report.destroy');
 });
 
 // =================================================================
