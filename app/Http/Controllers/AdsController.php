@@ -16,9 +16,18 @@ class AdsController extends Controller
     }
 
     // Lists all ads (active and inactive) for the admin management panel.
-    public function index()
+    public function index(Request $request)
     {
-        $ads = Ads::latest()->get();
+        $term = $request->search ? '%' . $request->search . '%' : null;
+
+        $ads = Ads::when($term, fn($q) => $q->where('title', 'like', $term)
+                                            ->orWhere('description', 'like', $term))
+            ->when($request->status === 'active',   fn($q) => $q->where('is_active', true))
+            ->when($request->status === 'inactive', fn($q) => $q->where('is_active', false))
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
+
         return view('admin.ads.index', compact('ads'));
     }
 

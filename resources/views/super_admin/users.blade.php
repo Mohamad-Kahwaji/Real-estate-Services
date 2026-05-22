@@ -123,7 +123,7 @@ tr.row-suspended td { opacity: .65; }
             </div>
             <div>
                 <div class="stat-label">Total Users</div>
-                <div class="stat-value">{{ $users->count() }}</div>
+                <div class="stat-value">{{ $stats['total'] }}</div>
             </div>
         </div>
     </div>
@@ -134,7 +134,7 @@ tr.row-suspended td { opacity: .65; }
             </div>
             <div>
                 <div class="stat-label">Active</div>
-                <div class="stat-value">{{ $users->where('is_active', true)->count() }}</div>
+                <div class="stat-value">{{ $stats['active'] }}</div>
             </div>
         </div>
     </div>
@@ -145,7 +145,7 @@ tr.row-suspended td { opacity: .65; }
             </div>
             <div>
                 <div class="stat-label">Suspended</div>
-                <div class="stat-value">{{ $users->where('is_active', false)->count() }}</div>
+                <div class="stat-value">{{ $stats['suspended'] }}</div>
             </div>
         </div>
     </div>
@@ -156,7 +156,7 @@ tr.row-suspended td { opacity: .65; }
             </div>
             <div>
                 <div class="stat-label">With Businesses</div>
-                <div class="stat-value">{{ $users->filter(fn($u) => $u->businesses->count() > 0)->count() }}</div>
+                <div class="stat-value">{{ $stats['with_biz'] }}</div>
             </div>
         </div>
     </div>
@@ -166,10 +166,21 @@ tr.row-suspended td { opacity: .65; }
 <div class="table-card">
     <div class="table-card-header">
         <h6><i class="ri ri-group-line me-2" style="color:#696cff;"></i>All Users</h6>
-        <div class="search-box">
-            <i class="ri ri-search-line"></i>
-            <input type="text" id="userSearch" placeholder="Search users..." oninput="filterUsers()">
-        </div>
+        <form method="GET" action="{{ route('allindex.index') }}" class="d-flex align-items-center gap-2 flex-wrap">
+            <div class="search-box">
+                <i class="ri ri-search-line"></i>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users...">
+            </div>
+            <select name="status" class="form-select form-select-sm" style="width:130px;border-radius:10px;">
+                <option value="">All Status</option>
+                <option value="active"    {{ request('status') === 'active'    ? 'selected' : '' }}>Active</option>
+                <option value="suspended" {{ request('status') === 'suspended' ? 'selected' : '' }}>Suspended</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+            @if(request('search') || request('status'))
+                <a href="{{ route('allindex.index') }}" class="btn btn-outline-secondary btn-sm">Clear</a>
+            @endif
+        </form>
     </div>
     <div class="table-responsive">
         <table class="table" id="usersTable">
@@ -261,17 +272,11 @@ tr.row-suspended td { opacity: .65; }
             </tbody>
         </table>
     </div>
+    @if($users->hasPages())
+    <div class="d-flex justify-content-center py-3">
+        {{ $users->links() }}
+    </div>
+    @endif
 </div>
 
 @endsection
-
-@push('scripts')
-<script>
-function filterUsers() {
-    const q = document.getElementById('userSearch').value.toLowerCase();
-    document.querySelectorAll('#usersTable tbody tr').forEach(row => {
-        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-    });
-}
-</script>
-@endpush

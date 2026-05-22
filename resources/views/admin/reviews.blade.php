@@ -41,15 +41,27 @@
 
 @section('content')
 
-<div class="d-flex align-items-center justify-content-between mb-4">
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
     <div>
         <h4 class="fw-bold mb-1">Reviews</h4>
         <p class="text-muted small mb-0">All service reviews submitted by users</p>
     </div>
-    <span class="badge px-3 py-2 rounded-pill"
-          style="background:#eef0ff;color:#696cff;font-size:13px;font-weight:700;">
-        {{ $reviews->count() }} Reviews
-    </span>
+    <form method="GET" action="{{ route('reviews.index') }}" class="d-flex align-items-center gap-2 flex-wrap">
+        <div class="input-group input-group-sm" style="width:220px;">
+            <span class="input-group-text"><i class="ri ri-search-line"></i></span>
+            <input type="text" name="search" class="form-control" placeholder="Search reviews..." value="{{ request('search') }}">
+        </div>
+        <select name="rating" class="form-select form-select-sm" style="width:130px;">
+            <option value="">All Ratings</option>
+            @for($i = 5; $i >= 1; $i--)
+                <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>{{ $i }} Stars</option>
+            @endfor
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+        @if(request('search') || request('rating'))
+            <a href="{{ route('reviews.index') }}" class="btn btn-outline-secondary btn-sm">Clear</a>
+        @endif
+    </form>
 </div>
 
 @if(session('success'))
@@ -122,5 +134,11 @@
     </div>
     @endforelse
 </div>
+
+@if($reviews->hasPages())
+<div class="d-flex justify-content-center mt-4">
+    {{ $reviews->links() }}
+</div>
+@endif
 
 @endsection

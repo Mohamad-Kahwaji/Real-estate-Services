@@ -14,6 +14,10 @@ class City extends Model
         return $this->hasMany(Business::class);
     }
 
+    public function services(){
+        return $this->hasManyThrough(Service::class, Business::class);
+    }
+
     protected $fillable = [
       'name_ar',
       'name_en'

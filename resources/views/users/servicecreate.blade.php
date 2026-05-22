@@ -46,7 +46,7 @@
 
                         <div class="col-12 col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <select class="form-select" name="category_id">
+                                <select class="form-select" name="category_id" id="categorySelect">
                                     <option value="">Select Category</option>
                                     @foreach($categories as $category)
                                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -60,10 +60,12 @@
 
                         <div class="col-12 col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <select class="form-select" name="subcategory_id">
+                                <select class="form-select" name="subcategory_id" id="subcategorySelect">
                                     <option value="">Select Subcategory</option>
                                     @foreach($subcategories as $subcategory)
-                                        <option value="{{ $subcategory->id }}" {{ old('subcategory_id') == $subcategory->id ? 'selected' : '' }}>
+                                        <option value="{{ $subcategory->id }}"
+                                                data-category="{{ $subcategory->category_id }}"
+                                                {{ old('subcategory_id') == $subcategory->id ? 'selected' : '' }}>
                                             {{ $subcategory->name_en }}
                                         </option>
                                     @endforeach
@@ -206,6 +208,30 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // ── Category → Subcategory dynamic filter ──
+    const catSel = document.getElementById('categorySelect');
+    const subSel = document.getElementById('subcategorySelect');
+    const allSubOptions = Array.from(subSel.querySelectorAll('option[data-category]'));
+
+    function filterSubcategories(categoryId) {
+        const selected = subSel.value;
+        subSel.innerHTML = '<option value="">Select Subcategory</option>';
+        allSubOptions.forEach(opt => {
+            if (!categoryId || opt.dataset.category === categoryId) {
+                const clone = opt.cloneNode(true);
+                if (clone.value === selected) clone.selected = true;
+                subSel.appendChild(clone);
+            }
+        });
+    }
+
+    catSel.addEventListener('change', function () {
+        filterSubcategories(this.value);
+    });
+
+    // Run on load to respect old() values
+    if (catSel.value) filterSubcategories(catSel.value);
+
     const defaultLat = 33.5138;
     const defaultLng = 36.2765;
 

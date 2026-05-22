@@ -190,9 +190,14 @@
                         <div style="font-size:11px;color:#8592a3;">{{ app()->getLocale() === 'ar' ? $category->name_en : $category->name_ar }}</div>
                     </td>
                     <td>
-                        <span class="badge-pill badge-success">
+                        <button type="button"
+                                class="badge-pill badge-success"
+                                style="border:none;cursor:pointer;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#subModal{{ $category->id }}"
+                                title="View subcategories">
                             <i class="ri ri-list-check-2"></i> {{ $category->subcategory_count }}
-                        </span>
+                        </button>
                     </td>
                     <td>
                         <div class="d-flex gap-2">
@@ -290,6 +295,46 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+{{-- ══ Subcategory List Modals ══ --}}
+@foreach ($categories as $category)
+<div class="modal fade" id="subModal{{ $category->id }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="ri ri-list-check-2 me-2" style="color:#28c76f;"></i>
+                    {{ $category->name_en }} — Subcategories
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:20px 26px;">
+                @if($category->subcategories->isEmpty())
+                    <div style="text-align:center;padding:30px 0;color:#8592a3;">
+                        <i class="ri ri-inbox-line" style="font-size:36px;display:block;margin-bottom:10px;opacity:.4;"></i>
+                        No subcategories yet.
+                    </div>
+                @else
+                    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;">
+                        @foreach($category->subcategories as $sub)
+                        <li style="background:#fafbff;border-radius:12px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border:1px solid #f0eef8;">
+                            <div>
+                                <div style="font-weight:700;color:#1e293b;font-size:14px;">{{ $sub->name_en }}</div>
+                                <div style="font-size:12px;color:#8592a3;">{{ $sub->name_ar }}</div>
+                            </div>
+                            <span class="badge-pill badge-accent" style="font-size:11px;">#{{ $sub->id }}</span>
+                        </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Close</button>
+            </div>
         </div>
     </div>
 </div>

@@ -117,11 +117,30 @@ class SuperadminController extends Controller
     }
 
     // Display all service requests with their related user, service, and business data.
-    public function serviceRequests()
+    public function serviceRequests(Request $request)
     {
+        $term = $request->search ? '%' . $request->search . '%' : null;
+
         $requests = ServiceRequest::with(['user', 'service.business', 'service.category', 'business'])
-            ->latest()->get();
-        return view('super_admin.servicerequests', compact('requests'));
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($term, fn($q) => $q->where(fn($q2) =>
+                $q2->whereHas('user',    fn($u) => $u->where('name', 'like', $term))
+                   ->orWhereHas('service', fn($s) => $s->where('title', 'like', $term))
+                   ->orWhereHas('business', fn($b) => $b->where('job_name_en', 'like', $term)
+                                                        ->orWhere('job_name_ar', 'like', $term))
+            ))
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        $counts = [
+            'all'      => \App\Models\ServiceRequest::count(),
+            'pending'  => \App\Models\ServiceRequest::where('status', 'pending')->count(),
+            'approved' => \App\Models\ServiceRequest::where('status', 'approved')->count(),
+            'rejected' => \App\Models\ServiceRequest::where('status', 'rejected')->count(),
+        ];
+
+        return view('super_admin.servicerequests', compact('requests', 'counts'));
     }
 
     // Approve a service request and notify the requesting user.

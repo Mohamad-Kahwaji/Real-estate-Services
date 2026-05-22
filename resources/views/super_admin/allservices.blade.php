@@ -327,6 +327,68 @@
     </a>
 </div>
 
+{{-- Search & Filter Form --}}
+<form method="GET" action="{{ route('allserviesad') }}" class="mb-3" id="servicesFilterForm">
+    <input type="hidden" name="status" value="{{ request('status') }}">
+    <div class="row g-2 align-items-end" style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(105,108,255,.07);">
+        <div class="col-12 col-md-4">
+            <div class="input-group">
+                <span class="input-group-text"><i class="ri-search-line"></i></span>
+                <input type="text" name="search" class="form-control" placeholder="Search services..." value="{{ request('search') }}">
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="category_id" id="saCategorySelect" class="form-select" onchange="document.getElementById('servicesFilterForm').submit()">
+                <option value="">All Categories</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                        {{ app()->getLocale() === 'ar' ? ($cat->name_ar ?? $cat->name_en) : ($cat->name_en ?? $cat->name_ar) }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="subcategory_id" id="saSubcategorySelect" class="form-select">
+                <option value="">All Subcategories</option>
+                @foreach($subcategories as $sub)
+                    <option value="{{ $sub->id }}"
+                            data-category="{{ $sub->category_id }}"
+                            {{ request('subcategory_id') == $sub->id ? 'selected' : '' }}>
+                        {{ app()->getLocale() === 'ar' ? ($sub->name_ar ?? $sub->name_en) : ($sub->name_en ?? $sub->name_ar) }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="city_id" class="form-select">
+                <option value="">All Cities</option>
+                @foreach($cities as $city)
+                    <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
+                        {{ app()->getLocale() === 'ar' ? ($city->name_ar ?? $city->name_en) : ($city->name_en ?? $city->name_ar) }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="services_type" class="form-select">
+                <option value="">Sale & Rent</option>
+                <option value="sale" {{ request('services_type') === 'sale' ? 'selected' : '' }}>Sale</option>
+                <option value="rent" {{ request('services_type') === 'rent' ? 'selected' : '' }}>Rent</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-auto d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm px-3">
+                <i class="ri-filter-line me-1"></i>Filter
+            </button>
+            @if(request()->hasAny(['search','category_id','subcategory_id','city_id','services_type']))
+                <a href="{{ route('allserviesad') }}{{ request('status') ? '?status='.request('status') : '' }}" class="btn btn-outline-secondary btn-sm px-3">
+                    <i class="ri-close-line me-1"></i>Clear
+                </a>
+            @endif
+        </div>
+    </div>
+</form>
+
 {{-- Active filter tags --}}
 @if(request()->hasAny(['search', 'city_id', 'category_id', 'subcategory_id', 'services_type', 'price_min', 'price_max']))
 <div class="d-flex align-items-center flex-wrap gap-2 mb-3"
@@ -815,5 +877,32 @@ document.addEventListener('shown.bs.modal', function (e) {
     }
     @endforeach
 });
+
+// ── Category → Subcategory dynamic filter ──
+(function () {
+    const catSel = document.getElementById('saCategorySelect');
+    const subSel = document.getElementById('saSubcategorySelect');
+    if (!catSel || !subSel) return;
+
+    const allSubOptions = Array.from(subSel.querySelectorAll('option[data-category]'));
+
+    function filterSubcategories(categoryId) {
+        const selected = subSel.value;
+        subSel.innerHTML = '<option value="">All Subcategories</option>';
+        allSubOptions.forEach(opt => {
+            if (!categoryId || opt.dataset.category === categoryId) {
+                const clone = opt.cloneNode(true);
+                if (clone.value === selected) clone.selected = true;
+                subSel.appendChild(clone);
+            }
+        });
+    }
+
+    catSel.addEventListener('change', function () {
+        filterSubcategories(this.value);
+    });
+
+    if (catSel.value) filterSubcategories(catSel.value);
+})();
 </script>
 @endpush

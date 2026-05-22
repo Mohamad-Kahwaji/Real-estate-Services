@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     // List all categories with their subcategory counts for the super-admin panel.
     public function index(){
-        $categories = Category::withCount('subcategory')->get();
+        $categories = Category::withCount('subcategory')->with('subcategories')->get();
         return view('super_admin.categories', compact('categories'));
     }
 

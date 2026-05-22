@@ -92,7 +92,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Business ──────────────────────────────────────────────────────────────
 
     // Full CRUD resource for businesses
-    Route::resource('business', BusinessController::class);
+    Route::resource('business', BusinessController::class)->names('api.business');
 
     // ── Services ──────────────────────────────────────────────────────────────
 
@@ -109,7 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Update (edit) a specific service
     Route::put('editservice/{id}',    [ServiceController::class, 'editservice']);
     // Full CRUD resource for services
-    Route::resource('services',       ServiceController::class);
+    Route::resource('services', ServiceController::class)->names('api.services');
 
     // ── Service Requests ──────────────────────────────────────────────────────
 
@@ -147,7 +147,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Reviews ───────────────────────────────────────────────────────────────
 
     // Full CRUD resource for reviews (index excluded — use the by-service route)
-    Route::resource('reviews', ReviewController::class)->except(['index']);
+    Route::resource('reviews', ReviewController::class)->except(['index'])->names('api.reviews');
     // List all reviews for a specific service
     Route::get('reviews/service/{serviceId}', [ReviewController::class, 'byService'])->name('api.reviews.by-service');
 

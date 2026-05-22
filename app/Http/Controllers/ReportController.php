@@ -67,7 +67,8 @@ class ReportController extends Controller
                    ->orWhereHas('service', fn($s) => $s->where('title', 'like', $term))
             ))
             ->latest()
-            ->get();
+            ->paginate(15)
+            ->withQueryString();
 
         if ($request->expectsJson()) {
             return response()->json(['status' => true, 'data' => $reports]);

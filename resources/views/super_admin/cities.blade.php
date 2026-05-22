@@ -135,6 +135,7 @@
                 <tr>
                     <th>#</th>
                     <th>{{ app()->getLocale() === 'ar' ? 'الاسم' : 'Name' }}</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الخدمات' : 'Services' }}</th>
                     <th>{{ app()->getLocale() === 'ar' ? 'الإجراءات' : 'Actions' }}</th>
                 </tr>
             </thead>
@@ -145,6 +146,16 @@
                     <td>
                         <strong>{{ app()->getLocale() === 'ar' ? $city->name_ar : $city->name_en }}</strong>
                         <div style="font-size:11px;color:#8592a3;">{{ app()->getLocale() === 'ar' ? $city->name_en : $city->name_ar }}</div>
+                    </td>
+                    <td>
+                        <button type="button"
+                                class="badge-pill"
+                                style="background:#eef0ff;color:#696cff;border:none;cursor:pointer;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#svcModal{{ $city->id }}"
+                                title="View services">
+                            <i class="ri ri-store-2-line"></i> {{ $city->services_count }}
+                        </button>
                     </td>
                     <td>
                         <div class="d-flex gap-2">
@@ -166,7 +177,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         <div class="empty-state">
                             <i class="ri ri-map-pin-2-line"></i>
                             <p>No cities found. Add your first city.</p>
@@ -242,6 +253,71 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+{{-- ══ Services Modals ══ --}}
+@foreach ($cities as $city)
+<div class="modal fade" id="svcModal{{ $city->id }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="ri ri-store-2-line me-2" style="color:#696cff;"></i>
+                    {{ $city->name_en }} — Services
+                    <span style="font-size:13px;font-weight:600;color:#8592a3;margin-right:6px;">({{ $city->services_count }})</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:20px 24px;">
+                @if($city->services->isEmpty())
+                    <div style="text-align:center;padding:40px 0;color:#8592a3;">
+                        <i class="ri ri-store-2-line" style="font-size:40px;display:block;margin-bottom:10px;opacity:.35;"></i>
+                        No services in this city yet.
+                    </div>
+                @else
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                        @foreach($city->services as $svc)
+                        <div style="background:#fafbff;border:1px solid #f0eef8;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px;">
+                            <img src="{{ $svc->image_url }}"
+                                 style="width:52px;height:52px;object-fit:cover;border-radius:10px;flex-shrink:0;"
+                                 alt="{{ $svc->title }}">
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-weight:700;color:#1e293b;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                    {{ $svc->title ?? '-' }}
+                                </div>
+                                <div style="font-size:12px;color:#8592a3;margin-top:2px;">
+                                    {{ $svc->category?->name_en ?? '-' }}
+                                    @if($svc->business)
+                                        &nbsp;·&nbsp; {{ $svc->business->job_name_en }}
+                                    @endif
+                                </div>
+                            </div>
+                            @if($svc->services_type)
+                            <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+                                background:{{ $svc->services_type === 'sale' ? '#eef0ff' : '#e3f8fc' }};
+                                color:{{ $svc->services_type === 'sale' ? '#696cff' : '#00cfe8' }};">
+                                {{ ucfirst($svc->services_type) }}
+                            </span>
+                            @endif
+                            <div style="text-align:right;flex-shrink:0;">
+                                @if($svc->price_usd)
+                                    <div style="font-weight:800;color:#1e293b;font-size:13px;">${{ number_format($svc->price_usd, 0) }}</div>
+                                @endif
+                                @if($svc->price_syp)
+                                    <div style="font-size:11px;color:#8592a3;">{{ number_format($svc->price_syp, 0) }} ل.س</div>
+                                @endif
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Close</button>
+            </div>
         </div>
     </div>
 </div>

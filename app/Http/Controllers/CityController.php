@@ -9,7 +9,9 @@ class CityController extends Controller
 {
     // List all cities for the super-admin panel.
     public function index(){
-        $cities = City::get();
+        $cities = City::withCount('services')
+            ->with('services.category', 'services.business')
+            ->get();
         return view('super_admin.cities', compact('cities'));
     }
 

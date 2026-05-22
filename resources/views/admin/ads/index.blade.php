@@ -56,9 +56,26 @@
         <h4><i class="ri ri-advertisement-line" style="color:#696cff;margin-left:8px;"></i>{{ __('app.ads') }}</h4>
         <p>{{ __('app.ads_desc') }}</p>
     </div>
-    <a href="{{ route('ads.create') }}" class="btn-add">
-        <i class="ri ri-add-line"></i> {{ __('app.add_ad') }}
-    </a>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+        <form method="GET" action="{{ route('ads.index') }}" class="d-flex align-items-center gap-2">
+            <div class="input-group input-group-sm" style="width:200px;">
+                <span class="input-group-text"><i class="ri ri-search-line"></i></span>
+                <input type="text" name="search" class="form-control" placeholder="Search ads..." value="{{ request('search') }}">
+            </div>
+            <select name="status" class="form-select form-select-sm" style="width:120px;" onchange="this.form.submit()">
+                <option value="">All</option>
+                <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
+            <button type="submit" class="btn btn-secondary btn-sm">Go</button>
+            @if(request('search') || request('status'))
+                <a href="{{ route('ads.index') }}" class="btn btn-outline-secondary btn-sm">Clear</a>
+            @endif
+        </form>
+        <a href="{{ route('ads.create') }}" class="btn-add">
+            <i class="ri ri-add-line"></i> {{ __('app.add_ad') }}
+        </a>
+    </div>
 </div>
 
 @if(session('success'))
@@ -68,7 +85,7 @@
 </div>
 @endif
 
-@if($ads->isEmpty())
+@if($ads->total() === 0)
 <div style="text-align:center;padding:80px 20px;background:#fff;border-radius:20px;border:1.5px dashed #d4d5ff;">
     <i class="ri ri-advertisement-line" style="font-size:52px;color:#c5c7ff;display:block;margin-bottom:14px;"></i>
     <h5 style="font-size:16px;font-weight:800;color:#312d4b;margin-bottom:6px;">{{ __('app.no_ads_yet') }}</h5>
@@ -125,5 +142,10 @@
     </div>
     @endforeach
 </div>
+@if($ads->hasPages())
+<div class="d-flex justify-content-center mt-4">
+    {{ $ads->links() }}
+</div>
+@endif
 @endif
 @endsection

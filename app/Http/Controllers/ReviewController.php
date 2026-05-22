@@ -37,11 +37,19 @@ class ReviewController extends Controller
     }
 
     // List all reviews with user and service details for the admin panel.
-    public function index()
+    public function index(Request $request)
     {
+        $term = $request->search ? '%' . $request->search . '%' : null;
+
         $reviews = Review::with(['user', 'service.business'])
+            ->when($term, fn($q) => $q->where(fn($q2) =>
+                $q2->whereHas('service', fn($s) => $s->where('title', 'like', $term))
+                   ->orWhereHas('user',    fn($u) => $u->where('name',  'like', $term))
+            ))
+            ->when($request->rating, fn($q) => $q->where('rating', $request->rating))
             ->latest()
-            ->get();
+            ->paginate(12)
+            ->withQueryString();
 
         return view('admin.reviews', compact('reviews'));
     }

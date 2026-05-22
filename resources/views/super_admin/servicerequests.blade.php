@@ -51,29 +51,23 @@
       <i class="ri ri-file-list-3-line me-2" style="color:#696cff;"></i>Service Requests
     </span>
 
-    <div class="d-flex gap-2 flex-wrap">
-      <a href="{{ route('superadmin.service-requests') }}"
-         class="filter-btn {{ !request('status') ? 'active' : '' }}">
-        All ({{ $requests->count() }})
-      </a>
-      <a href="{{ route('superadmin.service-requests') }}?status=pending"
-         class="filter-btn {{ request('status') === 'pending' ? 'active' : '' }}">
-        Pending ({{ $requests->where('status','pending')->count() }})
-      </a>
-      <a href="{{ route('superadmin.service-requests') }}?status=approved"
-         class="filter-btn {{ request('status') === 'approved' ? 'active' : '' }}">
-        Approved ({{ $requests->where('status','approved')->count() }})
-      </a>
-      <a href="{{ route('superadmin.service-requests') }}?status=rejected"
-         class="filter-btn {{ request('status') === 'rejected' ? 'active' : '' }}">
-        Rejected ({{ $requests->where('status','rejected')->count() }})
-      </a>
-    </div>
+    <form method="GET" action="{{ route('superadmin.service-requests') }}" class="d-flex align-items-center gap-2 flex-wrap">
+      <div class="input-group input-group-sm" style="width:220px;">
+        <span class="input-group-text"><i class="ri ri-search-line"></i></span>
+        <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+      </div>
+      <select name="status" class="form-select form-select-sm" style="width:140px;" onchange="this.form.submit()">
+        <option value="">All ({{ $counts['all'] }})</option>
+        <option value="pending"  {{ request('status') === 'pending'  ? 'selected' : '' }}>Pending ({{ $counts['pending'] }})</option>
+        <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved ({{ $counts['approved'] }})</option>
+        <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected ({{ $counts['rejected'] }})</option>
+      </select>
+      <button type="submit" class="btn btn-primary btn-sm">Search</button>
+      @if(request('search') || request('status'))
+        <a href="{{ route('superadmin.service-requests') }}" class="btn btn-outline-secondary btn-sm">Clear</a>
+      @endif
+    </form>
   </div>
-
-  @php
-    $filtered = request('status') ? $requests->where('status', request('status')) : $requests;
-  @endphp
 
   <div class="table-responsive">
     <table class="table req-table mb-0">
@@ -91,7 +85,7 @@
         </tr>
       </thead>
       <tbody>
-        @forelse($filtered as $req)
+        @forelse($requests as $req)
         <tr>
           <td style="color:#b0aab8;font-weight:700;">#{{ $req->id }}</td>
           <td>
@@ -159,10 +153,15 @@
       </tbody>
     </table>
   </div>
+  @if($requests->hasPages())
+  <div class="d-flex justify-content-center py-3">
+    {{ $requests->links() }}
+  </div>
+  @endif
 </div>
 
 {{-- Detail Modals outside the table --}}
-@foreach($filtered as $req)
+@foreach($requests as $req)
 <div class="modal fade" id="reqModal{{ $req->id }}" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content" style="border:0;border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.18);">

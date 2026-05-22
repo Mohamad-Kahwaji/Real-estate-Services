@@ -146,7 +146,17 @@
     display: flex; align-items: center; gap: 10px;
     background: #fafbff; border: 1px solid #f0eef8;
     border-radius: 12px; padding: 12px 14px;
+    transition: .15s; cursor: default;
 }
+.perm-item.role-match {
+    background: #eef0ff; border-color: #696cff; cursor: pointer;
+}
+.perm-item.role-match .perm-dot { background: #696cff; }
+.perm-item.manually-excluded {
+    opacity: .45; background: #fff5f5; border-color: #fca5a5; cursor: pointer;
+}
+.perm-item.manually-excluded .perm-name { text-decoration: line-through; color: #ea5455; }
+.perm-item.manually-excluded .perm-dot  { background: #ea5455; }
 .perm-dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: var(--accent); flex-shrink: 0;
@@ -271,8 +281,9 @@
                                    onmouseover="this.style.borderColor='#696cff';this.style.background='#f2f0ff'"
                                    onmouseout="if(!this.querySelector('input').checked){this.style.borderColor='#e8eaf2';this.style.background='#fafbff';}">
                                 <input type="checkbox" name="roles[]" value="{{ $role->name }}"
+                                       data-permissions="{{ json_encode($role->permissions->pluck('name')) }}"
                                        style="accent-color:#696cff;width:16px;height:16px;flex-shrink:0;"
-                                       onchange="highlightRole(this)"
+                                       onchange="highlightRole(this); filterPermsByRoles();"
                                        {{ is_array(old('roles')) && in_array($role->name, old('roles')) ? 'checked' : '' }}>
                                 <div>
                                     <div style="font-size:13px;font-weight:700;color:#1e293b;">{{ $role->name }}</div>
@@ -307,11 +318,11 @@
         <div class="list-card">
             <div class="list-card-header">
                 <h6><i class="ri ri-key-2-line me-2" style="color:#696cff;"></i>Existing Permissions</h6>
-                <span style="font-size:12px;color:#8592a3;font-weight:600;">{{ $permissions->count() }} total</span>
+                <span id="permCount" style="font-size:12px;color:#8592a3;font-weight:600;">{{ $permissions->count() }} total</span>
             </div>
             <div class="perm-grid">
                 @foreach($permissions as $perm)
-                <div class="perm-item">
+                <div class="perm-item" data-perm="{{ $perm->name }}">
                     <div class="perm-dot"
                          style="background:{{ $perm->guard_name === 'admins' ? '#696cff' : '#00cfe8' }};"></div>
                     <div>
@@ -349,8 +360,91 @@ function highlightRole(cb) {
         label.style.background  = '#fafbff';
     }
 }
+
+function updateCounter() {
+    const counter = document.getElementById('permCount');
+    if (!counter) return;
+    const items   = [...document.querySelectorAll('.perm-item')];
+    const anyRole = document.querySelectorAll('#rolesContainer input:checked').length > 0;
+    if (!anyRole) {
+        counter.textContent = items.length + ' total';
+    } else {
+        const shown = items.filter(el => el.style.display !== 'none').length;
+        counter.textContent = shown + ' / ' + items.length;
+    }
+}
+
+function filterPermsByRoles() {
+    const checked = [...document.querySelectorAll('#rolesContainer input:checked')];
+    const items   = [...document.querySelectorAll('.perm-item')];
+
+    // Reset all state classes and visibility
+    items.forEach(el => {
+        el.classList.remove('role-match', 'manually-excluded');
+        el.style.display = '';
+    });
+
+    if (checked.length === 0) {
+        updateCounter();
+        return;
+    }
+
+    const allowed = new Set();
+    checked.forEach(cb => {
+        JSON.parse(cb.dataset.permissions || '[]').forEach(p => allowed.add(p));
+    });
+
+    items.forEach(el => {
+        if (allowed.has(el.dataset.perm)) {
+            el.classList.add('role-match');
+        } else {
+            el.style.display = 'none';
+        }
+    });
+
+    updateCounter();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('#rolesContainer input:checked').forEach(highlightRole);
+    filterPermsByRoles();
+
+    // Toggle individual permission cards
+    document.querySelectorAll('.perm-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const anyRole = document.querySelectorAll('#rolesContainer input:checked').length > 0;
+            if (!anyRole) return;
+
+            if (item.classList.contains('role-match')) {
+                item.classList.replace('role-match', 'manually-excluded');
+            } else if (item.classList.contains('manually-excluded')) {
+                item.classList.replace('manually-excluded', 'role-match');
+            }
+
+            // Auto-uncheck any role whose ALL permissions are now manually excluded
+            let anyAutoUnchecked = false;
+            document.querySelectorAll('#rolesContainer input[type="checkbox"]:checked').forEach(cb => {
+                const perms = JSON.parse(cb.dataset.permissions || '[]');
+                if (!perms.length) return;
+                const allExcluded = perms.every(p => {
+                    const el = document.querySelector('.perm-item[data-perm="' + p.replace(/\\/g,'\\\\').replace(/"/g,'\\"') + '"]');
+                    return el && el.classList.contains('manually-excluded');
+                });
+                if (allExcluded) {
+                    cb.checked = false;
+                    highlightRole(cb);
+                    anyAutoUnchecked = true;
+                }
+            });
+
+            // If a role was auto-unchecked, recalculate the whole filter
+            if (anyAutoUnchecked) {
+                filterPermsByRoles();
+            } else {
+                updateCounter();
+            }
+        });
+    });
 });
 </script>
 @endpush

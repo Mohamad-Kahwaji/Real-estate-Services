@@ -13,9 +13,29 @@ class UserController extends Controller
 {
 
     // List all users with their associated businesses for the super-admin panel.
-    public function index(){
-        $users = User::with('businesses')->latest()->get();
-        return view('super_admin.users', compact('users'));
+    public function index(Request $request){
+        $term = $request->search ? '%' . $request->search . '%' : null;
+
+        $users = User::with('businesses')
+            ->when($term, fn($q) => $q->where(fn($q2) =>
+                $q2->where('name', 'like', $term)
+                   ->orWhere('phone', 'like', $term)
+                   ->orWhere('email', 'like', $term)
+            ))
+            ->when($request->status === 'active',    fn($q) => $q->where('is_active', true))
+            ->when($request->status === 'suspended', fn($q) => $q->where('is_active', false))
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        $stats = [
+            'total'     => User::count(),
+            'active'    => User::where('is_active', true)->count(),
+            'suspended' => User::where('is_active', false)->count(),
+            'with_biz'  => User::has('businesses')->count(),
+        ];
+
+        return view('super_admin.users', compact('users', 'stats'));
     }
 
     // Toggle a user's active status and cascade suspend/reactivate their businesses and services.

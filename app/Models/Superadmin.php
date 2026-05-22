@@ -28,5 +28,12 @@ class Superadmin extends Authenticatable
     public function devicetokens(){
         return $this->hasMany(DeviceToken::class,'super_admin_id');
     }
+
     protected string $guard_name = 'superadmins';
+
+    public function hasPermissionTo($permission, $guardName = null): bool { return true; }
+    public function hasAnyPermission(...$permissions): bool { return true; }
+    public function hasAllPermissions(...$permissions): bool { return true; }
+    public function hasRole($roles, $guard = null): bool { return true; }
+    public function hasAnyRole($roles, $guard = null): bool { return true; }
 }
