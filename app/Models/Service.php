@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Service extends Model
 {
     /** @use HasFactory<\Database\Factories\ServiceFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public function business()
     {
@@ -83,7 +84,9 @@ public function fieldValues()
 
     public function getLocationNameAttribute(): string
     {
-        return $this->business?->city?->name_en ?? 'Unknown Location';
+        $city = $this->business?->city;
+        if (!$city) return __('app.unknown_location');
+        return app()->getLocale() === 'ar' ? ($city->name_ar ?? $city->name_en) : $city->name_en;
     }
 
 

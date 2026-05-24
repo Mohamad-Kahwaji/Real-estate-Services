@@ -6,6 +6,7 @@ use App\Models\Activetype;
 use App\Models\Admin;
 use App\Models\Business;
 use App\Models\City;
+use App\Models\ServiceRequest;
 use App\Models\Superadmin;
 use App\Models\User;
 use App\Notifications\InvoiceCreated;
@@ -209,11 +210,26 @@ class BusinessController extends Controller
     }
 
     // Delete the authenticated user's own business account.
+    // If active paid rentals exist, soft-delete so renters keep access until rental_end_date.
     public function destroy(){
         $user = auth('users')->user();
         $business = $user->businesses()->pluck('id');
         $account = Business::whereIn('id', $business)->firstOrFail();
-        $account->delete();
+
+        $hasActiveRentals = ServiceRequest::where('business_id', $account->id)
+            ->where('payment_status', 'paid')
+            ->whereNotNull('rental_end_date')
+            ->where('rental_end_date', '>', today())
+            ->exists();
+
+        if ($hasActiveRentals) {
+            // Soft delete — services stay accessible to current renters until rental_end_date
+            $account->delete();
+        } else {
+            // No active rentals — permanently remove everything
+            $account->services()->each(fn($s) => $s->forceDelete());
+            $account->forceDelete();
+        }
 
         return response()->json([
             'status' => true,

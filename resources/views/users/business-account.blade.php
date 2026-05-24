@@ -2,7 +2,7 @@
 
 @php $editing = isset($business); @endphp
 
-@section('title', $editing ? 'Edit Business Account' : 'Create Business Account')
+@section('title', $editing ? __('app.edit_business') : __('app.create_business'))
 
 @section('content')
 <div class="row justify-content-center">
@@ -10,9 +10,9 @@
 
         <div class="card shadow-sm">
             <div class="card-header border-bottom">
-                <h5 class="mb-0">{{ $editing ? 'Edit Business Account' : 'Create Business Account' }}</h5>
+                <h5 class="mb-0">{{ $editing ? __('app.edit_business') : __('app.create_business') }}</h5>
                 <small class="text-muted">
-                    {{ $editing ? 'Update your business details below' : 'Fill in the details below and wait for admin approval' }}
+                    {{ $editing ? __('app.update_business_details') : __('app.fill_in_details_wait') }}
                 </small>
             </div>
 
@@ -38,18 +38,19 @@
                     <div class="row g-4">
 
                         {{-- Activity Type --}}
+                        @php $isAr = app()->getLocale() === 'ar'; @endphp
                         <div class="col-12 col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <select class="form-select @error('activetype_id') is-invalid @enderror" name="activetype_id">
-                                    <option value="">Select Activity Type</option>
+                                    <option value="">{{ __('app.select_activity_type') }}</option>
                                     @foreach($activetypes as $type)
                                         <option value="{{ $type->id }}"
                                             {{ old('activetype_id', $editing ? $business->activetype_id : '') == $type->id ? 'selected' : '' }}>
-                                            {{ $type->name }}
+                                            {{ ($isAr && $type->name_ar) ? $type->name_ar : $type->name }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label>Activity Type</label>
+                                <label>{{ __('app.activity_type') }}</label>
                                 @error('activetype_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -61,8 +62,8 @@
                                        class="form-control @error('license_number') is-invalid @enderror"
                                        name="license_number"
                                        value="{{ old('license_number', $editing ? $business->license_number : '') }}"
-                                       placeholder="License Number">
-                                <label>License Number</label>
+                                       placeholder="{{ __('app.license_number') }}">
+                                <label>{{ __('app.license_number') }}</label>
                                 @error('license_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -74,8 +75,8 @@
                                        class="form-control @error('job_name_ar') is-invalid @enderror"
                                        name="job_name_ar"
                                        value="{{ old('job_name_ar', $editing ? $business->job_name_ar : '') }}"
-                                       placeholder="Job Name Arabic">
-                                <label>Job Name (Arabic)</label>
+                                       placeholder="{{ __('app.job_name_arabic') }}">
+                                <label>{{ __('app.job_name_arabic') }}</label>
                                 @error('job_name_ar') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -87,8 +88,8 @@
                                        class="form-control @error('job_name_en') is-invalid @enderror"
                                        name="job_name_en"
                                        value="{{ old('job_name_en', $editing ? $business->job_name_en : '') }}"
-                                       placeholder="Job Name English">
-                                <label>Job Name (English)</label>
+                                       placeholder="{{ __('app.job_name_english') }}">
+                                <label>{{ __('app.job_name_english') }}</label>
                                 @error('job_name_en') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -100,8 +101,8 @@
                                        class="form-control @error('activites') is-invalid @enderror"
                                        name="activites"
                                        value="{{ old('activites', $editing ? $business->activites : '') }}"
-                                       placeholder="Activities">
-                                <label>Activities</label>
+                                       placeholder="{{ __('app.activities') }}">
+                                <label>{{ __('app.activities') }}</label>
                                 @error('activites') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -110,9 +111,9 @@
                         <div class="col-12">
                             <div class="form-floating form-floating-outline">
                                 <textarea class="form-control @error('details') is-invalid @enderror"
-                                          name="details" placeholder="Details"
+                                          name="details" placeholder="{{ __('app.details') }}"
                                           style="height: 120px">{{ old('details', $editing ? $business->details : '') }}</textarea>
-                                <label>Details</label>
+                                <label>{{ __('app.details') }}</label>
                                 @error('details') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -121,27 +122,27 @@
                         <div class="col-12 col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <select class="form-select @error('city_id') is-invalid @enderror" name="city_id">
-                                    <option value="">Select City</option>
+                                    <option value="">{{ __('app.select_city') }}</option>
                                     @foreach($cities as $city)
                                         <option value="{{ $city->id }}"
                                             {{ old('city_id', $editing ? $business->city_id : '') == $city->id ? 'selected' : '' }}>
-                                            {{ $city->name_en }}
+                                            {{ $isAr ? $city->name_ar : $city->name_en }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label>City</label>
+                                <label>{{ __('app.city') }}</label>
                                 @error('city_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
                         {{-- Image --}}
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Business Image <span class="text-muted">(optional)</span></label>
+                            <label class="form-label">{{ __('app.business_image') }} <span class="text-muted">{{ __('app.optional_label') }}</span></label>
                             @if($editing && $business->image)
                                 <div class="mb-2">
                                     <img src="{{ asset('storage/' . $business->image) }}"
-                                         style="height:60px;border-radius:8px;object-fit:cover;" alt="Current image">
-                                    <small class="text-muted ms-2">Current image</small>
+                                         style="height:60px;border-radius:8px;object-fit:cover;" alt="{{ __('app.current_image') }}">
+                                    <small class="text-muted ms-2">{{ __('app.current_image') }}</small>
                                 </div>
                             @endif
                             <input type="file" class="form-control @error('image') is-invalid @enderror"
@@ -151,35 +152,35 @@
 
                         {{-- Map --}}
                         <div class="col-12">
-                            <label class="form-label mb-2">Business Location <span class="text-muted">(optional — click map or use button)</span></label>
+                            <label class="form-label mb-2">{{ __('app.business_location') }} <span class="text-muted">{{ __('app.business_location_hint') }}</span></label>
                             <div id="business-map" style="height: 360px; border-radius: 14px; overflow: hidden; border: 1px solid #e4e4eb;"></div>
                         </div>
 
                         {{-- Lat / Lng --}}
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Latitude</label>
+                            <label class="form-label">{{ __('app.latitude') }}</label>
                             <input type="text" name="latitude" id="latitude" class="form-control"
                                    value="{{ old('latitude', $editing ? $business->latitude : '') }}" readonly>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Longitude</label>
+                            <label class="form-label">{{ __('app.longitude') }}</label>
                             <input type="text" name="longitude" id="longitude" class="form-control"
                                    value="{{ old('longitude', $editing ? $business->longitude : '') }}" readonly>
                         </div>
 
                         <div class="col-12">
                             <button type="button" class="btn btn-outline-secondary btn-sm" onclick="useMyLocation()">
-                                <i class="ri ri-map-pin-line me-1"></i> Use Current Location
+                                <i class="ri ri-map-pin-line me-1"></i> {{ __('app.use_current_location') }}
                             </button>
                         </div>
 
                         {{-- Buttons --}}
                         <div class="col-12">
                             <div class="d-flex justify-content-end gap-2 border-top pt-4 mt-2">
-                                <a href="{{ route('business.dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                                <a href="{{ route('business.dashboard') }}" class="btn btn-outline-secondary">{{ __('app.cancel') }}</a>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="ri {{ $editing ? 'ri-save-line' : 'ri-send-plane-line' }} me-1"></i>
-                                    {{ $editing ? 'Save Changes' : 'Submit for Approval' }}
+                                    {{ $editing ? __('app.save_changes') : __('app.submit_for_approval') }}
                                 </button>
                             </div>
                         </div>
@@ -226,10 +227,10 @@ document.addEventListener('DOMContentLoaded', function () {
     map.on('click', function (e) { setLocation(e.latlng.lat, e.latlng.lng); });
 
     window.useMyLocation = function () {
-        if (!navigator.geolocation) { alert('Geolocation not supported'); return; }
+        if (!navigator.geolocation) { alert('{{ __("app.geolocation_not_supported") }}'); return; }
         navigator.geolocation.getCurrentPosition(
             pos => setLocation(pos.coords.latitude, pos.coords.longitude),
-            ()  => alert('Could not get your location')
+            ()  => alert('{{ __("app.could_not_get_location") }}')
         );
     };
 

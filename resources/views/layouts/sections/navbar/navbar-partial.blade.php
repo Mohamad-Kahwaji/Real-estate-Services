@@ -58,7 +58,7 @@ use Illuminate\Support\Facades\Route;
             onmouseout="this.style.background='#f4f5ff';this.style.borderColor='#e5e7ff';this.style.color='#94a3b8';">
         <span style="display:flex;align-items:center;gap:8px;">
             <i class="ri ri-search-line" style="font-size:15px;color:#696cff;flex-shrink:0;"></i>
-            <span>Search services, users...</span>
+            <span>{{ __('app.search_placeholder') }}</span>
         </span>
         <kbd style="
             background: rgba(105,108,255,.12);
@@ -311,7 +311,7 @@ use Illuminate\Support\Facades\Route;
                         border-bottom:1.5px solid #f1f5f9;background:#fff;gap:12px;">
                 <i class="ri ri-search-line" style="font-size:20px;color:#696cff;flex-shrink:0;"></i>
                 <input id="gsInput" type="text"
-                       placeholder="Search services, businesses, users..."
+                       placeholder="{{ __('app.search_placeholder_full') }}"
                        autocomplete="off"
                        style="flex:1;border:none;outline:none;font-size:15px;font-weight:500;
                               color:#1e293b;background:transparent;line-height:1.4;">

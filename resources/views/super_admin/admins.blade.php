@@ -1,7 +1,7 @@
 @extends('layouts/contentNavbarLayout')
 {{-- Admins management page: lists all admins with their roles/permissions, and provides view/edit/delete/toggle-status actions. --}}
 
-@section('title', 'Admins Management')
+@section('title', __('app.admins_management'))
 
 @section('page-style')
 <style>
@@ -228,11 +228,11 @@
 {{-- ── Page Header ── --}}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4 class="fw-bold mb-1">Admins Management</h4>
-        <p class="text-muted mb-0 small">Manage your system administrators and their permissions</p>
+        <h4 class="fw-bold mb-1">{{ __('app.admins_management') }}</h4>
+        <p class="text-muted mb-0 small">{{ __('app.manage_admins_desc') }}</p>
     </div>
     <a href="{{ route('admins.create') }}" class="btn btn-primary px-4" style="border-radius:12px;font-weight:700;">
-        <i class="ri ri-user-add-line me-2"></i>Add Admin
+        <i class="ri ri-user-add-line me-2"></i>{{ __('app.add_admin') }}
     </a>
 </div>
 
@@ -244,7 +244,7 @@
                 <i class="ri ri-group-line" style="color:#696cff;"></i>
             </div>
             <div>
-                <div class="stat-label">Total Admins</div>
+                <div class="stat-label">{{ __('app.total_admins') }}</div>
                 <div class="stat-value" style="color:#1e293b;">{{ $totalAdmins }}</div>
             </div>
         </div>
@@ -255,7 +255,7 @@
                 <i class="ri ri-checkbox-circle-line" style="color:#28c76f;"></i>
             </div>
             <div>
-                <div class="stat-label">Active</div>
+                <div class="stat-label">{{ __('app.active') }}</div>
                 <div class="stat-value" style="color:#28c76f;">{{ $activeAdmins }}</div>
             </div>
         </div>
@@ -266,7 +266,7 @@
                 <i class="ri ri-close-circle-line" style="color:#ea5455;"></i>
             </div>
             <div>
-                <div class="stat-label">Inactive</div>
+                <div class="stat-label">{{ __('app.inactive') }}</div>
                 <div class="stat-value" style="color:#ea5455;">{{ $inactiveAdmins }}</div>
             </div>
         </div>
@@ -303,7 +303,7 @@
                         </span>
                     @empty
                         <span class="admin-no-role-chip">
-                            <i class="ri ri-shield-line"></i>No Role
+                            <i class="ri ri-shield-line"></i>{{ __('app.no_role') }}
                         </span>
                     @endforelse
                     @if($admin->permissions->count())
@@ -317,19 +317,19 @@
             {{-- Info rows --}}
             <div class="admin-card-body flex-grow-1">
                 <div class="info-row">
-                    <span class="label">Status</span>
+                    <span class="label">{{ __('app.status') }}</span>
                     @if($admin->is_active)
                         <span class="status-badge status-active">
-                            <i class="ri ri-checkbox-blank-circle-fill" style="font-size:8px;"></i>Active
+                            <i class="ri ri-checkbox-blank-circle-fill" style="font-size:8px;"></i>{{ __('app.active') }}
                         </span>
                     @else
                         <span class="status-badge status-inactive">
-                            <i class="ri ri-checkbox-blank-circle-fill" style="font-size:8px;"></i>Inactive
+                            <i class="ri ri-checkbox-blank-circle-fill" style="font-size:8px;"></i>{{ __('app.inactive') }}
                         </span>
                     @endif
                 </div>
                 <div class="info-row">
-                    <span class="label">Last Seen</span>
+                    <span class="label">{{ __('app.last_seen') }}</span>
                     @if($admin->last_seen_at)
                         @php
                             $diffMins  = now()->diffInMinutes($admin->last_seen_at);
@@ -337,19 +337,19 @@
                         @endphp
                         @if($diffMins < 5)
                             <span style="color:#28c76f;font-weight:700;font-size:12px;">
-                                <i class="ri ri-circle-fill me-1" style="font-size:7px;"></i>Online
+                                <i class="ri ri-circle-fill me-1" style="font-size:7px;"></i>{{ __('app.online') }}
                             </span>
                         @elseif($diffHours < 24)
-                            <span class="fw-semibold" style="font-size:12px;">{{ $diffHours }}h ago</span>
+                            <span class="fw-semibold" style="font-size:12px;">{{ __('app.time_h_ago', ['count' => $diffHours]) }}</span>
                         @else
-                            <span class="fw-semibold" style="font-size:12px;">{{ now()->diffInDays($admin->last_seen_at) }}d ago</span>
+                            <span class="fw-semibold" style="font-size:12px;">{{ __('app.time_d_ago', ['count' => now()->diffInDays($admin->last_seen_at)]) }}</span>
                         @endif
                     @else
-                        <span style="color:#a0aab4;font-size:12px;">Never</span>
+                        <span style="color:#a0aab4;font-size:12px;">{{ __('app.never') }}</span>
                     @endif
                 </div>
                 <div class="info-row">
-                    <span class="label">Joined</span>
+                    <span class="label">{{ __('app.joined') }}</span>
                     <span class="fw-semibold">{{ $admin->created_at?->format('M d, Y') }}</span>
                 </div>
             </div>
@@ -357,7 +357,7 @@
             {{-- Status Toggle --}}
             <div class="status-toggle-wrap">
                 <span class="fw-semibold" style="font-size:13px;">
-                    {{ $admin->is_active ? 'Admin is Active' : 'Admin is Inactive' }}
+                    {{ $admin->is_active ? __('app.admin_is_active') : __('app.admin_is_inactive') }}
                 </span>
                 <form action="{{ route('adminstatus', $admin->id) }}" method="POST">
                     @csrf @method('PUT')
@@ -374,20 +374,20 @@
                 <button class="btn btn-light"
                         data-bs-toggle="modal"
                         data-bs-target="#viewAdminModal{{ $admin->id }}"
-                        title="View Details">
-                    <i class="ri ri-eye-line me-1"></i>View
+                        title="{{ __('app.view') }}">
+                    <i class="ri ri-eye-line me-1"></i>{{ __('app.view') }}
                 </button>
                 <button class="btn btn-primary"
                         data-bs-toggle="modal"
                         data-bs-target="#editAdminModal{{ $admin->id }}"
-                        title="Edit Admin">
-                    <i class="ri ri-pencil-line me-1"></i>Edit
+                        title="{{ __('app.edit') }}">
+                    <i class="ri ri-pencil-line me-1"></i>{{ __('app.edit') }}
                 </button>
                 <form action="{{ route('admins.destroy', $admin->id) }}" method="POST">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn btn-danger"
-                            onclick="return confirm('Delete {{ $admin->name }}?')"
-                            title="Delete Admin">
+                            onclick="return confirm('{{ __('app.confirm_delete') }}')"
+                            title="{{ __('app.delete') }}">
                         <i class="ri ri-delete-bin-line"></i>
                     </button>
                 </form>
@@ -399,7 +399,7 @@
     <div class="col-12">
         <div class="text-center py-5" style="background:#fff;border-radius:20px;box-shadow:var(--shadow);">
             <i class="ri ri-group-line" style="font-size:52px;color:#c8ccda;"></i>
-            <p class="text-muted mt-3 mb-0 fw-semibold">No admins found</p>
+            <p class="text-muted mt-3 mb-0 fw-semibold">{{ __('app.no_admins_found') }}</p>
         </div>
     </div>
     @endforelse
@@ -436,7 +436,7 @@
                 <div class="row g-3 mb-4">
                     <div class="col-sm-6">
                         <div style="background:#fafbff;border-radius:14px;padding:16px;border:1.5px solid #f1f3f9;">
-                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8592a3;margin-bottom:10px;">Status</div>
+                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8592a3;margin-bottom:10px;">{{ __('app.status') }}</div>
                             <form action="{{ route('adminstatus', $admin->id) }}" method="POST">
                                 @csrf @method('PUT')
                                 <div class="d-flex align-items-center gap-2">
@@ -447,9 +447,9 @@
                                                onchange="this.form.submit()">
                                     </div>
                                     @if($admin->is_active)
-                                        <span class="status-badge status-active"><i class="ri ri-checkbox-blank-circle-fill me-1" style="font-size:8px;"></i>Active</span>
+                                        <span class="status-badge status-active"><i class="ri ri-checkbox-blank-circle-fill me-1" style="font-size:8px;"></i>{{ __('app.active') }}</span>
                                     @else
-                                        <span class="status-badge status-inactive"><i class="ri ri-checkbox-blank-circle-fill me-1" style="font-size:8px;"></i>Inactive</span>
+                                        <span class="status-badge status-inactive"><i class="ri ri-checkbox-blank-circle-fill me-1" style="font-size:8px;"></i>{{ __('app.inactive') }}</span>
                                     @endif
                                 </div>
                             </form>
@@ -457,14 +457,14 @@
                     </div>
                     <div class="col-sm-6">
                         <div style="background:#fafbff;border-radius:14px;padding:16px;border:1.5px solid #f1f3f9;">
-                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8592a3;margin-bottom:10px;">Member Since</div>
+                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8592a3;margin-bottom:10px;">{{ __('app.member_since') }}</div>
                             <div style="font-size:15px;font-weight:700;color:#1e293b;">{{ $admin->created_at?->format('M d, Y') }}</div>
                             <div style="font-size:12px;color:#a0aab4;margin-top:2px;">{{ $admin->created_at?->diffForHumans() }}</div>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div style="background:#fafbff;border-radius:14px;padding:16px;border:1.5px solid #f1f3f9;">
-                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8592a3;margin-bottom:10px;">Last Seen</div>
+                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8592a3;margin-bottom:10px;">{{ __('app.last_seen') }}</div>
                             @if($admin->last_seen_at)
                                 @php
                                     $diffMins  = now()->diffInMinutes($admin->last_seen_at);
@@ -472,20 +472,20 @@
                                 @endphp
                                 @if($diffMins < 5)
                                     <div style="font-size:15px;font-weight:700;color:#28c76f;">
-                                        <i class="ri ri-circle-fill me-1" style="font-size:9px;"></i>Online Now
+                                        <i class="ri ri-circle-fill me-1" style="font-size:9px;"></i>{{ __('app.online_now') }}
                                     </div>
-                                    <div style="font-size:12px;color:#a0aab4;margin-top:2px;">Active recently</div>
+                                    <div style="font-size:12px;color:#a0aab4;margin-top:2px;">{{ __('app.active_recently') }}</div>
                                 @elseif($diffHours < 24)
-                                    <div style="font-size:15px;font-weight:700;color:#1e293b;">{{ $diffHours }} hours ago</div>
+                                    <div style="font-size:15px;font-weight:700;color:#1e293b;">{{ __('app.hours_ago', ['count' => $diffHours]) }}</div>
                                     <div style="font-size:12px;color:#a0aab4;margin-top:2px;">{{ $admin->last_seen_at->format('h:i A') }}</div>
                                 @else
                                     @php $diffDays = now()->diffInDays($admin->last_seen_at); @endphp
-                                    <div style="font-size:15px;font-weight:700;color:#1e293b;">{{ $diffDays }} {{ $diffDays == 1 ? 'day' : 'days' }} ago</div>
+                                    <div style="font-size:15px;font-weight:700;color:#1e293b;">{{ $diffDays == 1 ? __('app.day_ago') : __('app.days_ago', ['count' => $diffDays]) }}</div>
                                     <div style="font-size:12px;color:#a0aab4;margin-top:2px;">{{ $admin->last_seen_at->format('M d, Y') }}</div>
                                 @endif
                             @else
-                                <div style="font-size:15px;font-weight:700;color:#a0aab4;">Never</div>
-                                <div style="font-size:12px;color:#c8ccda;margin-top:2px;">No activity recorded</div>
+                                <div style="font-size:15px;font-weight:700;color:#a0aab4;">{{ __('app.never') }}</div>
+                                <div style="font-size:12px;color:#c8ccda;margin-top:2px;">{{ __('app.no_activity') }}</div>
                             @endif
                         </div>
                     </div>
@@ -494,7 +494,7 @@
                 {{-- Role --}}
                 @php $adminRole = $admin->roles->first(); @endphp
                 <div class="mb-4">
-                    <div class="section-header orange mb-3"><span class="sh-title">Assigned Role</span></div>
+                    <div class="section-header orange mb-3"><span class="sh-title">{{ __('app.assigned_role') }}</span></div>
                     @if($adminRole)
                     <div style="background:#fffbf5;border-radius:14px;padding:18px;border:1.5px solid #ffe5c0;">
                         <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
@@ -503,12 +503,12 @@
                             </div>
                             <div>
                                 <div style="font-size:16px;font-weight:800;color:#1e293b;line-height:1.2;">{{ $adminRole->name }}</div>
-                                <div style="font-size:12px;color:#8592a3;margin-top:3px;">{{ $adminRole->permissions->count() }} permissions included</div>
+                                <div style="font-size:12px;color:#8592a3;margin-top:3px;">{{ __('app.permissions_included', ['count' => $adminRole->permissions->count()]) }}</div>
                             </div>
                         </div>
                         @if($adminRole->permissions->count())
                         <div style="border-top:1px solid #ffd59a;padding-top:14px;">
-                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#ff9f43;margin-bottom:8px;">Included Permissions</div>
+                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#ff9f43;margin-bottom:8px;">{{ __('app.included_permissions') }}</div>
                             <div style="display:flex;flex-wrap:wrap;gap:6px;">
                                 @foreach($adminRole->permissions as $rp)
                                 <span style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid #ffd59a;color:#d07c1a;padding:4px 11px;border-radius:8px;font-size:11px;font-weight:600;">
@@ -524,8 +524,8 @@
                         <div style="width:52px;height:52px;background:#f1f3f9;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
                             <i class="ri ri-shield-off-line" style="font-size:24px;color:#c8ccda;"></i>
                         </div>
-                        <div style="font-size:13px;font-weight:700;color:#5d6a82;margin-bottom:4px;">No role assigned</div>
-                        <div style="font-size:12px;color:#a0aab4;">Permissions managed through direct assignment</div>
+                        <div style="font-size:13px;font-weight:700;color:#5d6a82;margin-bottom:4px;">{{ __('app.no_role_assigned') }}</div>
+                        <div style="font-size:12px;color:#a0aab4;">{{ __('app.permissions_via_direct') }}</div>
                     </div>
                     @endif
                 </div>
@@ -533,7 +533,7 @@
                 {{-- Direct Permissions --}}
                 <div>
                     <div class="section-header green mb-3">
-                        <span class="sh-title">Direct Permissions</span>
+                        <span class="sh-title">{{ __('app.direct_permissions') }}</span>
                         <span style="background:#e8f8ef;color:#28c76f;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;margin-left:auto;">{{ $admin->permissions->count() }}</span>
                     </div>
                     @if($admin->permissions->count())
@@ -556,8 +556,8 @@
                         <div style="width:52px;height:52px;background:#f1f3f9;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
                             <i class="ri ri-key-line" style="font-size:24px;color:#c8ccda;"></i>
                         </div>
-                        <div style="font-size:13px;font-weight:700;color:#5d6a82;margin-bottom:4px;">No direct permissions</div>
-                        <div style="font-size:12px;color:#a0aab4;">All permissions come from the assigned role</div>
+                        <div style="font-size:13px;font-weight:700;color:#5d6a82;margin-bottom:4px;">{{ __('app.no_direct_permissions') }}</div>
+                        <div style="font-size:12px;color:#a0aab4;">{{ __('app.all_from_role') }}</div>
                     </div>
                     @endif
                 </div>
@@ -566,13 +566,13 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                        style="border-radius:12px;font-weight:600;">Close</button>
+                        style="border-radius:12px;font-weight:600;">{{ __('app.close') }}</button>
                 <button type="button" class="btn btn-primary"
                         style="border-radius:12px;font-weight:600;"
                         data-bs-dismiss="modal"
                         data-bs-toggle="modal"
                         data-bs-target="#editAdminModal{{ $admin->id }}">
-                    <i class="ri ri-pencil-line me-1"></i>Edit Admin
+                    <i class="ri ri-pencil-line me-1"></i>{{ __('app.edit_admin') }}
                 </button>
             </div>
 
@@ -594,7 +594,7 @@
                             {{ strtoupper(substr($admin->name, 0, 1)) }}
                         </div>
                         <div>
-                            <h5 class="modal-title mb-0">Edit Admin</h5>
+                            <h5 class="modal-title mb-0">{{ __('app.edit_admin') }}</h5>
                             <small class="text-muted">{{ $admin->name }}</small>
                         </div>
                     </div>
@@ -604,46 +604,46 @@
                 <div class="modal-body" style="overflow-y:auto;max-height:calc(100vh - 200px);">
 
                     {{-- Basic Info --}}
-                    <div class="section-header mb-4"><span class="sh-title">Basic Information</span></div>
+                    <div class="section-header mb-4"><span class="sh-title">{{ __('app.basic_information') }}</span></div>
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <input type="text" class="form-control" style="border-radius:12px;"
                                        id="name_{{ $admin->id }}" name="name"
-                                       value="{{ old('name', $admin->name) }}" placeholder="Name" required>
-                                <label for="name_{{ $admin->id }}">Name</label>
+                                       value="{{ old('name', $admin->name) }}" placeholder="{{ __('app.name') }}" required>
+                                <label for="name_{{ $admin->id }}">{{ __('app.name') }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <input type="email" class="form-control" style="border-radius:12px;"
                                        id="email_{{ $admin->id }}" name="email"
-                                       value="{{ old('email', $admin->email) }}" placeholder="Email" required>
-                                <label for="email_{{ $admin->id }}">Email</label>
+                                       value="{{ old('email', $admin->email) }}" placeholder="{{ __('app.email') }}" required>
+                                <label for="email_{{ $admin->id }}">{{ __('app.email') }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <input type="password" class="form-control" style="border-radius:12px;"
                                        id="password_{{ $admin->id }}" name="password"
-                                       placeholder="New Password (optional)">
-                                <label for="password_{{ $admin->id }}">New Password (optional)</label>
+                                       placeholder="{{ __('app.new_password_optional') }}">
+                                <label for="password_{{ $admin->id }}">{{ __('app.new_password_optional') }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <input type="password" class="form-control" style="border-radius:12px;"
                                        id="password_confirmation_{{ $admin->id }}"
-                                       name="password_confirmation" placeholder="Confirm Password">
-                                <label for="password_confirmation_{{ $admin->id }}">Confirm Password</label>
+                                       name="password_confirmation" placeholder="{{ __('app.confirm_password') }}">
+                                <label for="password_confirmation_{{ $admin->id }}">{{ __('app.confirm_password') }}</label>
                             </div>
                         </div>
                     </div>
 
                     {{-- Roles (multi-select) --}}
                     <div class="section-header orange mb-3">
-                        <span class="sh-title">Assign Roles</span>
-                        <small style="font-weight:400;text-transform:none;letter-spacing:0;color:#8592a3;font-size:11px;margin-left:6px;">— يمكن اختيار أكثر من رول</small>
+                        <span class="sh-title">{{ __('app.assign_roles') }}</span>
+                        <small style="font-weight:400;text-transform:none;letter-spacing:0;color:#8592a3;font-size:11px;margin-left:6px;">— {{ __('app.can_choose_multiple_roles') }}</small>
                     </div>
                     <div class="mb-4">
                         @php $adminRoleNames = $admin->roles->pluck('name')->toArray(); @endphp
@@ -660,7 +660,7 @@
                                     @forelse($role->permissions as $rp)
                                         <span class="role-perm-tag">{{ $rp->name }}</span>
                                     @empty
-                                        <span style="font-size:11px;color:#8592a3;font-style:italic;">No permissions</span>
+                                        <span style="font-size:11px;color:#8592a3;font-style:italic;">{{ __('app.no_permissions') }}</span>
                                     @endforelse
                                 </div>
                             </div>
@@ -671,8 +671,8 @@
 
                     {{-- Extra Permissions --}}
                     <div class="section-header green mb-3">
-                        <span class="sh-title">Extra Permissions</span>
-                        <small style="font-weight:400;text-transform:none;letter-spacing:0;color:#8592a3;font-size:11px;">— on top of role</small>
+                        <span class="sh-title">{{ __('app.extra_permissions') }}</span>
+                        <small style="font-weight:400;text-transform:none;letter-spacing:0;color:#8592a3;font-size:11px;">— {{ __('app.on_top_of_role') }}</small>
                         <span class="perm-badge ms-1">{{ $allPermissions->count() }}</span>
                         <div class="ms-auto form-check form-switch mb-0 d-flex align-items-center gap-2">
                             <input class="form-check-input select-all-perms" type="checkbox"
@@ -680,7 +680,7 @@
                                    data-admin="{{ $admin->id }}"
                                    style="width:2em;height:1em;cursor:pointer;">
                             <label class="form-check-label fw-semibold small" for="selectAll_{{ $admin->id }}">
-                                Select All
+                                {{ __('app.select_all') }}
                             </label>
                         </div>
                     </div>
@@ -697,7 +697,7 @@
                                 <span>{{ $permission->name }}</span>
                             </label>
                             @empty
-                            <div class="text-muted fst-italic small text-center py-3">No permissions defined</div>
+                            <div class="text-muted fst-italic small text-center py-3">{{ __('app.no_permissions_defined') }}</div>
                             @endforelse
                         </div>
                     </div>
@@ -710,10 +710,10 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                            style="border-radius:12px;font-weight:600;">Cancel</button>
+                            style="border-radius:12px;font-weight:600;">{{ __('app.cancel') }}</button>
                     <button type="submit" class="btn btn-primary"
                             style="border-radius:12px;font-weight:700;padding:10px 28px;">
-                        <i class="ri ri-save-line me-1"></i>Save Changes
+                        <i class="ri ri-save-line me-1"></i>{{ __('app.save_changes') }}
                     </button>
                 </div>
 

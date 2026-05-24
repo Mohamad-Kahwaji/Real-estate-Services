@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Reviews')
+@section('title', __('app.reviews'))
 
 @section('page-style')
 <style>
@@ -43,23 +43,23 @@
 
 <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
     <div>
-        <h4 class="fw-bold mb-1">Reviews</h4>
-        <p class="text-muted small mb-0">All service reviews submitted by users</p>
+        <h4 class="fw-bold mb-1">{{ __('app.reviews') }}</h4>
+        <p class="text-muted small mb-0">{{ __('app.reviews_desc_admin') }}</p>
     </div>
     <form method="GET" action="{{ route('reviews.index') }}" class="d-flex align-items-center gap-2 flex-wrap">
         <div class="input-group input-group-sm" style="width:220px;">
             <span class="input-group-text"><i class="ri ri-search-line"></i></span>
-            <input type="text" name="search" class="form-control" placeholder="Search reviews..." value="{{ request('search') }}">
+            <input type="text" name="search" class="form-control" placeholder="{{ __('app.search_reviews') }}" value="{{ request('search') }}">
         </div>
         <select name="rating" class="form-select form-select-sm" style="width:130px;">
-            <option value="">All Ratings</option>
+            <option value="">{{ __('app.all_ratings') }}</option>
             @for($i = 5; $i >= 1; $i--)
-                <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>{{ $i }} Stars</option>
+                <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>{{ $i }} ★</option>
             @endfor
         </select>
-        <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+        <button type="submit" class="btn btn-primary btn-sm">{{ __('app.filter') }}</button>
         @if(request('search') || request('rating'))
-            <a href="{{ route('reviews.index') }}" class="btn btn-outline-secondary btn-sm">Clear</a>
+            <a href="{{ route('reviews.index') }}" class="btn btn-outline-secondary btn-sm">{{ __('app.clear') }}</a>
         @endif
     </form>
 </div>
@@ -107,7 +107,7 @@
                 @if($review->comment)
                 <div class="rev-comment">{{ $review->comment }}</div>
                 @else
-                <div class="rev-comment" style="color:#b0aab8;font-style:italic;">No comment provided.</div>
+                <div class="rev-comment" style="color:#b0aab8;font-style:italic;">{{ __('app.no_comment') }}</div>
                 @endif
 
                 {{-- Delete --}}
@@ -116,8 +116,8 @@
                     <button type="submit"
                             class="btn btn-sm w-100 rounded-3 fw-bold"
                             style="background:#fdeaea;color:#ea5455;border:none;font-size:12px;"
-                            onclick="return confirm('Delete this review?')">
-                        <i class="ri ri-delete-bin-line me-1"></i>Delete Review
+                            onclick="return confirm('{{ __('app.confirm_delete') }}')">
+                        <i class="ri ri-delete-bin-line me-1"></i>{{ __('app.delete_review') }}
                     </button>
                 </form>
             </div>
@@ -128,8 +128,8 @@
     <div class="col-12">
         <div class="empty-state">
             <i class="ri ri-star-line"></i>
-            <p class="fw-bold mb-1">No Reviews Yet</p>
-            <p class="small text-muted mb-0">Reviews will appear here once users submit them.</p>
+            <p class="fw-bold mb-1">{{ __('app.no_reviews') }}</p>
+            <p class="small text-muted mb-0">{{ __('app.reviews_empty_desc') }}</p>
         </div>
     </div>
     @endforelse

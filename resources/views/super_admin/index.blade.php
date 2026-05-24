@@ -1,26 +1,26 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Super Admin Panel')
+@section('title', __('app.super_admin'))
 
 @section('content')
 
 {{-- Pending Business Account Requests --}}
 <div class="card mb-6 admin-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Pending Business Account Requests</h5>
-        <span class="badge bg-label-warning text-warning">{{ $accounts->count() ?? 0 }} Pending</span>
+        <h5 class="mb-0">{{ __('app.pending_business_requests') }}</h5>
+        <span class="badge bg-label-warning text-warning">{{ $accounts->count() ?? 0 }} {{ __('app.pending') }}</span>
     </div>
 
     <div class="table-responsive text-nowrap">
         <table class="table admin-table">
             <thead>
                 <tr>
-                    <th>User</th>
-                    <th>Business Name</th>
-                    <th>License Number</th>
-                    <th>City</th>
-                    <th>Status</th>
-                    <th class="text-center">Actions</th>
+                    <th>{{ __('app.user') }}</th>
+                    <th>{{ __('app.business_name') }}</th>
+                    <th>{{ __('app.license_number') }}</th>
+                    <th>{{ __('app.city') }}</th>
+                    <th>{{ __('app.status') }}</th>
+                    <th class="text-center">{{ __('app.actions') }}</th>
                 </tr>
             </thead>
 
@@ -67,7 +67,7 @@
                                         @csrf
                                         <button class="dropdown-item text-success" type="submit">
                                             <i class="icon-base ri ri-check-line me-1"></i>
-                                            Approve
+                                            {{ __('app.approve') }}
                                         </button>
                                     </form>
 
@@ -75,7 +75,7 @@
                                         @csrf
                                         <button class="dropdown-item text-danger" type="submit">
                                             <i class="icon-base ri ri-close-line me-1"></i>
-                                            Reject
+                                            {{ __('app.reject') }}
                                         </button>
                                     </form>
                                 </div>
@@ -84,7 +84,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-5">No pending requests found.</td>
+                        <td colspan="6" class="text-center text-muted py-5">{{ __('app.no_pending_requests') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -96,20 +96,20 @@
 {{-- Services --}}
 <div class="card mb-6 admin-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Services</h5>
-        <span class="badge bg-label-primary text-primary">{{ $services->count() ?? 0 }} Services</span>
+        <h5 class="mb-0">{{ __('app.services') }}</h5>
+        <span class="badge bg-label-primary text-primary">{{ $services->count() ?? 0 }} {{ __('app.services') }}</span>
     </div>
 
     <div class="table-responsive text-nowrap">
         <table class="table admin-table">
             <thead>
                 <tr>
-                    <th>Business</th>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th class="text-center">Actions</th>
+                    <th>{{ __('app.business') }}</th>
+                    <th>{{ __('app.title_label') }}</th>
+                    <th>{{ __('app.category') }}</th>
+                    <th>{{ __('app.price') }}</th>
+                    <th>{{ __('app.status') }}</th>
+                    <th class="text-center">{{ __('app.actions') }}</th>
                 </tr>
             </thead>
 
@@ -151,7 +151,7 @@
                                         @csrf
                                         <button class="dropdown-item text-success" type="submit">
                                             <i class="icon-base ri ri-check-line me-1"></i>
-                                            Approve
+                                            {{ __('app.approve') }}
                                         </button>
                                     </form>
 
@@ -159,7 +159,7 @@
                                         @csrf
                                         <button class="dropdown-item text-danger" type="submit">
                                             <i class="icon-base ri ri-close-line me-1"></i>
-                                            Reject
+                                            {{ __('app.reject') }}
                                         </button>
                                     </form>
 
@@ -167,7 +167,7 @@
                                         @csrf
                                         <button class="dropdown-item text-warning" type="submit">
                                             <i class="icon-base ri ri-time-line me-1"></i>
-                                            Pending
+                                            {{ __('app.pending') }}
                                         </button>
                                     </form>
                                 </div>
@@ -176,7 +176,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-5">No services found.</td>
+                        <td colspan="6" class="text-center text-muted py-5">{{ __('app.no_services_found') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -188,7 +188,7 @@
 {{-- Categories --}}
 <div class="card mb-6 admin-card">
     <div class="card-header">
-        <h5 class="mb-0">Categories | التصنيفات</h5>
+        <h5 class="mb-0">{{ __('app.categories') }}</h5>
     </div>
 
     <div class="table-responsive text-nowrap">
@@ -196,9 +196,9 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Arabic Name | الاسم بالعربي</th>
-                    <th>English Name | الاسم بالإنجليزي</th>
-                    <th class="text-center">Actions | الإجراءات</th>
+                    <th>{{ __('app.arabic_name') }}</th>
+                    <th>{{ __('app.english_name') }}</th>
+                    <th class="text-center">{{ __('app.actions') }}</th>
                 </tr>
             </thead>
 
@@ -221,7 +221,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#editCategoryModal{{ $category->id }}">
                                         <i class="icon-base ri ri-pencil-line me-1"></i>
-                                        Edit | تعديل
+                                        {{ __('app.edit') }}
                                     </button>
 
                                     <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
@@ -230,7 +230,7 @@
 
                                         <button class="dropdown-item text-danger" type="submit">
                                             <i class="icon-base ri ri-delete-bin-6-line me-1"></i>
-                                            Delete | حذف
+                                            {{ __('app.delete') }}
                                         </button>
                                     </form>
                                 </div>
@@ -247,19 +247,19 @@
                                     @method('PUT')
 
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Edit Category | تعديل التصنيف</h5>
+                                        <h5 class="modal-title">{{ __('app.edit_category') }}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
 
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label">Arabic Name | الاسم بالعربي</label>
+                                            <label class="form-label">{{ __('app.arabic_name') }}</label>
                                             <input type="text" name="name_ar" class="form-control"
                                                    value="{{ $category->name_ar }}" required>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label">English Name | الاسم بالإنجليزي</label>
+                                            <label class="form-label">{{ __('app.english_name') }}</label>
                                             <input type="text" name="name_en" class="form-control"
                                                    value="{{ $category->name_en }}" required>
                                         </div>
@@ -267,11 +267,11 @@
 
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-                                            Cancel | إلغاء
+                                            {{ __('app.cancel') }}
                                         </button>
 
                                         <button type="submit" class="btn btn-primary">
-                                            Update | تحديث
+                                            {{ __('app.update') }}
                                         </button>
                                     </div>
                                 </form>
@@ -280,7 +280,7 @@
                     </div>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center text-muted py-5">No categories found.</td>
+                        <td colspan="4" class="text-center text-muted py-5">{{ __('app.no_categories_found') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -293,18 +293,18 @@
 
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">Arabic Name | الاسم بالعربي</label>
+                    <label class="form-label">{{ __('app.arabic_name') }}</label>
                     <input type="text" name="name_ar" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">English Name | الاسم بالإنجليزي</label>
+                    <label class="form-label">{{ __('app.english_name') }}</label>
                     <input type="text" name="name_en" class="form-control" required>
                 </div>
             </div>
 
             <button type="submit" class="btn btn-primary w-100 mt-4">
-                Add Category | إضافة تصنيف
+                {{ __('app.add_category') }}
             </button>
         </form>
     </div>
@@ -314,7 +314,7 @@
 {{-- Subcategories --}}
 <div class="card mb-6 admin-card">
     <div class="card-header">
-        <h5 class="mb-0">Subcategories | التصنيفات الفرعية</h5>
+        <h5 class="mb-0">{{ __('app.subcategories') }}</h5>
     </div>
 
     <div class="table-responsive text-nowrap">
@@ -322,10 +322,10 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Arabic Name | الاسم بالعربي</th>
-                    <th>English Name | الاسم بالإنجليزي</th>
-                    <th>Category | التصنيف الرئيسي</th>
-                    <th class="text-center">Actions</th>
+                    <th>{{ __('app.arabic_name') }}</th>
+                    <th>{{ __('app.english_name') }}</th>
+                    <th>{{ __('app.parent_category') }}</th>
+                    <th class="text-center">{{ __('app.actions') }}</th>
                 </tr>
             </thead>
 
@@ -349,7 +349,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#editSubcategoryModal{{ $subcategory->id }}">
                                         <i class="icon-base ri ri-pencil-line me-1"></i>
-                                        Edit | تعديل
+                                        {{ __('app.edit') }}
                                     </button>
 
                                     <form action="{{ route('subcategories.destroy', $subcategory->id) }}" method="POST">
@@ -358,7 +358,7 @@
 
                                         <button class="dropdown-item text-danger" type="submit">
                                             <i class="icon-base ri ri-delete-bin-6-line me-1"></i>
-                                            Delete | حذف
+                                            {{ __('app.delete') }}
                                         </button>
                                     </form>
                                 </div>
@@ -375,25 +375,25 @@
                                     @method('PUT')
 
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Edit Subcategory | تعديل التصنيف الفرعي</h5>
+                                        <h5 class="modal-title">{{ __('app.edit_subcategory') }}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
 
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label">Arabic Name | الاسم بالعربي</label>
+                                            <label class="form-label">{{ __('app.arabic_name') }}</label>
                                             <input type="text" name="name_ar" class="form-control"
                                                    value="{{ $subcategory->name_ar }}" required>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label">English Name | الاسم بالإنجليزي</label>
+                                            <label class="form-label">{{ __('app.english_name') }}</label>
                                             <input type="text" name="name_en" class="form-control"
                                                    value="{{ $subcategory->name_en }}" required>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label">Category | التصنيف الرئيسي</label>
+                                            <label class="form-label">{{ __('app.parent_category') }}</label>
                                             <select name="category_id" class="form-select" required>
                                                 @foreach($categories as $category)
                                                     <option value="{{ $category->id }}"
@@ -407,11 +407,11 @@
 
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-                                            Cancel | إلغاء
+                                            {{ __('app.cancel') }}
                                         </button>
 
                                         <button type="submit" class="btn btn-primary">
-                                            Update | تحديث
+                                            {{ __('app.update') }}
                                         </button>
                                     </div>
                                 </form>
@@ -420,7 +420,7 @@
                     </div>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-5">No subcategories found.</td>
+                        <td colspan="5" class="text-center text-muted py-5">{{ __('app.no_subcategories_found') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -433,19 +433,19 @@
 
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
-                    <label class="form-label">Arabic Name | الاسم بالعربي</label>
+                    <label class="form-label">{{ __('app.arabic_name') }}</label>
                     <input type="text" name="name_ar" class="form-control" required>
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label">English Name | الاسم بالإنجليزي</label>
+                    <label class="form-label">{{ __('app.english_name') }}</label>
                     <input type="text" name="name_en" class="form-control" required>
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label">Category | التصنيف الرئيسي</label>
+                    <label class="form-label">{{ __('app.parent_category') }}</label>
                     <select name="category_id" class="form-select" required>
-                        <option value="">Select Category | اختر التصنيف</option>
+                        <option value="">{{ __('app.select_category') }}</option>
 
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}">
@@ -460,15 +460,13 @@
             <div class="dynamic-fields-card">
                 <div class="dynamic-fields-header">
                     <div>
-                        <h6 class="mb-1">Dynamic Fields | الحقول الديناميكية</h6>
-                        <p class="text-muted mb-0 small">
-                            أضف الحقول التي سيقوم المستخدم بتعبئتها عند إنشاء خدمة ضمن هذا التصنيف الفرعي.
-                        </p>
+                        <h6 class="mb-1">{{ __('app.dynamic_fields') }}</h6>
+                        <p class="text-muted mb-0 small">{{ __('app.dynamic_fields_desc') }}</p>
                     </div>
 
                     <button type="button" class="btn btn-outline-primary btn-sm" id="add-dynamic-field">
                         <i class="icon-base ri ri-add-line me-1"></i>
-                        Add Field
+                        {{ __('app.add_field') }}
                     </button>
                 </div>
 
@@ -476,19 +474,19 @@
                     <div class="dynamic-field-item">
                         <div class="row g-3 align-items-end">
                             <div class="col-md-2">
-                                <label class="form-label small">Field Name</label>
+                                <label class="form-label small">{{ __('app.field_name_label') }}</label>
                                 <input type="text" name="fields[0][name]" class="form-control" placeholder="area">
                             </div>
 
                             <div class="col-md-2">
-                                <label class="form-label small">Label</label>
-                                <input type="text" name="fields[0][label]" class="form-control" placeholder="المساحة">
+                                <label class="form-label small">{{ __('app.field_label') }}</label>
+                                <input type="text" name="fields[0][label]" class="form-control" placeholder="{{ __('app.arabic_name') }}">
                             </div>
 
                             <div class="col-md-2">
-                                <label class="form-label small">Type</label>
+                                <label class="form-label small">{{ __('app.field_type') }}</label>
                                 <select name="fields[0][type]" class="form-select">
-                                    <option value="">Select Type</option>
+                                    <option value="">{{ __('app.select_type') }}</option>
                                     <option value="text">Text</option>
                                     <option value="number">Number</option>
                                     <option value="date">Date</option>
@@ -499,15 +497,15 @@
                             </div>
 
                             <div class="col-md-2">
-                                <label class="form-label small">Required</label>
+                                <label class="form-label small">{{ __('app.field_required') }}</label>
                                 <select name="fields[0][is_required]" class="form-select">
-                                    <option value="0">Optional</option>
-                                    <option value="1">Required</option>
+                                    <option value="0">{{ __('app.optional_field') }}</option>
+                                    <option value="1">{{ __('app.required_field') }}</option>
                                 </select>
                             </div>
 
                             <div class="col-md-3">
-                                <label class="form-label small">Options</label>
+                                <label class="form-label small">{{ __('app.field_options') }}</label>
                                 <input type="text" name="fields[0][options]" class="form-control" placeholder="option1,option2">
                             </div>
 
@@ -522,7 +520,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary w-100 mt-4">
-                Add Subcategory | إضافة تصنيف فرعي
+                {{ __('app.add_subcategory') }}
             </button>
         </form>
     </div>
@@ -532,7 +530,7 @@
 {{-- Cities --}}
 <div class="card mb-6 admin-card">
     <div class="card-header">
-        <h5 class="mb-0">Cities | المدن</h5>
+        <h5 class="mb-0">{{ __('app.cities') }}</h5>
     </div>
 
     <div class="table-responsive text-nowrap">
@@ -540,9 +538,9 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Arabic Name | الاسم بالعربي</th>
-                    <th>English Name | الاسم بالإنجليزي</th>
-                    <th class="text-center">Actions | الإجراءات</th>
+                    <th>{{ __('app.arabic_name') }}</th>
+                    <th>{{ __('app.english_name') }}</th>
+                    <th class="text-center">{{ __('app.actions') }}</th>
                 </tr>
             </thead>
 
@@ -565,7 +563,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#editCityModal{{ $city->id }}">
                                         <i class="icon-base ri ri-pencil-line me-1"></i>
-                                        Edit | تعديل
+                                        {{ __('app.edit') }}
                                     </button>
 
                                     <form action="{{ route('cities.destroy', $city->id) }}" method="POST">
@@ -574,7 +572,7 @@
 
                                         <button class="dropdown-item text-danger" type="submit">
                                             <i class="icon-base ri ri-delete-bin-6-line me-1"></i>
-                                            Delete | حذف
+                                            {{ __('app.delete') }}
                                         </button>
                                     </form>
                                 </div>
@@ -591,19 +589,19 @@
                                     @method('PUT')
 
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Edit City | تعديل المدينة</h5>
+                                        <h5 class="modal-title">{{ __('app.edit_city') }}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
 
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label">Arabic Name | الاسم بالعربي</label>
+                                            <label class="form-label">{{ __('app.arabic_name') }}</label>
                                             <input type="text" name="name_ar" class="form-control"
                                                     value="{{ $city->name_ar }}" required>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label">English Name | الاسم بالإنجليزي</label>
+                                            <label class="form-label">{{ __('app.english_name') }}</label>
                                             <input type="text" name="name_en" class="form-control"
                                                     value="{{ $city->name_en }}" required>
                                         </div>
@@ -611,11 +609,11 @@
 
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-                                            Cancel | إلغاء
+                                            {{ __('app.cancel') }}
                                         </button>
 
                                         <button type="submit" class="btn btn-primary">
-                                            Update | تحديث
+                                            {{ __('app.update') }}
                                         </button>
                                     </div>
                                 </form>
@@ -624,7 +622,7 @@
                     </div>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center text-muted py-5">No cities found.</td>
+                        <td colspan="4" class="text-center text-muted py-5">{{ __('app.no_cities_found') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -637,18 +635,18 @@
 
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">Arabic Name | الاسم بالعربي</label>
+                    <label class="form-label">{{ __('app.arabic_name') }}</label>
                     <input type="text" name="name_ar" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">English Name | الاسم بالإنجليزي</label>
+                    <label class="form-label">{{ __('app.english_name') }}</label>
                     <input type="text" name="name_en" class="form-control" required>
                 </div>
             </div>
 
             <button type="submit" class="btn btn-primary w-100 mt-4">
-                Add City | إضافة مدينة
+                {{ __('app.add_city') }}
             </button>
         </form>
     </div>
@@ -893,28 +891,40 @@
 
 @push('scripts')
 <script>
+const FIELD_TRANS = {
+    fieldName:    '{{ __("app.field_name_label") }}',
+    label:        '{{ __("app.field_label") }}',
+    type:         '{{ __("app.field_type") }}',
+    required:     '{{ __("app.field_required") }}',
+    options:      '{{ __("app.field_options") }}',
+    selectType:   '{{ __("app.select_type") }}',
+    optional:     '{{ __("app.optional_field") }}',
+    requiredOpt:  '{{ __("app.required_field") }}',
+    arabicName:   '{{ __("app.arabic_name") }}',
+};
+
 let dynamicFieldIndex = 1;
 
 document.getElementById('add-dynamic-field')?.addEventListener('click', function () {
     const wrapper = document.getElementById('dynamic-fields-wrapper');
 
-    const html =
+    const html = `
         <div class="dynamic-field-item">
             <div class="row g-3 align-items-end">
                 <div class="col-md-2">
-                    <label class="form-label small">Field Name</label>
+                    <label class="form-label small">${FIELD_TRANS.fieldName}</label>
                     <input type="text" name="fields[${dynamicFieldIndex}][name]" class="form-control" placeholder="area"/>
                 </div>
 
                 <div class="col-md-2">
-                    <label class="form-label small">Label</label>
-                    <input type="text" name="fields[${dynamicFieldIndex}][label]" class="form-control" placeholder="المساحة"/>
+                    <label class="form-label small">${FIELD_TRANS.label}</label>
+                    <input type="text" name="fields[${dynamicFieldIndex}][label]" class="form-control" placeholder="${FIELD_TRANS.arabicName}"/>
                 </div>
 
                 <div class="col-md-2">
-                    <label class="form-label small">Type</label>
+                    <label class="form-label small">${FIELD_TRANS.type}</label>
                     <select name="fields[${dynamicFieldIndex}][type]" class="form-select">
-                        <option value="">Select Type</option>
+                        <option value="">${FIELD_TRANS.selectType}</option>
                         <option value="text">Text</option>
                         <option value="number">Number</option>
                         <option value="date">Date</option>
@@ -925,15 +935,15 @@ document.getElementById('add-dynamic-field')?.addEventListener('click', function
                 </div>
 
                 <div class="col-md-2">
-                    <label class="form-label small">Required</label>
+                    <label class="form-label small">${FIELD_TRANS.required}</label>
                     <select name="fields[${dynamicFieldIndex}][is_required]" class="form-select">
-                        <option value="0">Optional</option>
-                        <option value="1">Required</option>
+                        <option value="0">${FIELD_TRANS.optional}</option>
+                        <option value="1">${FIELD_TRANS.requiredOpt}</option>
                     </select>
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label small">Options</label>
+                    <label class="form-label small">${FIELD_TRANS.options}</label>
                     <input type="text" name="fields[${dynamicFieldIndex}][options]" class="form-control" placeholder="option1,option2" />
                 </div>
 
@@ -943,7 +953,7 @@ document.getElementById('add-dynamic-field')?.addEventListener('click', function
                     </button>
                 </div>
             </div>
-        </div>
+        </div>`;
 
     wrapper.insertAdjacentHTML('beforeend', html);
     dynamicFieldIndex++;

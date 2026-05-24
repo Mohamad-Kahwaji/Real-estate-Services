@@ -75,7 +75,12 @@ class ServiceRequestController extends Controller
     {
         /** @var User $user */
         $user     = auth('users')->user();
-        $requests = ServiceRequest::with(['service.business', 'service.category', 'payment'])
+        $requests = ServiceRequest::with([
+                'service' => fn($q) => $q->withTrashed(),
+                'service.business' => fn($q) => $q->withTrashed(),
+                'service.category',
+                'payment',
+            ])
             ->where('user_id', $user->id)
             ->latest()
             ->get();
@@ -233,7 +238,12 @@ class ServiceRequestController extends Controller
     {
         /** @var User $user */
         $user     = auth('users')->user();
-        $requests = ServiceRequest::with(['service.category', 'service.business', 'payment'])
+        $requests = ServiceRequest::with([
+                'service' => fn($q) => $q->withTrashed(),
+                'service.business' => fn($q) => $q->withTrashed(),
+                'service.category',
+                'payment',
+            ])
             ->where('user_id', $user->id)
             ->where('status', 'approved')
             ->latest()

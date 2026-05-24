@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Roles & Permissions')
+@section('title', __('app.roles_permissions'))
 
 @section('page-style')
 <style>
@@ -130,15 +130,15 @@
 {{-- Page Header --}}
 <div class="pg-header d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4><i class="ri ri-shield-star-line me-2" style="color:#696cff;"></i>Roles & Permissions</h4>
-        <p>Define roles and assign permissions to control admin access</p>
+        <h4><i class="ri ri-shield-star-line me-2" style="color:#696cff;"></i>{{ __('app.roles_permissions') }}</h4>
+        <p>{{ __('app.roles_permissions_desc') }}</p>
     </div>
     <div class="d-flex gap-2">
         <button type="button" class="btn-create" data-bs-toggle="modal" data-bs-target="#createRoleModal">
-            <i class="ri ri-shield-star-line"></i> Create Role
+            <i class="ri ri-shield-star-line"></i> {{ __('app.create_role') }}
         </button>
         <a href="{{ route('permissions.create') }}" class="btn-create" style="background:linear-gradient(135deg,#28c76f,#48da89);">
-            <i class="ri ri-add-line"></i> Create Permission
+            <i class="ri ri-add-line"></i> {{ __('app.create_permission') }}
         </a>
     </div>
 </div>
@@ -151,7 +151,7 @@
                 <i class="ri ri-shield-star-line" style="color:#696cff;"></i>
             </div>
             <div>
-                <div class="stat-label">Total Roles</div>
+                <div class="stat-label">{{ __('app.total_roles') }}</div>
                 <div class="stat-value">{{ $roles->count() }}</div>
             </div>
         </div>
@@ -162,7 +162,7 @@
                 <i class="ri ri-key-2-line" style="color:#28c76f;"></i>
             </div>
             <div>
-                <div class="stat-label">Total Permissions</div>
+                <div class="stat-label">{{ __('app.permissions') }}</div>
                 <div class="stat-value">{{ $roles->sum(fn($r) => $r->permissions->count()) }}</div>
             </div>
         </div>
@@ -173,7 +173,7 @@
                 <i class="ri ri-shield-check-line" style="color:#ff9f43;"></i>
             </div>
             <div>
-                <div class="stat-label">Roles with Permissions</div>
+                <div class="stat-label">{{ __('app.roles_with_permissions') }}</div>
                 <div class="stat-value">{{ $roles->filter(fn($r) => $r->permissions->count() > 0)->count() }}</div>
             </div>
         </div>
@@ -184,7 +184,7 @@
                 <i class="ri ri-error-warning-line" style="color:#ea5455;"></i>
             </div>
             <div>
-                <div class="stat-label">Empty Roles</div>
+                <div class="stat-label">{{ __('app.empty_roles') }}</div>
                 <div class="stat-value">{{ $roles->filter(fn($r) => $r->permissions->count() === 0)->count() }}</div>
             </div>
         </div>
@@ -194,7 +194,7 @@
 {{-- Roles Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-shield-star-line me-2" style="color:#696cff;"></i>All Roles</h6>
+        <h6><i class="ri ri-shield-star-line me-2" style="color:#696cff;"></i>{{ __('app.all_roles') }}</h6>
         <span style="font-size:12px;color:#8592a3;font-weight:600;">{{ $roles->count() }} role{{ $roles->count() !== 1 ? 's' : '' }} defined</span>
     </div>
     <div class="table-responsive">
@@ -202,11 +202,11 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Role Name</th>
-                    <th>Guard</th>
-                    <th>Permissions</th>
-                    <th style="width:120px;">Count</th>
-                    <th class="text-center" style="width:100px;">Actions</th>
+                    <th>{{ __('app.role_name') }}</th>
+                    <th>{{ __('app.guard') }}</th>
+                    <th>{{ __('app.permissions') }}</th>
+                    <th style="width:120px;">{{ __('app.count') }}</th>
+                    <th class="text-center" style="width:100px;">{{ __('app.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -239,7 +239,7 @@
                                     <i class="ri ri-key-2-line"></i>{{ $permission->name }}
                                 </span>
                             @empty
-                                <span style="color:#c8ccda;font-size:13px;font-style:italic;">No permissions assigned</span>
+                                <span style="color:#c8ccda;font-size:13px;font-style:italic;">{{ __('app.no_permissions_assigned') }}</span>
                             @endforelse
                         </div>
                     </td>
@@ -253,13 +253,13 @@
                     <td class="text-center">
                         <div class="d-flex align-items-center justify-content-center gap-2">
                             <a href="{{ route('permissions.edit', $role->id) }}"
-                               class="action-btn action-btn-edit" title="Edit Permissions">
+                               class="action-btn action-btn-edit" title="{{ __('app.edit_permissions') }}">
                                 <i class="ri ri-pencil-line"></i>
                             </a>
                             <form action="{{ route('permissions.destroy', $role->id) }}" method="POST" style="display:inline;">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="action-btn action-btn-delete" title="Delete Role"
-                                        onclick="return confirm('Delete role: {{ addslashes($role->name) }}?')">
+                                <button type="submit" class="action-btn action-btn-delete" title="{{ __('app.delete_role') }}"
+                                        onclick="return confirm('{{ __('app.confirm_delete') }}')">
                                     <i class="ri ri-delete-bin-line"></i>
                                 </button>
                             </form>
@@ -271,8 +271,8 @@
                     <td colspan="6">
                         <div class="empty-state">
                             <i class="ri ri-shield-line"></i>
-                            <p class="fw-bold mb-1">No roles found</p>
-                            <p class="small" style="color:#aab0be;">Start by creating your first role</p>
+                            <p class="fw-bold mb-1">{{ __('app.no_roles_found') }}</p>
+                            <p class="small" style="color:#aab0be;">{{ __('app.create_first_role') }}</p>
                         </div>
                     </td>
                 </tr>
@@ -289,7 +289,7 @@
 
             <div class="modal-header" style="background:linear-gradient(135deg,#696cff,#9c9eff);border-radius:20px 20px 0 0;border:0;padding:20px 28px;">
                 <h5 class="modal-title" id="createRoleModalLabel" style="color:#fff;font-weight:800;font-size:17px;">
-                    <i class="ri ri-shield-star-line me-2"></i>Create New Role
+                    <i class="ri ri-shield-star-line me-2"></i>{{ __('app.create_new_role') }}
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -321,18 +321,18 @@
                             <div class="d-flex gap-2">
                                 <button type="button" onclick="toggleAll(true)"
                                         style="font-size:11px;font-weight:700;color:#696cff;background:#eef0ff;border:0;border-radius:8px;padding:4px 12px;cursor:pointer;">
-                                    Select All
+                                    {{ __('app.select_all') }}
                                 </button>
                                 <button type="button" onclick="toggleAll(false)"
                                         style="font-size:11px;font-weight:700;color:#ea5455;background:#fdeaea;border:0;border-radius:8px;padding:4px 12px;cursor:pointer;">
-                                    Clear All
+                                    {{ __('app.clear_all') }}
                                 </button>
                             </div>
                         </div>
 
                         <div style="background:#fafbff;border-radius:14px;border:1.5px solid #e8eaf2;padding:16px;max-height:260px;overflow-y:auto;">
                             @if($permissions->isEmpty())
-                                <p style="color:#8592a3;font-size:13px;text-align:center;margin:0;">No permissions found. Create permissions first.</p>
+                                <p style="color:#8592a3;font-size:13px;text-align:center;margin:0;">{{ __('app.no_permissions_found_msg') }}</p>
                             @else
                                 <div class="row g-2" id="permissionsContainer">
                                     @foreach($permissions as $perm)
@@ -352,7 +352,7 @@
                             @endif
                         </div>
                         <div style="font-size:11px;color:#8592a3;margin-top:8px;">
-                            <span id="selectedCount">0</span> permission(s) selected
+                            <span id="selectedCount">0</span> {{ __('app.permission_selected') }}
                         </div>
                     </div>
 
@@ -360,9 +360,9 @@
 
                 <div class="modal-footer" style="border-top:1px solid #f0eef8;padding:16px 28px;border-radius:0 0 20px 20px;">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                            style="border-radius:10px;font-weight:700;padding:10px 20px;">Cancel</button>
+                            style="border-radius:10px;font-weight:700;padding:10px 20px;">{{ __('app.cancel') }}</button>
                     <button type="submit" class="btn-create" style="padding:10px 24px;">
-                        <i class="ri ri-save-line"></i> Create Role
+                        <i class="ri ri-save-line"></i> {{ __('app.create_role') }}
                     </button>
                 </div>
             </form>

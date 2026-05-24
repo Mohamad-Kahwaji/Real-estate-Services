@@ -186,10 +186,6 @@ Route::middleware('auth:superadmins')->group(function () {
     // Alias for superadmin dashboard index
     Route::get('indexsuperadmin',[SuperadminController::class, 'index'])->name('indexsuperadmin');
 
-    // Global dashboard search
-    Route::get('dashboard/search',  [SearchController::class, 'search'])->name('dashboard.search');
-    // Global dashboard filters
-    Route::get('dashboard/filters', [SearchController::class, 'filters'])->name('dashboard.filters');
 
     // List all admins
     Route::get('adminsindex',       [SuperadminController::class, 'adminindex'])->name('adminsindex');
@@ -247,6 +243,10 @@ Route::middleware('auth:superadmins')->group(function () {
 // Shared admin + superadmin routes
 // =================================================================
 Route::middleware('auth:admins,superadmins')->group(function () {
+
+    // Global dashboard search (accessible to both admins and superadmins)
+    Route::get('dashboard/search',  [SearchController::class, 'search'])->name('dashboard.search');
+    Route::get('dashboard/filters', [SearchController::class, 'filters'])->name('dashboard.filters');
 
     // List all registered users
     Route::resource('allindex', UserController::class);

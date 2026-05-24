@@ -60,16 +60,16 @@
         <form method="GET" action="{{ route('ads.index') }}" class="d-flex align-items-center gap-2">
             <div class="input-group input-group-sm" style="width:200px;">
                 <span class="input-group-text"><i class="ri ri-search-line"></i></span>
-                <input type="text" name="search" class="form-control" placeholder="Search ads..." value="{{ request('search') }}">
+                <input type="text" name="search" class="form-control" placeholder="{{ __('app.search_ads') }}" value="{{ request('search') }}">
             </div>
             <select name="status" class="form-select form-select-sm" style="width:120px;" onchange="this.form.submit()">
-                <option value="">All</option>
-                <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                <option value="">{{ __('app.all') }}</option>
+                <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>{{ __('app.active') }}</option>
+                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>{{ __('app.inactive') }}</option>
             </select>
-            <button type="submit" class="btn btn-secondary btn-sm">Go</button>
+            <button type="submit" class="btn btn-secondary btn-sm">{{ __('app.search') }}</button>
             @if(request('search') || request('status'))
-                <a href="{{ route('ads.index') }}" class="btn btn-outline-secondary btn-sm">Clear</a>
+                <a href="{{ route('ads.index') }}" class="btn btn-outline-secondary btn-sm">{{ __('app.clear') }}</a>
             @endif
         </form>
         <a href="{{ route('ads.create') }}" class="btn-add">

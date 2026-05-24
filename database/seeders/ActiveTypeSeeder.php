@@ -15,13 +15,13 @@ class ActiveTypeSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         $types = [
-            ['name' => 'Real Estate'],
-            ['name' => 'Construction & Finishing'],
-            ['name' => 'Maintenance'],
-            ['name' => 'Cleaning'],
-            ['name' => 'Transport & Moving'],
-            ['name' => 'Technology & Security'],
-            ['name' => 'Home Services'],
+            ['name' => 'Real Estate',             'name_ar' => 'عقارات'],
+            ['name' => 'Construction & Finishing', 'name_ar' => 'بناء وتشطيب'],
+            ['name' => 'Maintenance',              'name_ar' => 'صيانة'],
+            ['name' => 'Cleaning',                 'name_ar' => 'تنظيف'],
+            ['name' => 'Transport & Moving',       'name_ar' => 'نقل وتحريك'],
+            ['name' => 'Technology & Security',    'name_ar' => 'تقنية وأمن'],
+            ['name' => 'Home Services',            'name_ar' => 'خدمات منزلية'],
         ];
 
         foreach ($types as $type) {

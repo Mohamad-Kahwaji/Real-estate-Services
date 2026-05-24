@@ -105,15 +105,17 @@ class ServiceRequestController extends Controller
         $businesses = $user->businesses()->pluck('id');
         $term = $request->search ? '%' . $request->search . '%' : null;
 
-        $services = ServiceRequest::with(['service.business', 'service.category', 'service.subcategory'])
+        $services = ServiceRequest::with([
+                'service' => fn($q) => $q->withTrashed(),
+                'service.business' => fn($q) => $q->withTrashed(),
+                'service.category',
+                'service.subcategory',
+            ])
             ->where('user_id', $user->id)
             ->where('status', 'approved')
-            ->whereHas('service', function ($q) use ($businesses, $term) {
-                $q->whereNotIn('business_id', $businesses);
-                if ($term) $q->where('title', 'like', $term);
-            })
             ->latest()
-            ->get();
+            ->get()
+            ->filter(fn($sr) => $sr->service && !in_array($sr->service->business_id, $businesses->toArray()));
 
         $services->each(fn($sr) => $sr->service->makeHidden('quantity'));
 
