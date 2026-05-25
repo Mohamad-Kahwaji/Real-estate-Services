@@ -50,23 +50,6 @@
     <span class="req-title">
       <i class="ri ri-file-list-3-line me-2" style="color:#696cff;"></i>Service Requests
     </span>
-
-    <form method="GET" action="{{ route('superadmin.service-requests') }}" class="d-flex align-items-center gap-2 flex-wrap">
-      <div class="input-group input-group-sm" style="width:220px;">
-        <span class="input-group-text"><i class="ri ri-search-line"></i></span>
-        <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-      </div>
-      <select name="status" class="form-select form-select-sm" style="width:140px;" onchange="this.form.submit()">
-        <option value="">All ({{ $counts['all'] }})</option>
-        <option value="pending"  {{ request('status') === 'pending'  ? 'selected' : '' }}>Pending ({{ $counts['pending'] }})</option>
-        <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved ({{ $counts['approved'] }})</option>
-        <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected ({{ $counts['rejected'] }})</option>
-      </select>
-      <button type="submit" class="btn btn-primary btn-sm">Search</button>
-      @if(request('search') || request('status'))
-        <a href="{{ route('superadmin.service-requests') }}" class="btn btn-outline-secondary btn-sm">Clear</a>
-      @endif
-    </form>
   </div>
 
   <div class="table-responsive">
