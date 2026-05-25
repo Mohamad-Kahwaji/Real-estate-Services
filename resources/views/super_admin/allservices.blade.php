@@ -292,8 +292,8 @@
 {{-- Page Header --}}
 <div class="page-header d-flex align-items-center justify-content-between flex-wrap gap-3">
     <div>
-        <h4><i class="ri-service-line me-2"></i>All Services</h4>
-        <p>Browse and inspect all platform services</p>
+        <h4><i class="ri-service-line me-2"></i>{{ __('app.all_services') }}</h4>
+        <p>{{ __('app.browse_inspect_services') }}</p>
     </div>
     <div class="svc-count-badge">
         {{ $services->total() }} {{ Str::plural('Service', $services->total()) }}
@@ -311,19 +311,19 @@
 <div class="d-flex gap-2 flex-wrap mb-3">
     <a href="{{ route('allserviesad') }}{{ request()->except('status') ? '?'.http_build_query(request()->except('status')) : '' }}"
        class="btn btn-sm {{ !request('status') ? 'btn-primary' : 'btn-outline-secondary' }} rounded-pill fw-bold">
-        All ({{ $allCount }})
+        {{ __('app.all') }} ({{ $allCount }})
     </a>
     <a href="{{ route('allserviesad') }}?{{ http_build_query(array_merge(request()->except('status'), ['status'=>'pending'])) }}"
        class="btn btn-sm {{ request('status')==='pending' ? 'btn-warning text-dark' : 'btn-outline-warning' }} rounded-pill fw-bold">
-        Pending ({{ $pendingCount }})
+        {{ __('app.pending') }} ({{ $pendingCount }})
     </a>
     <a href="{{ route('allserviesad') }}?{{ http_build_query(array_merge(request()->except('status'), ['status'=>'approved'])) }}"
        class="btn btn-sm {{ request('status')==='approved' ? 'btn-success' : 'btn-outline-success' }} rounded-pill fw-bold">
-        Approved ({{ $approvedCount }})
+        {{ __('app.approved') }} ({{ $approvedCount }})
     </a>
     <a href="{{ route('allserviesad') }}?{{ http_build_query(array_merge(request()->except('status'), ['status'=>'rejected'])) }}"
        class="btn btn-sm {{ request('status')==='rejected' ? 'btn-danger' : 'btn-outline-danger' }} rounded-pill fw-bold">
-        Rejected ({{ $rejectedCount }})
+        {{ __('app.rejected') }} ({{ $rejectedCount }})
     </a>
 </div>
 
@@ -381,12 +381,19 @@
                         alt="{{ $service->title }}"
                     >
                     <div class="position-absolute top-0 start-0 m-2">
+                        @php
+                            $statusLabel = match($service->status) {
+                                'approved' => __('app.approved'),
+                                'rejected' => __('app.rejected'),
+                                default    => __('app.pending'),
+                            };
+                        @endphp
                         <span class="badge {{ $statusClass }} badge-status">
-                            {{ ucfirst($service->status) }}
+                            {{ $statusLabel }}
                         </span>
                     </div>
                     <div class="position-absolute top-0 end-0 m-2">
-                        <span class="badge-type">{{ strtoupper($service->services_type) }}</span>
+                        <span class="badge-type">{{ strtoupper(__('app.' . ($service->services_type ?? 'sale'))) }}</span>
                     </div>
 
                     {{-- متوسط التقييم --}}
@@ -394,7 +401,7 @@
                     <div class="position-absolute bottom-0 start-0 m-2">
                         <div class="svc-rating-badge">
                             <i class="ri-star-fill me-1" style="color:#fbbf24;font-size:12px;"></i>
-                            <span>{{ $avgRating > 0 ? number_format($avgRating, 1) : 'No rating' }}</span>
+                            <span>{{ $avgRating > 0 ? number_format($avgRating, 1) : __('app.no_rating') }}</span>
                         </div>
                     </div>
                 </div>
@@ -408,16 +415,16 @@
                     </div>
 
                     {{-- Title --}}
-                    <div class="svc-title">{{ $service->title }}</div>
+                    <div class="svc-title">{{ auto_translate($service->title ?? '') ?: '-' }}</div>
 
                     {{-- Description --}}
-                    <div class="svc-desc">{{ $service->description }}</div>
+                    <div class="svc-desc">{{ auto_translate($service->description ?? '') ?: __('app.no_description_available') }}</div>
 
                     {{-- Creator --}}
                     <div class="creator-row">
                         <div class="creator-ava">{{ $initials }}</div>
                         <div class="creator-info">
-                            <strong>{{ $creator->name ?? 'Unknown' }}</strong>
+                            <strong>{{ $creator->name ?? __('app.unknown') }}</strong>
                             <span>{{ $creator->email ?? '' }}</span>
                         </div>
                     </div>
@@ -426,22 +433,22 @@
                     <div class="stats-row">
                         <div class="stat-chip">
                             <strong class="price-val">{{ $price }}</strong>
-                            Price
+                            {{ __('app.price') }}
                         </div>
                         <div class="stat-chip">
                             <strong>{{ $service->quantity }}</strong>
-                            Qty
+                            {{ __('app.qty') }}
                         </div>
                         <div class="stat-chip">
                             <strong>{{ app()->getLocale() === 'ar' ? ($service->category?->name_ar ?? $service->category?->name_en ?? '-') : ($service->category?->name_en ?? $service->category?->name_ar ?? '-') }}</strong>
-                            Category
+                            {{ __('app.category') }}
                         </div>
                     </div>
 
                     {{-- Location --}}
                     <div class="loc-chip">
                         <i class="ri-map-pin-line"></i>
-                        {{ $service->location_name ?? 'Unknown Location' }}
+                        {{ $service->location_name ?? __('app.unknown_location') }}
                     </div>
 
                     <div class="mt-auto d-flex flex-column gap-2">
@@ -450,7 +457,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#{{ $modalId }}"
                         >
-                            <i class="ri-eye-line me-1"></i> View Full Details
+                            <i class="ri-eye-line me-1"></i> {{ __('app.view_full_details') }}
                         </button>
 
                         @if($service->status === 'pending')
@@ -458,13 +465,13 @@
                             <form action="{{ route('approveser', $service->id) }}" method="POST" class="flex-fill">
                                 @csrf
                                 <button type="submit" class="btn btn-success btn-sm w-100 rounded-3 fw-bold">
-                                    <i class="ri-check-line me-1"></i>Approve
+                                    <i class="ri-check-line me-1"></i>{{ __('app.approve') }}
                                 </button>
                             </form>
                             <form action="{{ route('rejectser', $service->id) }}" method="POST" class="flex-fill">
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm w-100 rounded-3 fw-bold">
-                                    <i class="ri-close-line me-1"></i>Reject
+                                    <i class="ri-close-line me-1"></i>{{ __('app.reject') }}
                                 </button>
                             </form>
                         </div>
@@ -483,10 +490,10 @@
                     {{-- Header --}}
                     <div class="modal-header border-0 px-4 pt-4 pb-2">
                         <div>
-                            <h4 class="fw-bold mb-2">{{ $service->title }}</h4>
+                            <h4 class="fw-bold mb-2">{{ auto_translate($service->title ?? '') ?: '-' }}</h4>
                             <div class="d-flex flex-wrap gap-2 align-items-center">
-                                <span class="badge {{ $statusClass }} badge-status">{{ ucfirst($service->status) }}</span>
-                                <span class="badge-type">{{ strtoupper($service->services_type) }}</span>
+                                <span class="badge {{ $statusClass }} badge-status">{{ $statusLabel }}</span>
+                                <span class="badge-type">{{ strtoupper(__('app.' . ($service->services_type ?? 'sale'))) }}</span>
                                 <span class="badge bg-label-secondary">{{ app()->getLocale() === 'ar' ? ($service->category?->name_ar ?? $service->category?->name_en ?? '-') : ($service->category?->name_en ?? $service->category?->name_ar ?? '-') }}</span>
                             </div>
                         </div>
@@ -508,10 +515,10 @@
                                 {{-- Description --}}
                                 <div class="info-card">
                                     <div class="info-card-title">
-                                        <i class="ri-align-left"></i> Description
+                                        <i class="ri-align-left"></i> {{ __('app.description') }}
                                     </div>
                                     <p class="text-muted mb-0" style="line-height:1.75;">
-                                        {{ $service->description }}
+                                        {{ auto_translate($service->description ?? '') ?: __('app.no_description_available') }}
                                     </p>
                                 </div>
 
@@ -549,7 +556,7 @@
                                 <div class="creator-card-modal">
                                     <div class="creator-ava-lg">{{ $initials }}</div>
                                     <div class="details">
-                                        <strong>{{ $creator->name ?? 'Unknown' }}</strong>
+                                        <strong>{{ $creator->name ?? __('app.unknown') }}</strong>
                                         <span>{{ $creator->email ?? '-' }}</span>
                                         <p>{{ app()->getLocale() === 'ar' ? ($service->business?->job_name_ar ?? $service->business?->job_name_en ?? '-') : ($service->business?->job_name_en ?? $service->business?->job_name_ar ?? '-') }}</p>
                                     </div>
@@ -558,46 +565,42 @@
                                 {{-- Service info --}}
                                 <div class="info-card">
                                     <div class="info-card-title">
-                                        <i class="ri-file-list-3-line"></i> Service Details
+                                        <i class="ri-file-list-3-line"></i> {{ __('app.service_info') }}
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Business</span>
+                                        <span>{{ __('app.business') }}</span>
                                         <strong>{{ app()->getLocale() === 'ar' ? ($service->business?->job_name_ar ?? $service->business?->job_name_en ?? '-') : ($service->business?->job_name_en ?? $service->business?->job_name_ar ?? '-') }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Category</span>
+                                        <span>{{ __('app.category') }}</span>
                                         <strong>{{ app()->getLocale() === 'ar' ? ($service->category?->name_ar ?? $service->category?->name_en ?? '-') : ($service->category?->name_en ?? $service->category?->name_ar ?? '-') }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Subcategory</span>
+                                        <span>{{ __('app.subcategories') }}</span>
                                         <strong>{{ app()->getLocale() === 'ar' ? ($service->subcategory?->name_ar ?? $service->subcategory?->name_en ?? '-') : ($service->subcategory?->name_en ?? $service->subcategory?->name_ar ?? '-') }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Service Type</span>
-                                        <strong>{{ ucfirst($service->services_type) }}</strong>
+                                        <span>{{ __('app.status') }}</span>
+                                        <strong>{{ __('app.' . ($service->services_type ?? 'sale')) }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Quantity</span>
+                                        <span>{{ __('app.quantity') }}</span>
                                         <strong>{{ $service->quantity }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Price</span>
+                                        <span>{{ __('app.price') }}</span>
                                         <strong style="color:#16a34a;">{{ $price }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Currency</span>
-                                        <strong>{{ $service->currency }}</strong>
-                                    </div>
-                                    <div class="info-row-m">
-                                        <span>Status</span>
+                                        <span>{{ __('app.status') }}</span>
                                         <strong>
                                             <span class="badge {{ $statusClass }}">
-                                                {{ ucfirst($service->status) }}
+                                                {{ $statusLabel }}
                                             </span>
                                         </strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Created At</span>
+                                        <span>{{ __('app.created_at') }}</span>
                                         <strong>{{ $service->created_at?->format('d M Y') }}</strong>
                                     </div>
                                 </div>
@@ -605,26 +608,26 @@
                                 {{-- Creator detailed info --}}
                                 <div class="info-card">
                                     <div class="info-card-title">
-                                        <i class="ri-user-line"></i> Owner Information
+                                        <i class="ri-user-line"></i> {{ __('app.owner') }}
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Full Name</span>
+                                        <span>{{ __('app.full_name') }}</span>
                                         <strong>{{ $creator->name ?? '-' }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Email</span>
+                                        <span>{{ __('app.email') }}</span>
                                         <strong>{{ $creator->email ?? '-' }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Phone</span>
+                                        <span>{{ __('app.phone') }}</span>
                                         <strong>{{ $creator->phone ?? '-' }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Business</span>
+                                        <span>{{ __('app.business') }}</span>
                                         <strong>{{ app()->getLocale() === 'ar' ? ($service->business?->job_name_ar ?? $service->business?->job_name_en ?? '-') : ($service->business?->job_name_en ?? $service->business?->job_name_ar ?? '-') }}</strong>
                                     </div>
                                     <div class="info-row-m">
-                                        <span>Member Since</span>
+                                        <span>{{ __('app.member_since') }}</span>
                                         <strong>{{ $creator?->created_at?->format('d M Y') ?? '-' }}</strong>
                                     </div>
                                 </div>

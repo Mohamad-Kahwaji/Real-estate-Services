@@ -1,7 +1,7 @@
 @extends('layouts/contentNavbarLayout')
 {{-- Cities management page: lists all available cities (bilingual) and provides add/edit/delete modals for location management. --}}
 
-@section('title', 'Cities')
+@section('title', __('app.cities'))
 
 @section('page-style')
 <style>
@@ -94,11 +94,11 @@
 {{-- Header --}}
 <div class="pg-header d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4>Cities</h4>
-        <p>Manage all available cities in the system</p>
+        <h4>{{ __('app.cities') }}</h4>
+        <p>{{ __('app.cities_desc') }}</p>
     </div>
     <button class="btn-add" data-bs-toggle="modal" data-bs-target="#addCityModal">
-        <i class="ri ri-add-line"></i> Add City
+        <i class="ri ri-add-line"></i> {{ __('app.add_city') }}
     </button>
 </div>
 
@@ -117,7 +117,7 @@
                 <i class="ri ri-map-pin-2-line" style="color:#00cfe8;"></i>
             </div>
             <div>
-                <div class="stat-label">Total Cities</div>
+                <div class="stat-label">{{ __('app.total_cities') }}</div>
                 <div class="stat-value">{{ $cities->count() }}</div>
             </div>
         </div>
@@ -127,7 +127,7 @@
 {{-- Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-map-pin-2-line me-2" style="color:#696cff;"></i>All Cities</h6>
+        <h6><i class="ri ri-map-pin-2-line me-2" style="color:#696cff;"></i>{{ __('app.cities') }}</h6>
     </div>
     <div class="table-responsive">
         <table class="table">
@@ -166,7 +166,7 @@
                                 <i class="ri ri-pencil-line"></i>
                             </button>
                             <form action="{{ route('cities.destroy', $city->id) }}" method="POST"
-                                  onsubmit="return confirm('Delete {{ $city->name_en }}?')">
+                                  onsubmit="return confirm('{{ __("app.confirm_delete") }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="action-btn btn-delete" title="Delete">
                                     <i class="ri ri-delete-bin-line"></i>
@@ -180,7 +180,7 @@
                     <td colspan="5">
                         <div class="empty-state">
                             <i class="ri ri-map-pin-2-line"></i>
-                            <p>No cities found. Add your first city.</p>
+                            <p>{{ __('app.no_cities_found') }}</p>
                         </div>
                     </td>
                 </tr>
@@ -197,25 +197,25 @@
             <form action="{{ route('cities.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-map-pin-add-line me-2" style="color:#696cff;"></i>Add City</h5>
+                    <h5 class="modal-title"><i class="ri ri-map-pin-add-line me-2" style="color:#696cff;"></i>{{ __('app.add_city') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Name (Arabic)</label>
+                        <label class="form-label">{{ __('app.arabic_name') }}</label>
                         <input type="text" class="form-control" name="name_ar"
                                placeholder="اسم المدينة" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Name (English)</label>
+                        <label class="form-label">{{ __('app.english_name') }}</label>
                         <input type="text" class="form-control" name="name_en"
                                placeholder="City name" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Cancel</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">{{ __('app.cancel') }}</button>
                     <button type="submit" class="btn btn-primary" style="border-radius:10px;font-weight:700;">
-                        <i class="ri ri-save-line me-1"></i>Save
+                        <i class="ri ri-save-line me-1"></i>{{ __('app.save') }}
                     </button>
                 </div>
             </form>
@@ -231,25 +231,25 @@
             <form action="{{ route('cities.update', $city->id) }}" method="POST">
                 @csrf @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:#696cff;"></i>Edit City</h5>
+                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:#696cff;"></i>{{ __('app.edit_city') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Name (Arabic)</label>
+                        <label class="form-label">{{ __('app.arabic_name') }}</label>
                         <input type="text" class="form-control" name="name_ar"
                                value="{{ $city->name_ar }}" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Name (English)</label>
+                        <label class="form-label">{{ __('app.english_name') }}</label>
                         <input type="text" class="form-control" name="name_en"
                                value="{{ $city->name_en }}" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Cancel</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">{{ __('app.cancel') }}</button>
                     <button type="submit" class="btn btn-primary" style="border-radius:10px;font-weight:700;">
-                        <i class="ri ri-save-line me-1"></i>Update
+                        <i class="ri ri-save-line me-1"></i>{{ __('app.update') }}
                     </button>
                 </div>
             </form>
@@ -266,7 +266,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="ri ri-store-2-line me-2" style="color:#696cff;"></i>
-                    {{ $city->name_en }} — Services
+                    {{ app()->getLocale() === 'ar' ? ($city->name_ar ?: $city->name_en) : ($city->name_en ?: $city->name_ar) }} — {{ __('app.services') }}
                     <span style="font-size:13px;font-weight:600;color:#8592a3;margin-right:6px;">({{ $city->services_count }})</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -275,23 +275,34 @@
                 @if($city->services->isEmpty())
                     <div style="text-align:center;padding:40px 0;color:#8592a3;">
                         <i class="ri ri-store-2-line" style="font-size:40px;display:block;margin-bottom:10px;opacity:.35;"></i>
-                        No services in this city yet.
+                        {{ __('app.no_services_in_city') }}
                     </div>
                 @else
                     <div style="display:flex;flex-direction:column;gap:10px;">
                         @foreach($city->services as $svc)
+                        @php
+                            $locale   = app()->getLocale();
+                            $catName  = $locale === 'ar'
+                                ? ($svc->category?->name_ar ?: $svc->category?->name_en)
+                                : ($svc->category?->name_en ?: $svc->category?->name_ar);
+                            $bizName  = $svc->business
+                                ? ($locale === 'ar'
+                                    ? ($svc->business->job_name_ar ?: $svc->business->job_name_en)
+                                    : ($svc->business->job_name_en ?: $svc->business->job_name_ar))
+                                : null;
+                        @endphp
                         <div style="background:#fafbff;border:1px solid #f0eef8;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px;">
                             <img src="{{ $svc->image_url }}"
                                  style="width:52px;height:52px;object-fit:cover;border-radius:10px;flex-shrink:0;"
                                  alt="{{ $svc->title }}">
                             <div style="flex:1;min-width:0;">
                                 <div style="font-weight:700;color:#1e293b;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                                    {{ $svc->title ?? '-' }}
+                                    {{ auto_translate($svc->title ?? '') ?: '-' }}
                                 </div>
                                 <div style="font-size:12px;color:#8592a3;margin-top:2px;">
-                                    {{ $svc->category?->name_en ?? '-' }}
-                                    @if($svc->business)
-                                        &nbsp;·&nbsp; {{ $svc->business->job_name_en }}
+                                    {{ $catName ?? '-' }}
+                                    @if($bizName)
+                                        &nbsp;·&nbsp; {{ $bizName }}
                                     @endif
                                 </div>
                             </div>
@@ -299,7 +310,7 @@
                             <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
                                 background:{{ $svc->services_type === 'sale' ? '#eef0ff' : '#e3f8fc' }};
                                 color:{{ $svc->services_type === 'sale' ? '#696cff' : '#00cfe8' }};">
-                                {{ ucfirst($svc->services_type) }}
+                                {{ __('app.' . $svc->services_type) }}
                             </span>
                             @endif
                             <div style="text-align:right;flex-shrink:0;">
@@ -316,7 +327,7 @@
                 @endif
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Close</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">{{ __('app.close') }}</button>
             </div>
         </div>
     </div>

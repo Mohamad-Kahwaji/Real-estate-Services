@@ -327,49 +327,49 @@ use Illuminate\Support\Facades\Route;
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
                     <div>
                         <div style="font-size:10px;font-weight:700;color:#b0b8c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">
-                            <i class="ri ri-map-pin-line" style="color:#696cff;"></i> City
+                            <i class="ri ri-map-pin-line" style="color:#696cff;"></i> {{ __('app.city') }}
                         </div>
                         <select id="gsCity" class="gsf-select">
-                            <option value="">All cities</option>
+                            <option value="">{{ __('app.all_cities') }}</option>
                         </select>
                     </div>
                     <div>
                         <div style="font-size:10px;font-weight:700;color:#b0b8c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">
-                            <i class="ri ri-layout-grid-line" style="color:#696cff;"></i> Category
+                            <i class="ri ri-layout-grid-line" style="color:#696cff;"></i> {{ __('app.category') }}
                         </div>
                         <select id="gsCat" class="gsf-select">
-                            <option value="">All</option>
+                            <option value="">{{ __('app.all') }}</option>
                         </select>
                     </div>
                     <div>
                         <div style="font-size:10px;font-weight:700;color:#b0b8c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">
-                            <i class="ri ri-list-check" style="color:#696cff;"></i> Subcategory
+                            <i class="ri ri-list-check" style="color:#696cff;"></i> {{ __('app.subcategories') }}
                         </div>
                         <select id="gsSub" class="gsf-select">
-                            <option value="">All</option>
+                            <option value="">{{ __('app.all') }}</option>
                         </select>
                     </div>
                     <div>
                         <div style="font-size:10px;font-weight:700;color:#b0b8c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">
-                            <i class="ri ri-exchange-line" style="color:#696cff;"></i> Type
+                            <i class="ri ri-exchange-line" style="color:#696cff;"></i> {{ __('app.field_type') }}
                         </div>
                         <select id="gsType" class="gsf-select">
-                            <option value="">All types</option>
-                            <option value="rent">Rent</option>
-                            <option value="sale">Sale</option>
+                            <option value="">{{ __('app.all_types') }}</option>
+                            <option value="rent">{{ __('app.rent') }}</option>
+                            <option value="sale">{{ __('app.sale') }}</option>
                         </select>
                     </div>
                 </div>
                 <div style="display:flex;gap:8px;align-items:flex-end;">
                     <div style="flex:1;">
                         <div style="font-size:10px;font-weight:700;color:#b0b8c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">
-                            <i class="ri ri-money-dollar-circle-line" style="color:#696cff;"></i> Min Price
+                            <i class="ri ri-money-dollar-circle-line" style="color:#696cff;"></i> {{ __('app.min_price') }}
                         </div>
                         <input id="gsPriceMin" type="number" min="0" placeholder="0" class="gsf-input">
                     </div>
                     <div style="flex:1;">
-                        <div style="font-size:10px;font-weight:700;color:#b0b8c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">Max Price</div>
-                        <input id="gsPriceMax" type="number" min="0" placeholder="Any" class="gsf-input">
+                        <div style="font-size:10px;font-weight:700;color:#b0b8c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">{{ __('app.max_price') }}</div>
+                        <input id="gsPriceMax" type="number" min="0" placeholder="{{ __('app.all') }}" class="gsf-input">
                     </div>
                     <button id="gsSearchBtn" type="button" style="
                         background:linear-gradient(135deg,#696cff,#9c9eff);
@@ -379,7 +379,7 @@ use Illuminate\Support\Facades\Route;
                         display:flex;align-items:center;gap:6px;flex-shrink:0;
                         transition:.15s;
                     ">
-                        <i class="ri ri-search-line"></i> Search
+                        <i class="ri ri-search-line"></i> {{ __('app.search') }}
                     </button>
                     <button id="gsClearBtn" type="button" style="
                         background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;
@@ -388,7 +388,7 @@ use Illuminate\Support\Facades\Route;
                         display:flex;align-items:center;gap:5px;flex-shrink:0;
                         transition:.15s;
                     ">
-                        <i class="ri ri-close-line"></i> Clear
+                        <i class="ri ri-close-line"></i> {{ __('app.clear') }}
                     </button>
                 </div>
             </div>
@@ -401,10 +401,10 @@ use Illuminate\Support\Facades\Route;
                         <i class="ri ri-search-line" style="font-size:24px;color:#696cff;"></i>
                     </div>
                     <div style="font-size:14px;color:#475569;font-weight:600;margin-bottom:5px;">
-                        Search or apply filters
+                        {{ __('app.search_or_apply_filters') }}
                     </div>
                     <div style="font-size:12px;color:#94a3b8;">
-                        Services · Businesses · Users
+                        {{ __('app.search_hint_subtitle') }}
                     </div>
                 </div>
             </div>
@@ -413,16 +413,16 @@ use Illuminate\Support\Facades\Route;
             <div style="padding:9px 18px;border-top:1.5px solid #f1f5f9;background:#fafbff;
                         display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
                 <span style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:5px;">
-                    <kbd style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:1px 6px;color:#64748b;font-family:inherit;font-size:10px;">↵</kbd> Open
+                    <kbd style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:1px 6px;color:#64748b;font-family:inherit;font-size:10px;">↵</kbd> {{ __('app.view') }}
                 </span>
                 <span style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:5px;">
-                    <kbd style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:1px 6px;color:#64748b;font-family:inherit;font-size:10px;">↑ ↓</kbd> Navigate
+                    <kbd style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:1px 6px;color:#64748b;font-family:inherit;font-size:10px;">↑ ↓</kbd> {{ __('app.filter') }}
                 </span>
                 <span style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:5px;">
-                    <kbd style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:1px 6px;color:#64748b;font-family:inherit;font-size:10px;">Esc</kbd> Close
+                    <kbd style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:1px 6px;color:#64748b;font-family:inherit;font-size:10px;">Esc</kbd> {{ __('app.close') }}
                 </span>
                 <span style="margin-left:auto;font-size:10px;color:#b0b8c4;display:flex;align-items:center;gap:5px;">
-                    <kbd style="background:#eef0ff;border:1px solid #d4d7ff;border-radius:4px;padding:1px 6px;color:#696cff;font-family:inherit;font-size:10px;font-weight:700;">Ctrl K</kbd> anywhere
+                    <kbd style="background:#eef0ff;border:1px solid #d4d7ff;border-radius:4px;padding:1px 6px;color:#696cff;font-family:inherit;font-size:10px;font-weight:700;">Ctrl K</kbd> {{ __('app.search') }}
                 </span>
             </div>
 
@@ -431,6 +431,11 @@ use Illuminate\Support\Facades\Route;
 </div>
 
 <script>
+var gsTranslations = {
+    noQuickResults:  "{{ __('app.no_quick_results') }}",
+    useSearchBtn:    "{{ __('app.use_search_btn_hint') }}",
+    viewAllResultsFor: "{{ __('app.view_all_results_for') }}",
+};
 (function () {
     const modal       = document.getElementById('globalSearchModal');
     const input       = document.getElementById('gsInput');
@@ -617,9 +622,9 @@ use Illuminate\Support\Facades\Route;
                         <i class="ri ri-search-eye-line" style="font-size:22px;color:#ea5455;"></i>
                     </div>
                     <div style="font-size:14px;color:#475569;font-weight:600;margin-bottom:6px;">
-                        No quick results for "<strong>${q}</strong>"
+                        ${gsTranslations.noQuickResults} "<strong>${q}</strong>"
                     </div>
-                    <div style="font-size:12px;color:#94a3b8;">Use the Search button above to apply filters</div>
+                    <div style="font-size:12px;color:#94a3b8;">${gsTranslations.useSearchBtn}</div>
                 </div>`;
             return;
         }
@@ -649,7 +654,7 @@ use Illuminate\Support\Facades\Route;
             <div style="padding:10px 20px 8px;text-align:center;border-top:1px solid #f1f5f9;margin-top:6px;">
                 <a href="/allserviesad?search=${encodeURIComponent(q)}"
                    style="font-size:12px;color:#696cff;font-weight:700;text-decoration:none;">
-                    View all results for "${q}" →
+                    ${gsTranslations.viewAllResultsFor} "${q}" →
                 </a>
             </div>`;
         results.innerHTML = html;

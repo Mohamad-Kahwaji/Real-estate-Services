@@ -1,7 +1,7 @@
-﻿@extends('layouts/contentNavbarLayout')
+@extends('layouts/contentNavbarLayout')
 {{-- Admin dashboard: welcome banner with permissions summary, platform stats, quick-action links, and pending business approval table. --}}
 
-@section('title', 'Admin Dashboard')
+@section('title', __('app.dashboard'))
 
 @section('page-style')
 <style>
@@ -20,7 +20,7 @@
     --shadow:      0 8px 28px rgba(18,38,63,.08);
 }
 
-/* â”€â”€ Welcome Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Welcome Banner ─────────────────────────────────── */
 .welcome-banner {
     background: linear-gradient(135deg, #696cff 0%, #8f91ff 60%, #9c9eff 100%);
     border-radius: var(--card-radius);
@@ -68,7 +68,7 @@
     margin-top: 10px;
 }
 
-/* â”€â”€ Stat Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Stat Cards ─────────────────────────────────────── */
 .stat-card {
     background: #fff;
     border-radius: var(--card-radius);
@@ -107,7 +107,7 @@
 .icon-red    { background: var(--red-soft);    color: var(--red);    }
 .icon-slate  { background: #f1f3f9; color: #475569; }
 
-/* â”€â”€ Section Label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Section Label ───────────────────────────────────── */
 .section-title {
     font-size: 11px; font-weight: 700; letter-spacing: .8px;
     text-transform: uppercase; color: #8592a3;
@@ -115,7 +115,7 @@
     border-bottom: 2px solid #f1f3f9;
 }
 
-/* â”€â”€ Quick-Link Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Quick-Link Cards ────────────────────────────────── */
 .quick-card {
     background: #fff;
     border-radius: 16px;
@@ -140,7 +140,7 @@
 .quick-label { font-size: 13px; font-weight: 700; color: #1e293b; }
 .quick-sub   { font-size: 11px; color: #8592a3; margin-top: 2px; }
 
-/* â”€â”€ Pending Businesses Table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Notifications / Main Card ───────────────────────── */
 .main-card {
     background: #fff;
     border-radius: var(--card-radius);
@@ -153,56 +153,6 @@
     display: flex; align-items: center; justify-content: space-between;
 }
 .main-card-title { font-size: 15px; font-weight: 700; color: #1e293b; }
-
-.bt { margin-bottom: 0; }
-.bt thead tr { background: #1e293b; }
-.bt thead th {
-    font-size: 11px; font-weight: 700; letter-spacing: .5px;
-    text-transform: uppercase; color: #94a3b8;
-    padding: 14px 18px; border: none;
-}
-.bt tbody td {
-    padding: 14px 18px; vertical-align: middle;
-    border-color: #f1f3f9; font-size: 13px;
-}
-.bt tbody tr:last-child td { border-bottom: none; }
-.bt tbody tr { transition: .15s ease; }
-.bt tbody tr:hover { background: #fafbff; }
-
-.status-pill {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 5px 12px; border-radius: 999px;
-    font-size: 11px; font-weight: 700;
-}
-.pill-pending  { background: var(--orange-soft); color: var(--orange); }
-.pill-approved { background: var(--green-soft);  color: var(--green);  }
-.pill-rejected { background: var(--red-soft);    color: var(--red);    }
-
-.action-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 5px;
-    border-radius: 10px; padding: 7px 14px;
-    font-size: 12px; font-weight: 700;
-    border: none; transition: .2s ease; cursor: pointer;
-}
-.action-btn:hover { transform: translateY(-1px); }
-.btn-approve { background: var(--green-soft);  color: var(--green);  }
-.btn-approve:hover { background: var(--green); color: #fff; }
-.btn-reject  { background: var(--red-soft);   color: var(--red);   }
-.btn-reject:hover  { background: var(--red);  color: #fff; }
-
-.biz-initials {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 800; color: #fff;
-    flex-shrink: 0;
-}
-.bi-0 { background: linear-gradient(135deg,#696cff,#8f91ff); }
-.bi-1 { background: linear-gradient(135deg,#03c3ec,#00a0cc); }
-.bi-2 { background: linear-gradient(135deg,#28c76f,#1fa958); }
-.bi-3 { background: linear-gradient(135deg,#ff9f43,#e08a2e); }
-.bi-4 { background: linear-gradient(135deg,#ea5455,#c93c3c); }
 
 .empty-state {
     padding: 50px 20px;
@@ -231,12 +181,12 @@
 </div>
 @endif
 
-{{-- â”€â”€ Welcome Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
+{{-- ── Welcome Banner ─────────────────────────────────── --}}
 <div class="welcome-banner">
     <div class="d-flex align-items-center gap-3 position-relative" style="z-index:1;">
         <div class="welcome-avatar">{{ $initials }}</div>
         <div>
-            <div class="welcome-name">Welcome, {{ $admin->name ?? 'Admin' }}</div>
+            <div class="welcome-name">{{ __('app.welcome_greeting') }}, {{ $admin->name ?? 'Admin' }}</div>
             <div class="welcome-sub">{{ $admin->email ?? '' }}</div>
             <div class="welcome-date">{{ now()->format('l, F j, Y') }}</div>
             @if($admin)
@@ -250,7 +200,7 @@
                 </span>
                 @endforeach
                 @if($perms->count() > 4)
-                <span class="perm-chip">+{{ $perms->count() - 4 }} more</span>
+                <span class="perm-chip">{{ __('app.x_more', ['count' => $perms->count() - 4]) }}</span>
                 @endif
             </div>
             @endif
@@ -259,18 +209,18 @@
         <div class="ms-auto d-none d-md-flex align-items-center gap-2">
             <span class="perm-chip">
                 <i class="ri ri-user-settings-line" style="font-size:11px;"></i>
-                Administrator
+                {{ __('app.administrator') }}
             </span>
             <button type="button" class="perm-chip" style="border:none;cursor:pointer;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);"
                     data-bs-toggle="modal" data-bs-target="#editAdminProfileModal">
                 <i class="ri ri-edit-line" style="font-size:11px;"></i>
-                Edit Profile
+                {{ __('app.edit_profile') }}
             </button>
         </div>
     </div>
 </div>
 
-{{-- â”€â”€ Stats Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
+{{-- ── Stats Row ──────────────────────────────────────── --}}
 <div class="row g-3 mb-4">
 
     <div class="col-6 col-md-4 col-xl-2">
@@ -278,12 +228,12 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div class="stat-icon icon-orange"><i class="ri ri-building-2-line"></i></div>
                 @if($pendingBusinesses > 0)
-                <span class="cnt-badge cb-orange">{{ $pendingBusinesses }} new</span>
+                <span class="cnt-badge cb-orange">{{ $pendingBusinesses }} {{ __('app.new_badge') }}</span>
                 @endif
             </div>
             <div class="stat-value">{{ $totalBusinesses }}</div>
-            <div class="stat-label">Businesses</div>
-            <div class="stat-sub">{{ $pendingBusinesses }} pending</div>
+            <div class="stat-label">{{ __('app.businesses') }}</div>
+            <div class="stat-sub">{{ __('app.x_pending', ['count' => $pendingBusinesses]) }}</div>
         </div>
     </div>
 
@@ -294,8 +244,8 @@
                 <span class="cnt-badge cb-green">{{ $approvedBusinesses }}</span>
             </div>
             <div class="stat-value">{{ $approvedBusinesses }}</div>
-            <div class="stat-label">Approved</div>
-            <div class="stat-sub">Business accounts</div>
+            <div class="stat-label">{{ __('app.approved') }}</div>
+            <div class="stat-sub">{{ __('app.business_accounts') }}</div>
         </div>
     </div>
 
@@ -305,8 +255,8 @@
                 <div class="stat-icon icon-purple"><i class="ri ri-apps-2-line"></i></div>
             </div>
             <div class="stat-value">{{ $totalCategories }}</div>
-            <div class="stat-label">Categories</div>
-            <div class="stat-sub">{{ $totalSubcategories }} subcategories</div>
+            <div class="stat-label">{{ __('app.categories') }}</div>
+            <div class="stat-sub">{{ __('app.x_subcategories', ['count' => $totalSubcategories]) }}</div>
         </div>
     </div>
 
@@ -316,8 +266,8 @@
                 <div class="stat-icon icon-cyan"><i class="ri ri-map-pin-2-line"></i></div>
             </div>
             <div class="stat-value">{{ $totalCities }}</div>
-            <div class="stat-label">Cities</div>
-            <div class="stat-sub">Service areas</div>
+            <div class="stat-label">{{ __('app.cities') }}</div>
+            <div class="stat-sub">{{ __('app.service_areas') }}</div>
         </div>
     </div>
 
@@ -330,8 +280,8 @@
                 @endif
             </div>
             <div class="stat-value">{{ $totalServices }}</div>
-            <div class="stat-label">Services</div>
-            <div class="stat-sub">{{ $pendingServices }} pending</div>
+            <div class="stat-label">{{ __('app.services') }}</div>
+            <div class="stat-sub">{{ __('app.x_pending', ['count' => $pendingServices]) }}</div>
         </div>
     </div>
 
@@ -341,78 +291,78 @@
                 <div class="stat-icon icon-purple"><i class="ri ri-shield-check-line"></i></div>
             </div>
             <div class="stat-value">{{ $perms->count() }}</div>
-            <div class="stat-label">Permissions</div>
-            <div class="stat-sub">Assigned to you</div>
+            <div class="stat-label">{{ __('app.permissions') }}</div>
+            <div class="stat-sub">{{ __('app.assigned_to_you') }}</div>
         </div>
     </div>
 
 </div>
 
-{{-- â”€â”€ Quick Actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
-<div class="section-title">Quick Actions</div>
+{{-- ── Quick Actions ──────────────────────────────────── --}}
+<div class="section-title">{{ __('app.quick_actions') }}</div>
 <div class="row g-3 mb-4">
     <div class="col-4 col-md-2">
         <a href="{{ route('business.index') }}" class="quick-card">
             <div class="quick-icon icon-orange"><i class="ri ri-building-2-line"></i></div>
-            <div class="quick-label">Businesses</div>
-            <div class="quick-sub">{{ $pendingBusinesses }} pending</div>
+            <div class="quick-label">{{ __('app.businesses') }}</div>
+            <div class="quick-sub">{{ __('app.x_pending', ['count' => $pendingBusinesses]) }}</div>
         </a>
     </div>
     <div class="col-4 col-md-2">
         <a href="{{ route('categories.index') }}" class="quick-card">
             <div class="quick-icon icon-purple"><i class="ri ri-apps-2-line"></i></div>
-            <div class="quick-label">Categories</div>
-            <div class="quick-sub">Manage</div>
+            <div class="quick-label">{{ __('app.categories') }}</div>
+            <div class="quick-sub">{{ __('app.manage') }}</div>
         </a>
     </div>
     <div class="col-4 col-md-2">
         <a href="{{ route('subcategories.index') }}" class="quick-card">
             <div class="quick-icon icon-cyan"><i class="ri ri-list-check-2"></i></div>
-            <div class="quick-label">Subcategories</div>
-            <div class="quick-sub">Manage</div>
+            <div class="quick-label">{{ __('app.subcategories') }}</div>
+            <div class="quick-sub">{{ __('app.manage') }}</div>
         </a>
     </div>
     <div class="col-4 col-md-2">
         <a href="{{ route('cities.index') }}" class="quick-card">
             <div class="quick-icon" style="background:#f3e8ff;color:#9333ea;"><i class="ri ri-map-pin-2-line"></i></div>
-            <div class="quick-label">Cities</div>
-            <div class="quick-sub">Manage</div>
+            <div class="quick-label">{{ __('app.cities') }}</div>
+            <div class="quick-sub">{{ __('app.manage') }}</div>
         </a>
     </div>
     <div class="col-4 col-md-2">
         <a href="{{ route('allserviesad') }}" class="quick-card">
             <div class="quick-icon icon-green"><i class="ri ri-tools-line"></i></div>
-            <div class="quick-label">Services</div>
-            <div class="quick-sub">{{ $totalServices }} total</div>
+            <div class="quick-label">{{ __('app.services') }}</div>
+            <div class="quick-sub">{{ __('app.x_total', ['count' => $totalServices]) }}</div>
         </a>
     </div>
     <div class="col-4 col-md-2">
         <a href="{{ route('allindex.index') }}" class="quick-card">
             <div class="quick-icon icon-slate"><i class="ri ri-group-line"></i></div>
-            <div class="quick-label">Users</div>
-            <div class="quick-sub">All users</div>
+            <div class="quick-label">{{ __('app.users') }}</div>
+            <div class="quick-sub">{{ __('app.all_users') }}</div>
         </a>
     </div>
 </div>
 
-{{-- ── Notifications ──────────────────────────────────────────── --}}
+{{-- ── Notifications ──────────────────────────────────── --}}
 <div class="section-title mt-2">
-    Notifications
+    {{ __('app.notifications') }}
     @if($unreadCount > 0)
-    <span class="cnt-badge cb-orange ms-2">{{ $unreadCount }} unread</span>
+    <span class="cnt-badge cb-orange ms-2">{{ __('app.x_unread', ['count' => $unreadCount]) }}</span>
     @endif
 </div>
 <div class="main-card mb-4">
     <div class="main-card-header">
         <span class="main-card-title">
             <i class="ri ri-notification-3-line me-2" style="color:var(--accent);"></i>
-            Recent Notifications
+            {{ __('app.recent_notifications') }}
         </span>
         @if($unreadCount > 0)
         <form action="{{ route('admin.notifications.read-all') }}" method="POST" style="display:inline;">
             @csrf
             <button type="submit" style="border:none;background:none;font-size:12px;color:#696cff;font-weight:700;cursor:pointer;padding:0;">
-                <i class="ri ri-check-double-line me-1"></i>Mark all as read
+                <i class="ri ri-check-double-line me-1"></i>{{ __('app.mark_all_as_read') }}
             </button>
         </form>
         @endif
@@ -450,8 +400,8 @@
     @else
     <div class="empty-state">
         <i class="ri ri-notification-off-line"></i>
-        <p class="fw-bold mb-1" style="color:#1e293b;">No Notifications</p>
-        <p class="small mb-0">You're all caught up</p>
+        <p class="fw-bold mb-1" style="color:#1e293b;">{{ __('app.no_notifications') }}</p>
+        <p class="small mb-0">{{ __('app.all_caught_up') }}</p>
     </div>
     @endif
 </div>
@@ -462,7 +412,7 @@
     <div class="modal-content" style="border:0;border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.18);">
       <div class="modal-header" style="border-bottom:1px solid #f1f3f9;padding:20px 26px;">
         <h5 class="modal-title" style="font-weight:800;color:#1e293b;">
-          <i class="ri ri-edit-line me-2" style="color:#696cff;"></i>Edit Profile
+          <i class="ri ri-edit-line me-2" style="color:#696cff;"></i>{{ __('app.edit_profile') }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
@@ -479,14 +429,14 @@
           @endif
 
           <div class="mb-3">
-            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">Name</label>
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.name') }}</label>
             <input type="text" name="name" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e2e8f0;"
                    value="{{ old('name', $admin->name) }}" required>
           </div>
 
           <div class="mb-3">
-            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">Email</label>
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.email') }}</label>
             <input type="email" name="email" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e2e8f0;"
                    value="{{ old('email', $admin->email) }}" required>
@@ -494,36 +444,36 @@
 
           <hr style="border-color:#f1f3f9;margin:18px 0 14px;">
           <p style="font-size:12px;color:#8592a3;margin-bottom:14px;">
-            <i class="ri ri-lock-line me-1"></i>Leave blank to keep current password.
+            <i class="ri ri-lock-line me-1"></i>{{ __('app.leave_blank_password') }}
           </p>
 
           <div class="mb-3">
-            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">Current Password</label>
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.current_password') }}</label>
             <input type="password" name="current_password" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e2e8f0;"
-                   placeholder="Required only if changing password">
+                   placeholder="{{ __('app.required_if_changing_password') }}">
           </div>
 
           <div class="mb-3">
-            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">New Password</label>
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.new_password') }}</label>
             <input type="password" name="new_password" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e2e8f0;"
-                   placeholder="Min 8 characters">
+                   placeholder="{{ __('app.min_8_characters') }}">
           </div>
 
           <div class="mb-0">
-            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">Confirm New Password</label>
+            <label style="font-size:11px;font-weight:700;color:#8592a3;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.confirm_new_password') }}</label>
             <input type="password" name="new_password_confirmation" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e2e8f0;"
-                   placeholder="Repeat new password">
+                   placeholder="{{ __('app.repeat_new_password') }}">
           </div>
 
         </div>
         <div class="modal-footer" style="border-top:1px solid #f1f3f9;padding:18px 26px;gap:10px;">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                  style="border-radius:12px;font-weight:700;">Cancel</button>
+                  style="border-radius:12px;font-weight:700;">{{ __('app.cancel') }}</button>
           <button type="submit" class="btn btn-primary" style="border-radius:12px;font-weight:700;">
-            <i class="ri ri-save-line me-1"></i>Save Changes
+            <i class="ri ri-save-line me-1"></i>{{ __('app.save_changes') }}
           </button>
         </div>
       </form>
@@ -542,4 +492,3 @@ document.addEventListener('DOMContentLoaded', function () {
 @endif
 
 @endsection
-

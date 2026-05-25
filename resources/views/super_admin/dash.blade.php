@@ -1,7 +1,7 @@
 @extends('layouts/contentNavbarLayout')
 {{-- Super admin overview dashboard: profile hero, platform-wide stats, notifications, and recent activity tables. --}}
 
-@section('title', 'Super Admin Dashboard')
+@section('title', __('app.dashboard'))
 
 @section('page-style')
 <style>
@@ -271,7 +271,7 @@
         <div class="hero-cover-dot1"></div>
         <div class="hero-cover-dot2"></div>
         <span class="hero-cover-label">
-          <i class="ri ri-shield-star-fill"></i>Super Administrator
+          <i class="ri ri-shield-star-fill"></i>{{ __('app.super_administrator') }}
         </span>
       </div>
 
@@ -286,7 +286,7 @@
           </div>
           <button type="button" class="edit-profile-btn"
                   data-bs-toggle="modal" data-bs-target="#editProfileModal">
-            <i class="ri ri-edit-line"></i>Edit Profile
+            <i class="ri ri-edit-line"></i>{{ __('app.edit_profile') }}
           </button>
         </div>
 
@@ -294,14 +294,14 @@
         <h4 class="hero-name">{{ $superadmin->name ?? 'Super Admin' }}</h4>
         <p class="hero-email">{{ $superadmin->email }}</p>
         <span class="hero-role">
-          <i class="ri ri-shield-star-fill"></i>Super Administrator
+          <i class="ri ri-shield-star-fill"></i>{{ __('app.super_administrator') }}
         </span>
 
         {{-- Meta chips --}}
         <div class="hero-meta">
           <span class="hero-meta-chip">
             <i class="ri ri-calendar-check-line" style="color:#28c76f;"></i>
-            Joined {{ $superadmin->created_at?->format('M d, Y') ?? '-' }}
+            {{ __('app.joined') }} {{ $superadmin->created_at?->format('M d, Y') ?? '-' }}
           </span>
           <span class="hero-meta-chip">
             <i class="ri ri-time-line" style="color:#696cff;"></i>
@@ -309,21 +309,21 @@
           </span>
           <span class="hero-meta-chip">
             <i class="ri ri-user-settings-line" style="color:#ff9f43;"></i>
-            {{ $activeAdmins }} active admin{{ $activeAdmins !== 1 ? 's' : '' }}
+            {{ __('app.x_active_admins', ['count' => $activeAdmins]) }}
             @if($inactiveAdmins > 0)
-              &middot; {{ $inactiveAdmins }} inactive
+              &middot; {{ __('app.x_inactive', ['count' => $inactiveAdmins]) }}
             @endif
           </span>
           @if($pendingBusinesses > 0)
           <span class="hero-meta-chip" style="background:#fff8f0;border-color:#ffe4bc;color:#ff9f43;">
             <i class="ri ri-building-2-line"></i>
-            {{ $pendingBusinesses }} businesses awaiting approval
+            {{ __('app.x_businesses_awaiting', ['count' => $pendingBusinesses]) }}
           </span>
           @endif
           @if($pendingReports > 0)
           <span class="hero-meta-chip" style="background:#fff5f5;border-color:#ffd5d5;color:#ea5455;">
             <i class="ri ri-flag-2-line"></i>
-            {{ $pendingReports }} open report{{ $pendingReports !== 1 ? 's' : '' }}
+            {{ __('app.x_open_reports', ['count' => $pendingReports]) }}
           </span>
           @endif
         </div>
@@ -333,28 +333,28 @@
       {{-- Quick Actions Bar --}}
       <div class="hero-actions">
         <a href="{{ route('adminsindex') }}" class="hero-action-btn">
-          <i class="ri ri-admin-line"></i>Manage Admins
+          <i class="ri ri-admin-line"></i>{{ __('app.manage_admins') }}
         </a>
         <a href="{{ route('business.index') }}" class="hero-action-btn">
-          <i class="ri ri-building-2-line"></i>Businesses
+          <i class="ri ri-building-2-line"></i>{{ __('app.businesses') }}
           @if($pendingBusinesses > 0)
           <span class="bp bp-orange" style="font-size:10px;padding:2px 7px;">{{ $pendingBusinesses }}</span>
           @endif
         </a>
         <a href="{{ route('allserviesad') }}" class="hero-action-btn">
-          <i class="ri ri-service-line"></i>Services
+          <i class="ri ri-service-line"></i>{{ __('app.services') }}
         </a>
         <a href="{{ route('reports.index') }}" class="hero-action-btn">
-          <i class="ri ri-flag-2-line"></i>Reports
+          <i class="ri ri-flag-2-line"></i>{{ __('app.reports') }}
           @if($pendingReports > 0)
           <span class="bp bp-red" style="font-size:10px;padding:2px 7px;">{{ $pendingReports }}</span>
           @endif
         </a>
         <a href="{{ route('allindex.index') }}" class="hero-action-btn">
-          <i class="ri ri-group-line"></i>Users
+          <i class="ri ri-group-line"></i>{{ __('app.users') }}
         </a>
         <a href="{{ route('categories.index') }}" class="hero-action-btn">
-          <i class="ri ri-layout-grid-line"></i>Categories
+          <i class="ri ri-layout-grid-line"></i>{{ __('app.categories') }}
         </a>
       </div>
 
@@ -374,11 +374,11 @@
           <div class="s-icon" style="background:#fff4e5;color:#ff9f43;">
             <i class="ri ri-building-2-line"></i>
           </div>
-          @if($pendingBusinesses > 0)<span class="bp bp-orange">{{ $pendingBusinesses }} new</span>@endif
+          @if($pendingBusinesses > 0)<span class="bp bp-orange">{{ $pendingBusinesses }} {{ __('app.new_badge') }}</span>@endif
         </div>
         <div class="s-num">{{ $totalBusinesses }}</div>
-        <div class="s-lbl">Businesses</div>
-        <div class="s-note">{{ $pendingBusinesses }} pending approval</div>
+        <div class="s-lbl">{{ __('app.businesses') }}</div>
+        <div class="s-note">{{ __('app.x_pending_approval', ['count' => $pendingBusinesses]) }}</div>
       </div>
     </a>
   </div>
@@ -390,11 +390,11 @@
           <div class="s-icon" style="background:#eef0ff;color:#696cff;">
             <i class="ri ri-tools-line"></i>
           </div>
-          @if($pendingServices > 0)<span class="bp bp-purple">{{ $pendingServices }} new</span>@endif
+          @if($pendingServices > 0)<span class="bp bp-purple">{{ $pendingServices }} {{ __('app.new_badge') }}</span>@endif
         </div>
         <div class="s-num">{{ $totalServices }}</div>
-        <div class="s-lbl">Services</div>
-        <div class="s-note">{{ $pendingServices }} pending approval</div>
+        <div class="s-lbl">{{ __('app.services') }}</div>
+        <div class="s-note">{{ __('app.x_pending_approval', ['count' => $pendingServices]) }}</div>
       </div>
     </a>
   </div>
@@ -406,11 +406,11 @@
           <div class="s-icon" style="background:#e8faf0;color:#28c76f;">
             <i class="ri ri-user-settings-line"></i>
           </div>
-          <span class="bp bp-green">{{ $activeAdmins }} active</span>
+          <span class="bp bp-green">{{ $activeAdmins }} {{ __('app.active') }}</span>
         </div>
         <div class="s-num">{{ $totalAdmins }}</div>
-        <div class="s-lbl">Admins</div>
-        <div class="s-note">{{ $inactiveAdmins }} inactive</div>
+        <div class="s-lbl">{{ __('app.admins') }}</div>
+        <div class="s-note">{{ __('app.x_inactive', ['count' => $inactiveAdmins]) }}</div>
       </div>
     </a>
   </div>
@@ -422,11 +422,11 @@
           <div class="s-icon" style="background:#fdeaea;color:#ea5455;">
             <i class="ri ri-flag-2-line"></i>
           </div>
-          @if($pendingReports > 0)<span class="bp bp-red">{{ $pendingReports }} open</span>@endif
+          @if($pendingReports > 0)<span class="bp bp-red">{{ $pendingReports }} {{ __('app.open_badge') }}</span>@endif
         </div>
         <div class="s-num">{{ $totalReports }}</div>
-        <div class="s-lbl">Reports</div>
-        <div class="s-note">{{ $pendingReports }} need review</div>
+        <div class="s-lbl">{{ __('app.reports') }}</div>
+        <div class="s-note">{{ __('app.x_need_review', ['count' => $pendingReports]) }}</div>
       </div>
     </a>
   </div>
@@ -440,8 +440,8 @@
           </div>
         </div>
         <div class="s-num">{{ $totalUsers }}</div>
-        <div class="s-lbl">Users</div>
-        <div class="s-note">Registered users</div>
+        <div class="s-lbl">{{ __('app.users') }}</div>
+        <div class="s-note">{{ __('app.registered_accounts') }}</div>
       </div>
     </a>
   </div>
@@ -456,8 +456,8 @@
           @if($pendingRequests > 0)<span class="bp bp-purple">{{ $pendingRequests }}</span>@endif
         </div>
         <div class="s-num">{{ $totalRequests }}</div>
-        <div class="s-lbl">Requests</div>
-        <div class="s-note">{{ $pendingRequests }} pending</div>
+        <div class="s-lbl">{{ __('app.requests') }}</div>
+        <div class="s-note">{{ __('app.x_pending', ['count' => $pendingRequests]) }}</div>
       </div>
     </a>
   </div>
@@ -475,11 +475,11 @@
         <div class="s-icon" style="background:#eef0ff;color:#696cff;">
           <i class="ri ri-layout-grid-line"></i>
         </div>
-        <a href="{{ route('categories.index') }}" class="bp bp-purple" style="text-decoration:none;">Manage</a>
+        <a href="{{ route('categories.index') }}" class="bp bp-purple" style="text-decoration:none;">{{ __('app.manage') }}</a>
       </div>
       <div class="s-num">{{ $totalCategories }}</div>
-      <div class="s-lbl">Categories</div>
-      <div class="s-note">Service classification</div>
+      <div class="s-lbl">{{ __('app.categories') }}</div>
+      <div class="s-note">{{ __('app.service_classification') }}</div>
     </div>
   </div>
 
@@ -489,11 +489,11 @@
         <div class="s-icon" style="background:#fff4e5;color:#ff9f43;">
           <i class="ri ri-list-check-2"></i>
         </div>
-        <a href="{{ route('subcategories.index') }}" class="bp bp-orange" style="text-decoration:none;">Manage</a>
+        <a href="{{ route('subcategories.index') }}" class="bp bp-orange" style="text-decoration:none;">{{ __('app.manage') }}</a>
       </div>
       <div class="s-num">{{ $totalSubcategories }}</div>
-      <div class="s-lbl">Subcategories</div>
-      <div class="s-note">Under {{ $totalCategories }} categories</div>
+      <div class="s-lbl">{{ __('app.subcategories') }}</div>
+      <div class="s-note">{{ __('app.under_x_categories', ['count' => $totalCategories]) }}</div>
     </div>
   </div>
 
@@ -503,11 +503,11 @@
         <div class="s-icon" style="background:#e3f8fc;color:#00cfe8;">
           <i class="ri ri-map-pin-2-line"></i>
         </div>
-        <a href="{{ route('cities.index') }}" class="bp bp-gray" style="text-decoration:none;background:#e3f8fc;color:#00cfe8;">Manage</a>
+        <a href="{{ route('cities.index') }}" class="bp bp-gray" style="text-decoration:none;background:#e3f8fc;color:#00cfe8;">{{ __('app.manage') }}</a>
       </div>
       <div class="s-num">{{ $totalCities }}</div>
-      <div class="s-lbl">Cities</div>
-      <div class="s-note">Available locations</div>
+      <div class="s-lbl">{{ __('app.cities') }}</div>
+      <div class="s-note">{{ __('app.available_locations') }}</div>
     </div>
   </div>
 
@@ -522,16 +522,16 @@
       <div class="notif-hdr">
         <span class="rc-title">
           <i class="ri ri-notification-3-line me-2" style="color:#696cff;"></i>
-          Notifications
+          {{ __('app.notifications') }}
           @if($unreadCount > 0)
-            <span class="bp bp-purple ms-2">{{ $unreadCount }} new</span>
+            <span class="bp bp-purple ms-2">{{ $unreadCount }} {{ __('app.new_badge') }}</span>
           @endif
         </span>
         @if($unreadCount > 0)
         <form action="{{ route('notifications.readAll') }}" method="POST">
           @csrf
           <button type="submit" class="btn btn-sm" style="background:#eef0ff;color:#696cff;font-size:12px;font-weight:700;border-radius:10px;padding:5px 14px;">
-            <i class="ri ri-check-double-line me-1"></i>Mark all as read
+            <i class="ri ri-check-double-line me-1"></i>{{ __('app.mark_all_as_read') }}
           </button>
         </form>
         @endif
@@ -574,7 +574,7 @@
       @empty
         <div style="text-align:center;padding:40px;color:#b0aab8;">
           <i class="ri ri-notification-off-line" style="font-size:32px;display:block;margin-bottom:8px;opacity:.4;"></i>
-          No notifications yet
+          {{ __('app.no_notifications_yet') }}
         </div>
       @endforelse
     </div>
@@ -591,17 +591,17 @@
     <div class="rc">
       <div class="rc-hdr">
         <span class="rc-title">
-          <i class="ri ri-building-2-line me-2" style="color:#ff9f43;"></i>Recent Businesses
+          <i class="ri ri-building-2-line me-2" style="color:#ff9f43;"></i>{{ __('app.recent_businesses') }}
         </span>
-        <a href="{{ route('business.index') }}" class="rc-link">View all &rarr;</a>
+        <a href="{{ route('business.index') }}" class="rc-link">{{ __('app.view_all') }}</a>
       </div>
       <div class="table-responsive">
         <table class="table rt mb-0">
           <thead>
             <tr>
-              <th>Business</th>
-              <th>Owner</th>
-              <th>Status</th>
+              <th>{{ __('app.business') }}</th>
+              <th>{{ __('app.owner') }}</th>
+              <th>{{ __('app.status') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -621,7 +621,7 @@
             <tr>
               <td colspan="3" style="text-align:center;padding:40px;color:#b0aab8;">
                 <i class="ri ri-building-2-line" style="font-size:30px;display:block;margin-bottom:8px;opacity:.4;"></i>
-                No businesses yet
+                {{ __('app.no_businesses_yet') }}
               </td>
             </tr>
             @endforelse
@@ -636,17 +636,17 @@
     <div class="rc">
       <div class="rc-hdr">
         <span class="rc-title">
-          <i class="ri ri-time-line me-2" style="color:#ff9f43;"></i>Pending Services
+          <i class="ri ri-time-line me-2" style="color:#ff9f43;"></i>{{ __('app.pending_services') }}
         </span>
-        <a href="{{ route('allserviesad') }}?status=pending" class="rc-link">View all &rarr;</a>
+        <a href="{{ route('allserviesad') }}?status=pending" class="rc-link">{{ __('app.view_all') }}</a>
       </div>
       <div class="table-responsive">
         <table class="table rt mb-0">
           <thead>
             <tr>
-              <th>Service</th>
-              <th>Business</th>
-              <th>Status</th>
+              <th>{{ __('app.service') }}</th>
+              <th>{{ __('app.business') }}</th>
+              <th>{{ __('app.status') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -658,14 +658,14 @@
               </td>
               <td style="color:#585164;">{{ app()->getLocale() === 'ar' ? ($svc->business?->job_name_ar ?? $svc->business?->job_name_en ?? '-') : ($svc->business?->job_name_en ?? $svc->business?->job_name_ar ?? '-') }}</td>
               <td>
-                <span class="sp sp-pending">Pending</span>
+                <span class="sp sp-pending">{{ __('app.pending') }}</span>
               </td>
             </tr>
             @empty
             <tr>
               <td colspan="3" style="text-align:center;padding:40px;color:#b0aab8;">
                 <i class="ri ri-checkbox-circle-line" style="font-size:30px;display:block;margin-bottom:8px;opacity:.4;color:#28c76f;"></i>
-                No pending services
+                {{ __('app.no_pending_services') }}
               </td>
             </tr>
             @endforelse
@@ -680,16 +680,16 @@
     <div class="rc">
       <div class="rc-hdr">
         <span class="rc-title">
-          <i class="ri ri-flag-2-line me-2" style="color:#ea5455;"></i>Recent Reports
+          <i class="ri ri-flag-2-line me-2" style="color:#ea5455;"></i>{{ __('app.recent_reports') }}
         </span>
-        <a href="{{ route('reports.index') }}" class="rc-link">View all &rarr;</a>
+        <a href="{{ route('reports.index') }}" class="rc-link">{{ __('app.view_all') }}</a>
       </div>
       <div class="table-responsive">
         <table class="table rt mb-0">
           <thead>
             <tr>
-              <th>Service</th>
-              <th>Status</th>
+              <th>{{ __('app.service') }}</th>
+              <th>{{ __('app.status') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -708,7 +708,7 @@
             <tr>
               <td colspan="2" style="text-align:center;padding:40px;color:#b0aab8;">
                 <i class="ri ri-flag-2-line" style="font-size:30px;display:block;margin-bottom:8px;opacity:.4;"></i>
-                No reports yet
+                {{ __('app.no_reports_yet') }}
               </td>
             </tr>
             @endforelse
@@ -728,7 +728,7 @@
     <div class="modal-content" style="border:0;border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.18);">
       <div class="modal-header" style="border-bottom:1px solid #f0eef4;padding:20px 26px;">
         <h5 class="modal-title" style="font-weight:800;color:#312d4b;">
-          <i class="ri ri-edit-line me-2" style="color:#696cff;"></i>Edit Profile
+          <i class="ri ri-edit-line me-2" style="color:#696cff;"></i>{{ __('app.edit_profile') }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
@@ -745,14 +745,14 @@
           @endif
 
           <div class="mb-3">
-            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">Name</label>
+            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.name') }}</label>
             <input type="text" name="name" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e8e6ef;"
                    value="{{ old('name', $superadmin->name) }}" required>
           </div>
 
           <div class="mb-3">
-            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">Email</label>
+            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.email') }}</label>
             <input type="email" name="email" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e8e6ef;"
                    value="{{ old('email', $superadmin->email) }}" required>
@@ -760,36 +760,36 @@
 
           <hr style="border-color:#f0eef4;margin:18px 0 14px;">
           <p style="font-size:12px;color:#97939e;margin-bottom:14px;">
-            <i class="ri ri-lock-line me-1"></i>Leave blank to keep current password.
+            <i class="ri ri-lock-line me-1"></i>{{ __('app.leave_blank_password') }}
           </p>
 
           <div class="mb-3">
-            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">Current Password</label>
+            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.current_password') }}</label>
             <input type="password" name="current_password" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e8e6ef;"
-                   placeholder="Required only if changing password">
+                   placeholder="{{ __('app.required_if_changing_password') }}">
           </div>
 
           <div class="mb-3">
-            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">New Password</label>
+            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.new_password') }}</label>
             <input type="password" name="new_password" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e8e6ef;"
-                   placeholder="Min 8 characters">
+                   placeholder="{{ __('app.min_8_characters') }}">
           </div>
 
           <div class="mb-0">
-            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">Confirm New Password</label>
+            <label style="font-size:11px;font-weight:700;color:#7c748a;text-transform:uppercase;letter-spacing:.5px;">{{ __('app.confirm_new_password') }}</label>
             <input type="password" name="new_password_confirmation" class="form-control mt-1"
                    style="border-radius:10px;border:1.5px solid #e8e6ef;"
-                   placeholder="Repeat new password">
+                   placeholder="{{ __('app.repeat_new_password') }}">
           </div>
 
         </div>
         <div class="modal-footer" style="border-top:1px solid #f0eef4;padding:18px 26px;gap:10px;">
           <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal"
-                  style="border-radius:12px;font-weight:700;">Cancel</button>
+                  style="border-radius:12px;font-weight:700;">{{ __('app.cancel') }}</button>
           <button type="submit" class="btn btn-primary" style="border-radius:12px;font-weight:700;">
-            <i class="ri ri-save-line me-1"></i>Save Changes
+            <i class="ri ri-save-line me-1"></i>{{ __('app.save_changes') }}
           </button>
         </div>
       </form>

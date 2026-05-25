@@ -29,7 +29,12 @@
       "Bash(ls -la \"c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\\\\\" | head -20)",
       "Read(//c/Users/Mohamad/Desktop/Laravel/project-final/**)",
       "Bash(php -d memory_limit=256M artisan view:clear)",
-      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\" -Recurse -Directory | Select-Object -First 20 | ForEach-Object { $_.FullName })"
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\" -Recurse -Directory | Select-Object -First 20 | ForEach-Object { $_.FullName })",
+      "Bash(grep -v \"^\\\\\"#\\\\|^\\\\\"https\\\\|^\\\\\"\\\\/\\\\|^\\\\\".*\\\\\\\\..*\\\\|^\\\\\"margin\\\\|^\\\\\"padding\\\\|^\\\\\"color\\\\|^\\\\\"background\\\\|^\\\\\"border\\\\|^\\\\\"font\\\\|^\\\\\"display\\\\|^\\\\\"align\\\\|^\\\\\"gap\\\\|^\\\\\"width\\\\|^\\\\\"height\\\\|^\\\\\"flex\\\\|^\\\\\"text\\\\|^\\\\\"box\\\\|^\\\\\"transform\\\\|^\\\\\"transition\\\\|^\\\\\"white\\\\|^\\\\\"outline\\\\|^\\\\\"cursor\\\\|^\\\\\"pointer\\\\|^\\\\\"opacity\\\\|^\\\\\"overflow\\\\|^\\\\\"position\\\\|^\\\\\"z-index\\\\|^\\\\\"line\\\\|^\\\\\"letter\\\\|^\\\\\"text-\\\\|^\\\\\"min-\\\\|^\\\\\"max\\\\|^\\\\\"justify\\\\|^\\\\\"radius\\\\|^\\\\\"box-\\\\|^\\\\\"object\\\\|^\\\\\"float\\\\|^\\\\\"top\\\\|^\\\\\"right\\\\|^\\\\\"bottom\\\\|^\\\\\"left\\\\|^\\\\\"block\\\\|^\\\\\"content\\\\|^\\\\\"order\\\\|^\\\\\"shrink\")",
+      "Bash(xargs grep -l \"dashboards-analytics\\\\|analytics\")",
+      "Bash(Test-Path \"c:\\\\Users\\\\Mohamad\\\\Desktop\\\\Laravel\\\\project-final\\\\Real estate services\\\\public\\\\css\\\\rtl.css\")",
+      "Bash(php -r \"if\\(function_exists\\('opcache_reset'\\)\\){opcache_reset\\(\\);echo 'opcache cleared';}else{echo 'no opcache';}\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Mohamad\\Desktop\\Laravel\\project-final\\Real estate services\\storage\\framework\\views"

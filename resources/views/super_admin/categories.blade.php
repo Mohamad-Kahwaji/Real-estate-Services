@@ -1,7 +1,7 @@
 @extends('layouts/contentNavbarLayout')
 {{-- Categories management page: shows all service categories with subcategory counts and provides add/edit/delete modals. --}}
 
-@section('title', 'Categories')
+@section('title', __('app.categories'))
 
 @section('page-style')
 <style>
@@ -125,11 +125,11 @@
 {{-- Header --}}
 <div class="pg-header d-flex justify-content-between align-items-center">
     <div>
-        <h4>Categories</h4>
-        <p>Manage all categories and their subcategories</p>
+        <h4>{{ __('app.categories') }}</h4>
+        <p>{{ __('app.categories_desc') }}</p>
     </div>
     <button class="btn-add" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-        <i class="ri ri-add-line"></i> Add Category
+        <i class="ri ri-add-line"></i> {{ __('app.add_category') }}
     </button>
 </div>
 
@@ -148,7 +148,7 @@
                 <i class="ri ri-layout-grid-line" style="color:#696cff;"></i>
             </div>
             <div>
-                <div class="stat-label">Total Categories</div>
+                <div class="stat-label">{{ __('app.total_categories') }}</div>
                 <div class="stat-value">{{ $categories->count() }}</div>
             </div>
         </div>
@@ -159,7 +159,7 @@
                 <i class="ri ri-list-check-2" style="color:#28c76f;"></i>
             </div>
             <div>
-                <div class="stat-label">Total Subcategories</div>
+                <div class="stat-label">{{ __('app.total_subcategories') }}</div>
                 <div class="stat-value">{{ $categories->sum('subcategory_count') }}</div>
             </div>
         </div>
@@ -169,7 +169,7 @@
 {{-- Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-layout-grid-line me-2" style="color:#696cff;"></i>All Categories</h6>
+        <h6><i class="ri ri-layout-grid-line me-2" style="color:#696cff;"></i>{{ __('app.categories') }}</h6>
     </div>
     <div class="table-responsive">
         <table class="table">
@@ -208,7 +208,7 @@
                                 <i class="ri ri-pencil-line"></i>
                             </button>
                             <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                  onsubmit="return confirm('Delete {{ $category->name_en }}?')">
+                                  onsubmit="return confirm('{{ __("app.confirm_delete") }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="action-btn btn-delete" title="Delete">
                                     <i class="ri ri-delete-bin-line"></i>
@@ -222,7 +222,7 @@
                     <td colspan="5">
                         <div class="empty-state">
                             <i class="ri ri-layout-grid-line"></i>
-                            <p>No categories found. Add your first category.</p>
+                            <p>{{ __('app.no_categories_found') }}</p>
                         </div>
                     </td>
                 </tr>
@@ -239,25 +239,25 @@
             <form action="{{ route('categories.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-add-circle-line me-2" style="color:#696cff;"></i>Add Category</h5>
+                    <h5 class="modal-title"><i class="ri ri-add-circle-line me-2" style="color:#696cff;"></i>{{ __('app.add_category') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Name (Arabic)</label>
+                        <label class="form-label">{{ __('app.arabic_name') }}</label>
                         <input type="text" class="form-control" name="name_ar"
                                placeholder="اسم التصنيف" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Name (English)</label>
+                        <label class="form-label">{{ __('app.english_name') }}</label>
                         <input type="text" class="form-control" name="name_en"
                                placeholder="Category name" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Cancel</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">{{ __('app.cancel') }}</button>
                     <button type="submit" class="btn btn-primary" style="border-radius:10px;font-weight:700;">
-                        <i class="ri ri-save-line me-1"></i>Save
+                        <i class="ri ri-save-line me-1"></i>{{ __('app.save') }}
                     </button>
                 </div>
             </form>
@@ -273,25 +273,25 @@
             <form action="{{ route('categories.update', $category->id) }}" method="POST">
                 @csrf @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:#696cff;"></i>Edit Category</h5>
+                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:#696cff;"></i>{{ __('app.edit_category') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Name (Arabic)</label>
+                        <label class="form-label">{{ __('app.arabic_name') }}</label>
                         <input type="text" class="form-control" name="name_ar"
                                value="{{ $category->name_ar }}" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Name (English)</label>
+                        <label class="form-label">{{ __('app.english_name') }}</label>
                         <input type="text" class="form-control" name="name_en"
                                value="{{ $category->name_en }}" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Cancel</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">{{ __('app.cancel') }}</button>
                     <button type="submit" class="btn btn-primary" style="border-radius:10px;font-weight:700;">
-                        <i class="ri ri-save-line me-1"></i>Update
+                        <i class="ri ri-save-line me-1"></i>{{ __('app.update') }}
                     </button>
                 </div>
             </form>
@@ -308,7 +308,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="ri ri-list-check-2 me-2" style="color:#28c76f;"></i>
-                    {{ $category->name_en }} — Subcategories
+                    {{ app()->getLocale() === 'ar' ? ($category->name_ar ?: $category->name_en) : ($category->name_en ?: $category->name_ar) }} — {{ __('app.subcategories') }}
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -316,15 +316,15 @@
                 @if($category->subcategories->isEmpty())
                     <div style="text-align:center;padding:30px 0;color:#8592a3;">
                         <i class="ri ri-inbox-line" style="font-size:36px;display:block;margin-bottom:10px;opacity:.4;"></i>
-                        No subcategories yet.
+                        {{ __('app.no_subcategories_yet') }}
                     </div>
                 @else
                     <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;">
                         @foreach($category->subcategories as $sub)
                         <li style="background:#fafbff;border-radius:12px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border:1px solid #f0eef8;">
                             <div>
-                                <div style="font-weight:700;color:#1e293b;font-size:14px;">{{ $sub->name_en }}</div>
-                                <div style="font-size:12px;color:#8592a3;">{{ $sub->name_ar }}</div>
+                                <div style="font-weight:700;color:#1e293b;font-size:14px;">{{ app()->getLocale() === 'ar' ? ($sub->name_ar ?: $sub->name_en) : ($sub->name_en ?: $sub->name_ar) }}</div>
+                                <div style="font-size:12px;color:#8592a3;">{{ app()->getLocale() === 'ar' ? $sub->name_en : $sub->name_ar }}</div>
                             </div>
                             <span class="badge-pill badge-accent" style="font-size:11px;">#{{ $sub->id }}</span>
                         </li>
@@ -333,7 +333,7 @@
                 @endif
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">Close</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:10px;">{{ __('app.close') }}</button>
             </div>
         </div>
     </div>

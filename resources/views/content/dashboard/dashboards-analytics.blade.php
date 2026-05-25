@@ -1,5 +1,5 @@
 @extends('layouts/contentNavbarLayout')
-@section('title', 'Dashboard')
+@section('title', __('app.dashboard'))
 
 @section('page-style')
 <style>
@@ -74,10 +74,10 @@
             display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
     <div>
         <h4 style="font-size:22px;font-weight:800;margin:0 0 6px;">
-            Welcome back, {{ auth('superadmins')->user()->name ?? 'Admin' }} 👋
+            {{ __('app.welcome_back') }}, {{ auth('superadmins')->user()->name ?? 'Admin' }} 👋
         </h4>
         <p style="opacity:.85;margin:0;font-size:14px;">
-            Here's what's happening on the platform today.
+            {{ __('app.platform_today') }}
         </p>
     </div>
     <a href="{{ route('allserviesad') }}"
@@ -86,7 +86,7 @@
               font-size:13px;text-decoration:none;transition:.2s;"
        onmouseover="this.style.background='rgba(255,255,255,.3)'"
        onmouseout="this.style.background='rgba(255,255,255,.2)'">
-        <i class="ri ri-service-line me-2"></i>Manage Services
+        <i class="ri ri-service-line me-2"></i>{{ __('app.manage_services') }}
     </a>
 </div>
 
@@ -99,10 +99,10 @@
                 <i class="ri ri-service-line"></i>
             </div>
             <div>
-                <div class="stat-label">Total Services</div>
+                <div class="stat-label">{{ __('app.total_services') }}</div>
                 <div class="stat-value">{{ $stats['services_total'] }}</div>
                 <div class="stat-sub">
-                    <span style="color:#ff9f43;">{{ $stats['services_pending'] }} pending</span>
+                    <span style="color:#ff9f43;">{{ __('app.x_pending', ['count' => $stats['services_pending']]) }}</span>
                 </div>
             </div>
         </div>
@@ -114,10 +114,10 @@
                 <i class="ri ri-checkbox-circle-line"></i>
             </div>
             <div>
-                <div class="stat-label">Approved</div>
+                <div class="stat-label">{{ __('app.approved') }}</div>
                 <div class="stat-value">{{ $stats['services_approved'] }}</div>
                 <div class="stat-sub">
-                    <span style="color:#ea5455;">{{ $stats['services_rejected'] }} rejected</span>
+                    <span style="color:#ea5455;">{{ __('app.x_rejected', ['count' => $stats['services_rejected']]) }}</span>
                 </div>
             </div>
         </div>
@@ -129,9 +129,9 @@
                 <i class="ri ri-user-3-line"></i>
             </div>
             <div>
-                <div class="stat-label">Users</div>
+                <div class="stat-label">{{ __('app.users') }}</div>
                 <div class="stat-value">{{ $stats['users_total'] }}</div>
-                <div class="stat-sub">Registered accounts</div>
+                <div class="stat-sub">{{ __('app.registered_accounts') }}</div>
             </div>
         </div>
     </div>
@@ -142,10 +142,10 @@
                 <i class="ri ri-building-2-line"></i>
             </div>
             <div>
-                <div class="stat-label">Businesses</div>
+                <div class="stat-label">{{ __('app.businesses') }}</div>
                 <div class="stat-value">{{ $stats['businesses_total'] }}</div>
                 <div class="stat-sub">
-                    <span style="color:#ff9f43;">{{ $stats['businesses_pending'] }} pending</span>
+                    <span style="color:#ff9f43;">{{ __('app.x_pending', ['count' => $stats['businesses_pending']]) }}</span>
                 </div>
             </div>
         </div>
@@ -162,10 +162,10 @@
                 <i class="ri ri-file-list-3-line"></i>
             </div>
             <div>
-                <div class="stat-label">Service Requests</div>
+                <div class="stat-label">{{ __('app.service_requests') }}</div>
                 <div class="stat-value">{{ $stats['requests_total'] }}</div>
                 <div class="stat-sub">
-                    <span style="color:#ff9f43;">{{ $stats['requests_pending'] }} pending</span>
+                    <span style="color:#ff9f43;">{{ __('app.x_pending', ['count' => $stats['requests_pending']]) }}</span>
                 </div>
             </div>
         </div>
@@ -177,9 +177,9 @@
                 <i class="ri ri-time-line"></i>
             </div>
             <div>
-                <div class="stat-label">Needs Review</div>
+                <div class="stat-label">{{ __('app.needs_review') }}</div>
                 <div class="stat-value" style="color:#ff9f43;">{{ $stats['services_pending'] + $stats['businesses_pending'] }}</div>
-                <div class="stat-sub">services + businesses</div>
+                <div class="stat-sub">{{ __('app.services_and_businesses') }}</div>
             </div>
         </div>
     </div>
@@ -188,14 +188,14 @@
     <div class="col-xl-6">
         <div class="card border-0 h-100" style="border-radius:18px;box-shadow:0 4px 20px rgba(15,23,42,.07);">
             <div class="card-body">
-                <div class="section-title"><i class="ri ri-flashlight-line"></i> Quick Actions</div>
+                <div class="section-title"><i class="ri ri-flashlight-line"></i> {{ __('app.quick_actions') }}</div>
                 <div class="row g-2">
                     <div class="col-6">
                         <a href="{{ route('allserviesad') }}?status=pending"
                            class="d-flex align-items-center gap-2 p-3 rounded-3 text-decoration-none"
                            style="background:#fff9f0;color:#ff9f43;font-size:13px;font-weight:700;transition:.2s;"
                            onmouseover="this.style.background='#fff0d8'" onmouseout="this.style.background='#fff9f0'">
-                            <i class="ri ri-time-line" style="font-size:18px;"></i> Pending Services
+                            <i class="ri ri-time-line" style="font-size:18px;"></i> {{ __('app.pending_services') }}
                         </a>
                     </div>
                     <div class="col-6">
@@ -203,7 +203,7 @@
                            class="d-flex align-items-center gap-2 p-3 rounded-3 text-decoration-none"
                            style="background:#fff0ee;color:#ea5455;font-size:13px;font-weight:700;transition:.2s;"
                            onmouseover="this.style.background='#ffe4e2'" onmouseout="this.style.background='#fff0ee'">
-                            <i class="ri ri-building-2-line" style="font-size:18px;"></i> Pending Businesses
+                            <i class="ri ri-building-2-line" style="font-size:18px;"></i> {{ __('app.pending_businesses') }}
                         </a>
                     </div>
                     <div class="col-6">
@@ -211,7 +211,7 @@
                            class="d-flex align-items-center gap-2 p-3 rounded-3 text-decoration-none"
                            style="background:#eefbff;color:#00cfe8;font-size:13px;font-weight:700;transition:.2s;"
                            onmouseover="this.style.background='#ddf7ff'" onmouseout="this.style.background='#eefbff'">
-                            <i class="ri ri-user-3-line" style="font-size:18px;"></i> All Users
+                            <i class="ri ri-user-3-line" style="font-size:18px;"></i> {{ __('app.all_users') }}
                         </a>
                     </div>
                     <div class="col-6">
@@ -219,7 +219,7 @@
                            class="d-flex align-items-center gap-2 p-3 rounded-3 text-decoration-none"
                            style="background:#f2f0ff;color:#696cff;font-size:13px;font-weight:700;transition:.2s;"
                            onmouseover="this.style.background='#e8e5ff'" onmouseout="this.style.background='#f2f0ff'">
-                            <i class="ri ri-file-list-3-line" style="font-size:18px;"></i> Service Requests
+                            <i class="ri ri-file-list-3-line" style="font-size:18px;"></i> {{ __('app.service_requests') }}
                         </a>
                     </div>
                 </div>
@@ -237,9 +237,9 @@
         <div class="card border-0 h-100" style="border-radius:18px;box-shadow:0 4px 20px rgba(15,23,42,.07);">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div class="section-title mb-0"><i class="ri ri-service-line"></i> Recent Services</div>
+                    <div class="section-title mb-0"><i class="ri ri-service-line"></i> {{ __('app.recent_services') }}</div>
                     <a href="{{ route('allserviesad') }}" style="font-size:12px;color:#696cff;font-weight:700;text-decoration:none;">
-                        View all →
+                        {{ __('app.view_all') }}
                     </a>
                 </div>
 
@@ -266,7 +266,7 @@
                     </span>
                 </div>
                 @empty
-                <div class="text-center py-4 text-muted">No services yet.</div>
+                <div class="text-center py-4 text-muted">{{ __('app.no_services_yet') }}</div>
                 @endforelse
             </div>
         </div>
@@ -277,9 +277,9 @@
         <div class="card border-0 h-100" style="border-radius:18px;box-shadow:0 4px 20px rgba(15,23,42,.07);">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div class="section-title mb-0"><i class="ri ri-user-3-line"></i> Recent Users</div>
+                    <div class="section-title mb-0"><i class="ri ri-user-3-line"></i> {{ __('app.recent_users') }}</div>
                     <a href="{{ route('allindex.index') }}" style="font-size:12px;color:#696cff;font-weight:700;text-decoration:none;">
-                        View all →
+                        {{ __('app.view_all') }}
                     </a>
                 </div>
 
@@ -297,7 +297,7 @@
                     </div>
                 </div>
                 @empty
-                <div class="text-center py-4 text-muted">No users yet.</div>
+                <div class="text-center py-4 text-muted">{{ __('app.no_users_yet') }}</div>
                 @endforelse
             </div>
         </div>

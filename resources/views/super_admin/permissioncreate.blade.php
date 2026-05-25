@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Create Permission')
+@section('title', __('app.create_permission'))
 
 @section('page-style')
 <style>
@@ -183,13 +183,13 @@
 @endif
 @if($errors->any())
 <div class="al-alert al-alert-danger">
-    <i class="ri ri-error-warning-line"></i> Please fix the errors below.
+    <i class="ri ri-error-warning-line"></i> {{ __('app.fix_errors_below') }}
 </div>
 @endif
 
 {{-- Back --}}
 <a href="{{ route('roleindex') }}" class="back-link">
-    <i class="ri ri-arrow-left-s-line" style="font-size:18px;"></i> Back to Roles
+    <i class="ri ri-arrow-left-s-line" style="font-size:18px;"></i> {{ __('app.back_to_roles') }}
 </a>
 
 <div class="row justify-content-center">
@@ -205,8 +205,8 @@
                         <i class="ri ri-key-2-line"></i>
                     </div>
                     <div>
-                        <div style="font-size:19px;font-weight:800;color:#fff;margin-bottom:3px;">Create New Permission</div>
-                        <div style="font-size:13px;color:rgba(255,255,255,.7);">Add a permission and assign it to a guard</div>
+                        <div style="font-size:19px;font-weight:800;color:#fff;margin-bottom:3px;">{{ __('app.create_permission_title') }}</div>
+                        <div style="font-size:13px;color:rgba(255,255,255,.7);">{{ __('app.create_permission_desc') }}</div>
                     </div>
                 </div>
             </div>
@@ -217,10 +217,10 @@
                     @csrf
 
                     {{-- Permission Name --}}
-                    <div class="section-label">Permission Details</div>
+                    <div class="section-label">{{ __('app.permission_details') }}</div>
 
                     <div class="mb-4">
-                        <label class="form-label">Permission Name</label>
+                        <label class="form-label">{{ __('app.permission_name_label') }}</label>
                         <input type="text" name="name"
                                class="form-control @error('name') is-invalid @enderror"
                                value="{{ old('name') }}"
@@ -232,7 +232,7 @@
                     </div>
 
                     {{-- Guard Type --}}
-                    <div class="section-label">Guard Type</div>
+                    <div class="section-label">{{ __('app.guard_type') }}</div>
 
                     <div class="row g-3 mb-4">
                         <div class="col-6">
@@ -243,8 +243,8 @@
                                     <i class="ri ri-user-settings-line" style="color:#696cff;"></i>
                                 </div>
                                 <div style="flex:1;">
-                                    <div class="guard-name">Admin</div>
-                                    <div class="guard-desc">For admin panel users</div>
+                                    <div class="guard-name">{{ __('app.admin_guard') }}</div>
+                                    <div class="guard-desc">{{ __('app.admin_guard_desc') }}</div>
                                 </div>
                                 <div class="guard-check"></div>
                             </label>
@@ -257,8 +257,8 @@
                                     <i class="ri ri-user-line" style="color:#00cfe8;"></i>
                                 </div>
                                 <div style="flex:1;">
-                                    <div class="guard-name">Web User</div>
-                                    <div class="guard-desc">For regular app users</div>
+                                    <div class="guard-name">{{ __('app.web_user') }}</div>
+                                    <div class="guard-desc">{{ __('app.web_user_desc') }}</div>
                                 </div>
                                 <div class="guard-check"></div>
                             </label>
@@ -270,7 +270,7 @@
                     @enderror
 
                     {{-- Assign to Roles --}}
-                    <div class="section-label" style="margin-top:24px;">Assign to Roles <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></div>
+                    <div class="section-label" style="margin-top:24px;">{{ __('app.assign_to_roles') }} <span style="font-weight:400;text-transform:none;letter-spacing:0;">({{ __('app.optional') }})</span></div>
 
                     @if($roles->count())
                     <div class="row g-2 mb-4" id="rolesContainer">
@@ -287,7 +287,7 @@
                                        {{ is_array(old('roles')) && in_array($role->name, old('roles')) ? 'checked' : '' }}>
                                 <div>
                                     <div style="font-size:13px;font-weight:700;color:#1e293b;">{{ $role->name }}</div>
-                                    <div style="font-size:11px;color:#8592a3;">{{ $role->permissions->count() }} perms</div>
+                                    <div style="font-size:11px;color:#8592a3;">{{ __('app.perms_label', ['count' => $role->permissions->count()]) }}</div>
                                 </div>
                             </label>
                         </div>
@@ -295,17 +295,17 @@
                     </div>
                     @else
                     <div style="background:#fafbff;border-radius:12px;padding:16px;color:#8592a3;font-size:13px;margin-bottom:16px;">
-                        No admin roles found. <a href="{{ route('roleindex') }}" style="color:#696cff;">Create roles first.</a>
+                        {{ __('app.create_roles_first') }} <a href="{{ route('roleindex') }}" style="color:#696cff;">{{ __('app.create_role') }}</a>
                     </div>
                     @endif
 
                     {{-- Actions --}}
                     <div class="d-flex align-items-center gap-3 pt-3" style="border-top:1px solid #f0eef8;">
                         <a href="{{ route('roleindex') }}" class="btn-cancel">
-                            <i class="ri ri-arrow-left-line"></i> Cancel
+                            <i class="ri ri-arrow-left-line"></i> {{ __('app.cancel') }}
                         </a>
                         <button type="submit" class="btn-submit">
-                            <i class="ri ri-key-2-line"></i> Create Permission
+                            <i class="ri ri-key-2-line"></i> {{ __('app.create_permission') }}
                         </button>
                     </div>
 
@@ -317,8 +317,8 @@
         @if(isset($permissions) && $permissions->count() > 0)
         <div class="list-card">
             <div class="list-card-header">
-                <h6><i class="ri ri-key-2-line me-2" style="color:#696cff;"></i>Existing Permissions</h6>
-                <span id="permCount" style="font-size:12px;color:#8592a3;font-weight:600;">{{ $permissions->count() }} total</span>
+                <h6><i class="ri ri-key-2-line me-2" style="color:#696cff;"></i>{{ __('app.existing_permissions_list') }}</h6>
+                <span id="permCount" style="font-size:12px;color:#8592a3;font-weight:600;">{{ __('app.x_total', ['count' => $permissions->count()]) }}</span>
             </div>
             <div class="perm-grid">
                 @foreach($permissions as $perm)
@@ -336,11 +336,11 @@
         @elseif(isset($permissions))
         <div class="list-card">
             <div class="list-card-header">
-                <h6><i class="ri ri-key-2-line me-2" style="color:#696cff;"></i>Existing Permissions</h6>
+                <h6><i class="ri ri-key-2-line me-2" style="color:#696cff;"></i>{{ __('app.existing_permissions_list') }}</h6>
             </div>
             <div class="empty-perm">
                 <i class="ri ri-key-2-line"></i>
-                <p style="font-weight:600;margin:0;">No permissions created yet</p>
+                <p style="font-weight:600;margin:0;">{{ __('app.no_permissions_created') }}</p>
             </div>
         </div>
         @endif

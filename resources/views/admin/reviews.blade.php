@@ -78,11 +78,18 @@
                 <div>
                     <div class="rev-service-title">
                         <i class="ri ri-store-3-line me-1" style="color:#696cff;"></i>
-                        {{ $review->service->title ?? 'Unknown Service' }}
+                        {{ auto_translate($review->service->title ?? '') ?: __('app.unknown_service') }}
                     </div>
-                    <div class="rev-business">
-                        {{ $review->service->business->job_name_en ?? '—' }}
-                    </div>
+                    @php
+                        $revBiz = $review->service->business ?? null;
+                        $revLocale = app()->getLocale();
+                        $revBizName = $revBiz
+                            ? ($revLocale === 'ar'
+                                ? ($revBiz->job_name_ar ?: $revBiz->job_name_en)
+                                : ($revBiz->job_name_en ?: $revBiz->job_name_ar))
+                            : null;
+                    @endphp
+                    <div class="rev-business">{{ $revBizName ?? '—' }}</div>
                 </div>
                 {{-- Stars --}}
                 <div class="stars">
@@ -105,7 +112,7 @@
                 </div>
 
                 @if($review->comment)
-                <div class="rev-comment">{{ $review->comment }}</div>
+                <div class="rev-comment">{{ auto_translate($review->comment) }}</div>
                 @else
                 <div class="rev-comment" style="color:#b0aab8;font-style:italic;">{{ __('app.no_comment') }}</div>
                 @endif

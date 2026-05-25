@@ -102,9 +102,9 @@
             <img class="ad-img" src="{{ $ad->image_url }}" alt="{{ $ad->title }}">
 
             <div class="ad-body">
-                <div class="ad-title">{{ $ad->title }}</div>
+                <div class="ad-title">{{ auto_translate($ad->title ?? '') ?: $ad->title }}</div>
                 @if($ad->description)
-                <div class="ad-desc">{{ $ad->description }}</div>
+                <div class="ad-desc">{{ auto_translate($ad->description) }}</div>
                 @endif
 
                 @if($ad->is_active)

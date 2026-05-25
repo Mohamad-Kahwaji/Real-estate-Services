@@ -261,23 +261,38 @@
                 <div>
                     <div class="service-title">
                         <i class="ri ri-tools-line me-1" style="color:#8592a3;font-size:14px;"></i>
-                        {{ $report->service->title ?? __('app.unknown_service') }}
+                        {{ auto_translate($report->service->title ?? '') ?: __('app.unknown_service') }}
                     </div>
                     <div class="business-name">
                         <i class="ri ri-store-2-line me-1"></i>
-                        {{ $report->service->business->job_name_en ?? __('app.no_business_name') }}
+                        @php
+                            $biz     = $report->service->business ?? null;
+                            $locale  = app()->getLocale();
+                            $bizName = $biz
+                                ? ($locale === 'ar'
+                                    ? ($biz->job_name_ar ?: $biz->job_name_en)
+                                    : ($biz->job_name_en ?: $biz->job_name_ar))
+                                : null;
+                        @endphp
+                        {{ $bizName ?? __('app.no_business_name') }}
                     </div>
                 </div>
                 @php
-                    $statusClass = match($report->status ?? 'pending') {
+                    $st = $report->status ?? 'pending';
+                    $statusClass = match($st) {
                         'reviewed' => 'status-reviewed',
                         'resolved' => 'status-resolved',
                         default    => 'status-pending',
                     };
+                    $statusLabel = match($st) {
+                        'reviewed' => __('app.reviewed'),
+                        'resolved' => __('app.resolved'),
+                        default    => __('app.pending'),
+                    };
                 @endphp
                 <span class="status-pill {{ $statusClass }}">
                     <i class="ri ri-checkbox-blank-circle-fill" style="font-size:8px;"></i>
-                    {{ ucfirst($report->status ?? 'pending') }}
+                    {{ $statusLabel }}
                 </span>
             </div>
 
@@ -289,7 +304,7 @@
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">{{ __('app.reason') }}</span>
-                    <span class="detail-value">{{ $report->reason ?? '-' }}</span>
+                    <span class="detail-value">{{ auto_translate($report->reason ?? '') ?: '-' }}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">{{ __('app.date') }}</span>
@@ -298,7 +313,7 @@
                 <div class="detail-row" style="flex-direction:column;gap:8px;">
                     <span class="detail-label">{{ __('app.message_label') }}</span>
                     <div class="report-message-box w-100">
-                        {{ $report->message ?? __('app.no_details_provided') }}
+                        {{ auto_translate($report->message ?? '') ?: __('app.no_details_provided') }}
                     </div>
                 </div>
             </div>
@@ -326,7 +341,7 @@
                 <form action="{{ route($destroyRoute, $report->id) }}" method="POST" style="flex:0 0 auto;">
                     @csrf @method('DELETE')
                     <button type="submit" class="action-btn btn-del"
-                            onclick="return confirm('{{ __('app.confirm_delete') }}')">
+                            onclick="return confirm('{{ __("app.confirm_delete") }}')">
                         <i class="ri ri-delete-bin-line"></i>
                     </button>
                 </form>
