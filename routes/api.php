@@ -27,12 +27,12 @@ use Illuminate\Support\Facades\Route;
 // Register a new user account
 Route::post('/register',       [RegisteredUserController::class,    'store']);
 // Authenticate a user and return a Bearer token
-Route::post('/login',          [AuthenticatedUserController::class, 'store']);
+Route::post('/login',          [AuthenticatedUserController::class, 'store']);//default password is (password) for data in seeders
 // Verify the OTP sent during registration or password reset
-Route::post('/verify-otp',     [ApiOtpController::class,           'verify']);
+Route::post('/verify-otp',     [ApiOtpController::class,           'verify']);//default otp 123456 if OTP_ENABLED=false
 // Resend the OTP to the user's contact
 Route::post('/resend-otp',     [ApiOtpController::class,           'resend']);
-// Send a password-reset link to the user's email
+// Send a password-reset link to the user's phone number
 Route::post('/forgot-password',[PasswordResetLinkController::class,'store']);
 // Set a new password using the reset token
 Route::post('/reset-password', [NewPasswordController::class,      'store']);
