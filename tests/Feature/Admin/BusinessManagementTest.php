@@ -6,7 +6,6 @@ use App\Models\Business;
 use App\Models\City;
 use App\Models\Superadmin;
 use App\Models\User;
-use App\Notifications\InvoiceCreated;
 use App\Notifications\UserDatabaseNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -115,7 +114,7 @@ describe('Business Management – Admin Panel', function () {
         expect($business->fresh()->status)->toBe('rejected');
     });
 
-    it('sends an InvoiceCreated notification to the owner when a business is approved', function () {
+    it('sends a UserDatabaseNotification to the owner when a business is approved', function () {
         Notification::fake();
 
         $superadmin = makeSuperadminWithPermissions();
@@ -127,8 +126,8 @@ describe('Business Management – Admin Panel', function () {
 
         Notification::assertSentTo(
             $business->user,
-            InvoiceCreated::class,
-            fn (InvoiceCreated $notification) =>
+            UserDatabaseNotification::class,
+            fn (UserDatabaseNotification $notification) =>
                 $notification->data['business_id'] === $business->id
         );
     });

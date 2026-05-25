@@ -9,7 +9,6 @@ use App\Models\City;
 use App\Models\ServiceRequest;
 use App\Models\Superadmin;
 use App\Models\User;
-use App\Notifications\InvoiceCreated;
 use App\Notifications\UserDatabaseNotification;
 use App\Services\AdminPushNotificationService;
 use Illuminate\Http\Request;
@@ -179,7 +178,7 @@ class BusinessController extends Controller
         $account = Business::findOrFail($id);
         $account->update(['status' => 'approved']);
 
-        $account->user->notify(new InvoiceCreated(
+        $account->user->notify(new UserDatabaseNotification(
             'Business Account Approved',
             'Your business account has been approved.',
             ['type' => 'business_account', 'business_id' => $account->id]

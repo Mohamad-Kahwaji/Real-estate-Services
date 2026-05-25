@@ -11,7 +11,6 @@ use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Models\Subcategory;
 use App\Models\User;
-use App\Notifications\InvoiceCreated;
 use App\Notifications\UserDatabaseNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -149,7 +148,7 @@ class SuperadminController extends Controller
         $req = ServiceRequest::with(['user', 'service'])->findOrFail($id);
         $req->update(['status' => 'approved']);
 
-        $req->user?->notify(new InvoiceCreated(
+        $req->user?->notify(new UserDatabaseNotification(
             'Service Request Approved',
             'Your service request has been approved.',
             ['type' => 'service_request', 'request_id' => $req->id]

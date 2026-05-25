@@ -10,7 +10,6 @@ use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Models\Subcategory;
 use App\Models\Superadmin;
-use App\Notifications\InvoiceCreated;
 use App\Notifications\UserDatabaseNotification;
 use App\Services\AdminPushNotificationService;
 use Illuminate\Http\Request;
@@ -162,7 +161,7 @@ class ServiceController extends Controller
         $val['status'] = 'pending';
         $service = Service::create($val);
 
-        $service->user->notify(new InvoiceCreated(
+        $service->user->notify(new UserDatabaseNotification(
             'Service Created',
             'Your service has been created and is pending approval.',
             ['type' => 'service', 'service_id' => $service->id]

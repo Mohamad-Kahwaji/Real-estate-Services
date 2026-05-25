@@ -12,7 +12,6 @@ use App\Models\ServiceFieldValue;
 use App\Models\ServiceRequest;
 use App\Models\Subcategory;
 use App\Models\Superadmin;
-use App\Notifications\InvoiceCreated;
 use App\Notifications\UserDatabaseNotification;
 use App\Services\AdminPushNotificationService;
 use Illuminate\Http\Request;
@@ -162,7 +161,7 @@ public function allservices(Request $request){
         ]);
     }
 
-    $service->user->notify(new InvoiceCreated(
+    $service->user->notify(new UserDatabaseNotification(
         'Service Created',
         'Your service has been created and is pending approval.',
         [
