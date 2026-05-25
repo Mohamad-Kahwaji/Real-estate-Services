@@ -281,10 +281,22 @@ class ServiceController extends Controller
         return redirect()->route('rejectsermy', response('rejected'));
     }
 
-    // Permanently deletes a service and redirects to the user's service list.
+    // Deletes a service. Soft-deletes if active paid rentals exist; force-deletes otherwise.
     public function destroy($id){
         $service = Service::findOrFail($id);
-        $service->delete();
+
+        $hasActiveRentals = ServiceRequest::where('service_id', $service->id)
+            ->where('payment_status', 'paid')
+            ->whereNotNull('rental_end_date')
+            ->where('rental_end_date', '>', today())
+            ->exists();
+
+        if ($hasActiveRentals) {
+            $service->delete();
+        } else {
+            $service->forceDelete();
+        }
+
         return redirect()->route('myservices');
     }
 

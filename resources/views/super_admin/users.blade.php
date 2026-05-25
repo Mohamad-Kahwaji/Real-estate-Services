@@ -1,7 +1,7 @@
 @extends('layouts/contentNavbarLayout')
 {{-- Users management page: displays all registered users with status stats and allows superadmin to suspend or activate accounts. --}}
 
-@section('title', 'Users')
+@section('title', __('app.users'))
 
 @section('page-style')
 <style>
@@ -97,8 +97,8 @@ tr.row-suspended td { opacity: .65; }
 {{-- Header --}}
 <div class="pg-header d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4>Users</h4>
-        <p>View and manage all registered users</p>
+        <h4>{{ __('app.users') }}</h4>
+        <p>{{ __('app.users_desc') }}</p>
     </div>
 </div>
 
@@ -122,7 +122,7 @@ tr.row-suspended td { opacity: .65; }
                 <i class="ri ri-group-line" style="color:#00cfe8;"></i>
             </div>
             <div>
-                <div class="stat-label">Total Users</div>
+                <div class="stat-label">{{ __('app.total_users') }}</div>
                 <div class="stat-value">{{ $stats['total'] }}</div>
             </div>
         </div>
@@ -133,7 +133,7 @@ tr.row-suspended td { opacity: .65; }
                 <i class="ri ri-user-follow-line" style="color:#28c76f;"></i>
             </div>
             <div>
-                <div class="stat-label">Active</div>
+                <div class="stat-label">{{ __('app.active') }}</div>
                 <div class="stat-value">{{ $stats['active'] }}</div>
             </div>
         </div>
@@ -144,7 +144,7 @@ tr.row-suspended td { opacity: .65; }
                 <i class="ri ri-user-forbid-line" style="color:#ea5455;"></i>
             </div>
             <div>
-                <div class="stat-label">Suspended</div>
+                <div class="stat-label">{{ __('app.suspended') }}</div>
                 <div class="stat-value">{{ $stats['suspended'] }}</div>
             </div>
         </div>
@@ -155,7 +155,7 @@ tr.row-suspended td { opacity: .65; }
                 <i class="ri ri-building-2-line" style="color:#28c76f;"></i>
             </div>
             <div>
-                <div class="stat-label">With Businesses</div>
+                <div class="stat-label">{{ __('app.with_businesses') }}</div>
                 <div class="stat-value">{{ $stats['with_biz'] }}</div>
             </div>
         </div>
@@ -165,20 +165,20 @@ tr.row-suspended td { opacity: .65; }
 {{-- Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-group-line me-2" style="color:#696cff;"></i>All Users</h6>
+        <h6><i class="ri ri-group-line me-2" style="color:#696cff;"></i>{{ __('app.all_users') }}</h6>
         <form method="GET" action="{{ route('allindex.index') }}" class="d-flex align-items-center gap-2 flex-wrap">
             <div class="search-box">
                 <i class="ri ri-search-line"></i>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users...">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('app.search_users') }}">
             </div>
             <select name="status" class="form-select form-select-sm" style="width:130px;border-radius:10px;">
-                <option value="">All Status</option>
-                <option value="active"    {{ request('status') === 'active'    ? 'selected' : '' }}>Active</option>
-                <option value="suspended" {{ request('status') === 'suspended' ? 'selected' : '' }}>Suspended</option>
+                <option value="">{{ __('app.all_status') }}</option>
+                <option value="active"    {{ request('status') === 'active'    ? 'selected' : '' }}>{{ __('app.active') }}</option>
+                <option value="suspended" {{ request('status') === 'suspended' ? 'selected' : '' }}>{{ __('app.suspended') }}</option>
             </select>
-            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+            <button type="submit" class="btn btn-primary btn-sm">{{ __('app.search') }}</button>
             @if(request('search') || request('status'))
-                <a href="{{ route('allindex.index') }}" class="btn btn-outline-secondary btn-sm">Clear</a>
+                <a href="{{ route('allindex.index') }}" class="btn btn-outline-secondary btn-sm">{{ __('app.clear') }}</a>
             @endif
         </form>
     </div>
@@ -187,12 +187,12 @@ tr.row-suspended td { opacity: .65; }
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>User</th>
-                    <th>Phone</th>
-                    <th>Businesses</th>
-                    <th>Status</th>
-                    <th>Joined</th>
-                    <th>Action</th>
+                    <th>{{ __('app.user') }}</th>
+                    <th>{{ __('app.phone') }}</th>
+                    <th>{{ __('app.businesses') }}</th>
+                    <th>{{ __('app.status') }}</th>
+                    <th>{{ __('app.joined') }}</th>
+                    <th>{{ __('app.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -223,20 +223,20 @@ tr.row-suspended td { opacity: .65; }
                         @php $bizCount = $user->businesses->count(); @endphp
                         @if($bizCount > 0)
                             <span class="badge-pill badge-success">
-                                <i class="ri ri-building-2-line"></i> {{ $bizCount }} business{{ $bizCount > 1 ? 'es' : '' }}
+                                <i class="ri ri-building-2-line"></i> {{ $bizCount }} {{ $bizCount > 1 ? __('app.businesses') : __('app.business') }}
                             </span>
                         @else
-                            <span class="badge-pill badge-gray">None</span>
+                            <span class="badge-pill badge-gray">{{ __('app.no_data') }}</span>
                         @endif
                     </td>
                     <td>
                         @if($user->is_active)
                             <span class="badge-pill badge-success">
-                                <i class="ri ri-checkbox-circle-line"></i> Active
+                                <i class="ri ri-checkbox-circle-line"></i> {{ __('app.active') }}
                             </span>
                         @else
                             <span class="badge-pill badge-danger">
-                                <i class="ri ri-forbid-2-line"></i> Suspended
+                                <i class="ri ri-forbid-2-line"></i> {{ __('app.suspended') }}
                             </span>
                         @endif
                     </td>
@@ -245,15 +245,15 @@ tr.row-suspended td { opacity: .65; }
                     </td>
                     <td>
                         <form method="POST" action="{{ route('users.toggle-status', $user->id) }}"
-                              onsubmit="return confirm('{{ $user->is_active ? 'Suspend this user? Their businesses and services will be suspended too.' : 'Activate this user?' }}')">
+                              onsubmit="return confirm('{{ $user->is_active ? __('app.suspend_confirm') : __('app.activate_confirm') }}')">
                             @csrf
                             @if($user->is_active)
                                 <button type="submit" class="btn-toggle-suspend btn-suspend">
-                                    <i class="ri ri-forbid-2-line"></i> Suspend
+                                    <i class="ri ri-forbid-2-line"></i> {{ __('app.suspend') }}
                                 </button>
                             @else
                                 <button type="submit" class="btn-toggle-suspend btn-activate">
-                                    <i class="ri ri-checkbox-circle-line"></i> Activate
+                                    <i class="ri ri-checkbox-circle-line"></i> {{ __('app.activate') }}
                                 </button>
                             @endif
                         </form>
@@ -264,7 +264,7 @@ tr.row-suspended td { opacity: .65; }
                     <td colspan="7">
                         <div class="empty-state">
                             <i class="ri ri-group-line"></i>
-                            <p>No users found.</p>
+                            <p>{{ __('app.no_users_found') }}</p>
                         </div>
                     </td>
                 </tr>

@@ -317,6 +317,40 @@ return [
     'reviews_desc_admin'   => 'All service reviews submitted by users',
     'reviews_empty_desc'   => 'Reviews will appear here once users submit them.',
 
+    // ── Create Admin page ─────────────────────────────────────────────────────
+    'back_to_admins'           => 'Back to Admins',
+    'create_new_admin'         => 'Create New Admin',
+    'create_admin_subtitle'    => 'Add a new admin and assign permissions',
+    'email_address'            => 'Email Address',
+    'create_admin'             => 'Create Admin',
+    'optional_on_top_role'     => 'optional, added on top of the role',
+    'no_perms_in_role'         => 'No permissions assigned yet',
+    'select_all_permissions'   => 'Select All Permissions',
+    'no_permissions_available' => 'No permissions available. Create permissions first.',
+
+    // ── Users page ────────────────────────────────────────────────────────────
+    'users_desc'               => 'View and manage all registered users',
+    'total_users'              => 'Total Users',
+    'with_businesses'          => 'With Businesses',
+    'suspended'                => 'Suspended',
+    'all_status'               => 'All Status',
+    'search_users'             => 'Search users...',
+    'no_users_found'           => 'No users found.',
+    'suspend'                  => 'Suspend',
+    'activate'                 => 'Activate',
+    'suspend_confirm'          => 'Suspend this user? Their businesses and services will be suspended too.',
+    'activate_confirm'         => 'Activate this user?',
+
+    // ── Business Accounts page ────────────────────────────────────────────────
+    'type'                       => 'Type',
+    'no_business_accounts_found' => 'No business accounts found.',
+    'view_details'               => 'View Details',
+    'business_en'                => 'Business (EN)',
+    'business_ar'                => 'Business (AR)',
+    'search_name_license_owner'  => 'Search name, license, owner...',
+    'image'                      => 'Image',
+    'business_details'           => 'Business Details',
+
     // ── Admins management ─────────────────────────────────────────────────────
     'admins_management'    => 'Admins Management',
     'manage_admins_desc'   => 'Manage your system administrators and their permissions',

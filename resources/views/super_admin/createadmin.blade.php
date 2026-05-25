@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Create Admin')
+@section('title', __('app.create_new_admin'))
 
 @section('page-style')
 <style>
@@ -153,7 +153,7 @@
 <div class="mb-3">
     <a href="{{ route('adminsindex') }}" class="text-muted small d-inline-flex align-items-center gap-1"
        style="text-decoration:none;">
-        <i class="ri ri-arrow-left-line"></i> Back to Admins
+        <i class="ri ri-arrow-left-line"></i> {{ __('app.back_to_admins') }}
     </a>
 </div>
 
@@ -169,8 +169,8 @@
                         <i class="ri ri-user-add-line" style="font-size:22px;color:#fff;"></i>
                     </div>
                     <div>
-                        <h5 class="mb-0 fw-bold text-white">Create New Admin</h5>
-                        <small style="color:rgba(255,255,255,.75);">Add a new admin and assign permissions</small>
+                        <h5 class="mb-0 fw-bold text-white">{{ __('app.create_new_admin') }}</h5>
+                        <small style="color:rgba(255,255,255,.75);">{{ __('app.create_admin_subtitle') }}</small>
                     </div>
                 </div>
             </div>
@@ -181,41 +181,41 @@
                     @csrf
 
                     {{-- Basic Info --}}
-                    <div class="form-section-title">Basic Information</div>
+                    <div class="form-section-title">{{ __('app.basic_information') }}</div>
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold small">Full Name</label>
+                            <label class="form-label fw-semibold small">{{ __('app.full_name') }}</label>
                             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
                                    value="{{ old('name') }}" placeholder="e.g. John Doe" required>
                             @error('name') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold small">Email Address</label>
+                            <label class="form-label fw-semibold small">{{ __('app.email_address') }}</label>
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                    value="{{ old('email') }}" placeholder="e.g. admin@example.com" required>
                             @error('email') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold small">Password</label>
+                            <label class="form-label fw-semibold small">{{ __('app.password') }}</label>
                             <input type="password" name="password"
                                    class="form-control @error('password') is-invalid @enderror"
-                                   placeholder="Min 8 characters" required>
+                                   placeholder="{{ __('app.min_8_characters') }}" required>
                             @error('password') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold small">Confirm Password</label>
+                            <label class="form-label fw-semibold small">{{ __('app.confirm_password') }}</label>
                             <input type="password" name="password_confirmation"
-                                   class="form-control" placeholder="Repeat password" required>
+                                   class="form-control" placeholder="{{ __('app.confirm_password_ph') }}" required>
                         </div>
                     </div>
 
                     {{-- Roles (multi-select) --}}
                     <div class="form-section-title">
-                        Assign Roles
-                        <span style="font-size:11px;font-weight:400;color:#8592a3;text-transform:none;letter-spacing:0;">— يمكن اختيار أكثر من رول</span>
+                        {{ __('app.assign_roles') }}
+                        <span style="font-size:11px;font-weight:400;color:#8592a3;text-transform:none;letter-spacing:0;">— {{ __('app.can_choose_multiple_roles') }}</span>
                     </div>
 
                     @php $rolePermissionsMap = $roles->mapWithKeys(fn($r) => [$r->name => $r->permissions->pluck('name')]); @endphp
@@ -234,7 +234,7 @@
                                     @forelse($role->permissions as $rp)
                                         <span class="role-perm-tag">{{ $rp->name }}</span>
                                     @empty
-                                        <span style="font-size:11px;color:#8592a3;font-style:italic;">No permissions assigned yet</span>
+                                        <span style="font-size:11px;color:#8592a3;font-style:italic;">{{ __('app.no_perms_in_role') }}</span>
                                     @endforelse
                                 </div>
                             </div>
@@ -246,9 +246,9 @@
 
                     {{-- Permissions --}}
                     <div class="form-section-title" style="margin-top:24px;">
-                        Extra Permissions
+                        {{ __('app.extra_permissions') }}
                         <span style="font-size:11px;font-weight:400;color:#8592a3;text-transform:none;letter-spacing:0;">
-                            — optional, added on top of the role
+                            — {{ __('app.optional_on_top_role') }}
                         </span>
                     </div>
 
@@ -256,7 +256,7 @@
                     @if($permissions->count())
                     <label class="select-all-box">
                         <input class="form-check-input" type="checkbox" id="selectAllCreate">
-                        <span class="fw-bold" style="font-size:13px;">Select All Permissions</span>
+                        <span class="fw-bold" style="font-size:13px;">{{ __('app.select_all_permissions') }}</span>
                         <span class="ms-auto badge" style="background:#eef0ff;color:#696cff;border-radius:999px;">
                             {{ $permissions->count() }}
                         </span>
@@ -278,7 +278,7 @@
                     @else
                     <div class="text-center py-4">
                         <i class="ri ri-shield-line" style="font-size:36px;color:#c8ccda;"></i>
-                        <p class="text-muted small mb-0 mt-2">No permissions available. Create permissions first.</p>
+                        <p class="text-muted small mb-0 mt-2">{{ __('app.no_permissions_available') }}</p>
                     </div>
                     @endif
                     </div>
@@ -287,9 +287,9 @@
 
                     {{-- Actions --}}
                     <div class="d-flex justify-content-end gap-3 mt-5 pt-3" style="border-top:1px solid #f1f3f9;">
-                        <a href="{{ route('adminsindex') }}" class="btn btn-cancel">Cancel</a>
+                        <a href="{{ route('adminsindex') }}" class="btn btn-cancel">{{ __('app.cancel') }}</a>
                         <button type="submit" class="btn btn-submit text-white">
-                            <i class="ri ri-user-add-line me-2"></i>Create Admin
+                            <i class="ri ri-user-add-line me-2"></i>{{ __('app.create_admin') }}
                         </button>
                     </div>
 

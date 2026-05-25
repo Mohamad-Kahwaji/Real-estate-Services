@@ -1,7 +1,7 @@
 @extends('layouts/contentNavbarLayout')
 {{-- Business accounts page: lists all business registrations filterable by status, with approve/reject actions and a detail modal per business. --}}
 
-@section('title', 'Business Accounts')
+@section('title', __('app.business_accounts'))
 
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -51,15 +51,15 @@
 <div class="biz-card">
   <div class="biz-hdr">
     <span class="biz-title">
-      <i class="ri ri-building-2-line me-2" style="color:#ff9f43;"></i>Business Accounts
+      <i class="ri ri-building-2-line me-2" style="color:#ff9f43;"></i>{{ __('app.business_accounts') }}
     </span>
 
     <div class="d-flex gap-2 flex-wrap">
       @php $curStatus = request('status', 'pending'); @endphp
-      @foreach(['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', 'all' => 'All'] as $val => $label)
+      @foreach(['pending', 'approved', 'rejected', 'all'] as $val)
         <a href="{{ route('business.index', array_merge(request()->except('status','page'), ['status' => $val])) }}"
            class="filter-btn {{ $curStatus === $val ? 'active' : '' }}">
-          {{ $label }} ({{ $statusCounts[$val] }})
+          {{ __('app.' . $val) }} ({{ $statusCounts[$val] }})
         </a>
       @endforeach
     </div>
@@ -71,11 +71,11 @@
     <div style="position:relative;flex:1;min-width:200px;max-width:320px;">
       <i class="ri ri-search-line" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#8592a3;font-size:16px;"></i>
       <input type="text" name="search" value="{{ request('search') }}"
-             placeholder="Search name, license, owner..."
+             placeholder="{{ __('app.search_name_license_owner') }}"
              style="width:100%;border-radius:10px;border:1.5px solid #e4e4eb;padding:8px 14px 8px 36px;font-size:13px;background:#fafbff;">
     </div>
     <select name="city_id" style="border-radius:10px;border:1.5px solid #e4e4eb;padding:8px 14px;font-size:13px;background:#fafbff;min-width:150px;">
-      <option value="">All Cities</option>
+      <option value="">{{ __('app.all_cities') }}</option>
       @foreach($cities as $city)
         <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
           {{ $city->name_ar ?? $city->name_en }}
@@ -83,12 +83,12 @@
       @endforeach
     </select>
     <button type="submit" style="padding:8px 18px;border-radius:10px;background:#696cff;color:#fff;border:none;font-size:13px;font-weight:700;">
-      <i class="ri ri-filter-line me-1"></i>Filter
+      <i class="ri ri-filter-line me-1"></i>{{ __('app.filter') }}
     </button>
     @if(request('search') || request('city_id'))
       <a href="{{ route('business.index', ['status' => $curStatus]) }}"
          style="padding:8px 14px;border-radius:10px;background:#f1f0f4;color:#585164;font-size:13px;font-weight:700;text-decoration:none;">
-        <i class="ri ri-close-line me-1"></i>Clear
+        <i class="ri ri-close-line me-1"></i>{{ __('app.clear') }}
       </a>
     @endif
   </form>
@@ -98,14 +98,14 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>Owner</th>
-          <th>Business Name</th>
-          <th>Type</th>
-          <th>City</th>
-          <th>License</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th class="text-center">Actions</th>
+          <th>{{ __('app.owner') }}</th>
+          <th>{{ __('app.business_name') }}</th>
+          <th>{{ __('app.type') }}</th>
+          <th>{{ __('app.city') }}</th>
+          <th>{{ __('app.license_number') }}</th>
+          <th>{{ __('app.status') }}</th>
+          <th>{{ __('app.date') }}</th>
+          <th class="text-center">{{ __('app.actions') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -123,7 +123,7 @@
           <td style="color:#585164;">{{ $biz->activeType?->name ?? '-' }}</td>
           <td style="color:#585164;">{{ app()->getLocale() === 'ar' ? ($biz->city?->name_ar ?? $biz->city?->name_en ?? '-') : ($biz->city?->name_en ?? $biz->city?->name_ar ?? '-') }}</td>
           <td style="font-family:monospace;color:#585164;">{{ $biz->license_number ?? '-' }}</td>
-          <td><span class="sp sp-{{ $biz->status ?? 'pending' }}">{{ ucfirst($biz->status ?? 'pending') }}</span></td>
+          <td><span class="sp sp-{{ $biz->status ?? 'pending' }}">{{ __('app.' . ($biz->status ?? 'pending')) }}</span></td>
           <td style="color:#b0aab8;font-size:12px;">{{ $biz->created_at?->format('M d, Y') }}</td>
           <td class="text-center">
             <div class="dropdown">
@@ -138,7 +138,7 @@
                         style="border-radius:10px;font-weight:600;padding:9px 14px;"
                         data-bs-toggle="modal"
                         data-bs-target="#bizModal{{ $biz->id }}">
-                  <i class="ri ri-eye-line me-1" style="color:#696cff;"></i>View Details
+                  <i class="ri ri-eye-line me-1" style="color:#696cff;"></i>{{ __('app.view_details') }}
                 </button>
 
                 @if($biz->status !== 'approved')
@@ -146,7 +146,7 @@
                   @csrf
                   <button class="dropdown-item text-success" type="submit"
                           style="border-radius:10px;font-weight:600;padding:9px 14px;">
-                    <i class="ri ri-check-line me-1"></i>Approve
+                    <i class="ri ri-check-line me-1"></i>{{ __('app.approve') }}
                   </button>
                 </form>
                 @endif
@@ -156,7 +156,7 @@
                   @csrf
                   <button class="dropdown-item text-danger" type="submit"
                           style="border-radius:10px;font-weight:600;padding:9px 14px;">
-                    <i class="ri ri-close-line me-1"></i>Reject
+                    <i class="ri ri-close-line me-1"></i>{{ __('app.reject') }}
                   </button>
                 </form>
                 @endif
@@ -168,7 +168,7 @@
         <tr>
           <td colspan="9" style="text-align:center;padding:50px;color:#b0aab8;">
             <i class="ri ri-building-2-line" style="font-size:36px;display:block;margin-bottom:10px;opacity:.35;"></i>
-            No business accounts found.
+            {{ __('app.no_business_accounts_found') }}
           </td>
         </tr>
         @endforelse
@@ -192,47 +192,47 @@
       <div class="modal-header" style="border-bottom:1px solid #f0eef4;padding:20px 26px;">
         <h5 class="modal-title" style="font-weight:800;color:#312d4b;">
           <i class="ri ri-building-2-line me-2" style="color:#ff9f43;"></i>
-          {{ $biz->job_name_en ?? 'Business Details' }}
+          {{ (app()->getLocale() === 'ar' ? ($biz->job_name_ar ?: $biz->job_name_en) : ($biz->job_name_en ?: $biz->job_name_ar)) ?: __('app.business_details') }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" style="padding:26px;">
         <div class="row g-4">
           <div class="col-md-6">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Owner</div>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">{{ __('app.owner') }}</div>
             <div style="font-weight:700;color:#312d4b;">{{ $biz->user?->name ?? '-' }}</div>
           </div>
           <div class="col-md-6">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Business (EN)</div>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">{{ __('app.business_en') }}</div>
             <div style="font-weight:700;color:#312d4b;">{{ $biz->job_name_en ?? '-' }}</div>
           </div>
           <div class="col-md-6">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Business (AR)</div>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">{{ __('app.business_ar') }}</div>
             <div style="font-weight:700;color:#312d4b;">{{ $biz->job_name_ar ?? '-' }}</div>
           </div>
           <div class="col-md-6">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">License Number</div>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">{{ __('app.license_number') }}</div>
             <div style="font-weight:700;color:#312d4b;font-family:monospace;">{{ $biz->license_number ?? '-' }}</div>
           </div>
           <div class="col-md-6">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">City</div>
-            <div style="font-weight:700;color:#312d4b;">{{ $biz->city?->name_en ?? '-' }}</div>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">{{ __('app.city') }}</div>
+            <div style="font-weight:700;color:#312d4b;">{{ app()->getLocale() === 'ar' ? ($biz->city?->name_ar ?? $biz->city?->name_en ?? '-') : ($biz->city?->name_en ?? $biz->city?->name_ar ?? '-') }}</div>
           </div>
           <div class="col-md-6">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Status</div>
-            <span class="sp sp-{{ $biz->status ?? 'pending' }}">{{ ucfirst($biz->status ?? 'pending') }}</span>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">{{ __('app.status') }}</div>
+            <span class="sp sp-{{ $biz->status ?? 'pending' }}">{{ __('app.' . ($biz->status ?? 'pending')) }}</span>
           </div>
           <div class="col-12">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Activities</div>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">{{ __('app.activities') }}</div>
             <div style="color:#585164;line-height:1.6;">{{ $biz->activites ?? '-' }}</div>
           </div>
           <div class="col-12">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Details</div>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">{{ __('app.details') }}</div>
             <div style="color:#585164;line-height:1.6;">{{ $biz->details ?? '-' }}</div>
           </div>
           @if($biz->image)
           <div class="col-12">
-            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Image</div>
+            <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">{{ __('app.image') }}</div>
             <img src="{{ asset('storage/'.$biz->image) }}" alt="Business"
                  style="max-width:100%;border-radius:14px;max-height:250px;object-fit:cover;">
           </div>
@@ -240,7 +240,7 @@
           @if($biz->latitude && $biz->longitude)
           <div class="col-12">
             <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">
-              <i class="ri ri-map-pin-2-line me-1" style="color:#696cff;"></i>Location
+              <i class="ri ri-map-pin-2-line me-1" style="color:#696cff;"></i>{{ __('app.location') }}
               <span style="font-weight:500;color:#b0aab8;font-size:10px;margin-left:6px;">{{ $biz->latitude }}, {{ $biz->longitude }}</span>
             </div>
             <div id="biz-map-{{ $biz->id }}" style="height:260px;border-radius:14px;overflow:hidden;border:1px solid #f0eef4;"></div>
@@ -250,12 +250,12 @@
       </div>
       <div class="modal-footer" style="border-top:1px solid #f0eef4;padding:18px 26px;gap:10px;">
         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal"
-                style="border-radius:12px;font-weight:700;">Close</button>
+                style="border-radius:12px;font-weight:700;">{{ __('app.close') }}</button>
         @if($biz->status !== 'approved')
         <form action="{{ route('approve', $biz->id) }}" method="POST">
           @csrf
           <button type="submit" class="btn btn-success" style="border-radius:12px;font-weight:700;">
-            <i class="ri ri-check-line me-1"></i>Approve
+            <i class="ri ri-check-line me-1"></i>{{ __('app.approve') }}
           </button>
         </form>
         @endif
@@ -263,7 +263,7 @@
         <form action="{{ route('reject', $biz->id) }}" method="POST">
           @csrf
           <button type="submit" class="btn btn-danger" style="border-radius:12px;font-weight:700;">
-            <i class="ri ri-close-line me-1"></i>Reject
+            <i class="ri ri-close-line me-1"></i>{{ __('app.reject') }}
           </button>
         </form>
         @endif
