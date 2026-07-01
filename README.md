@@ -19,26 +19,26 @@ A full-stack real estate services platform built with Laravel 12, connecting pro
 
 ## 👥 Role System
 
-| Role | Description |
-|------|-------------|
-| **Super Admin** | Full platform control — manages admins, settings, and all data |
-| **Admin** | Manages users, listings, and service requests |
-| **User** | Browses listings, chats, submits service requests, and processes payments |
+| Role            | Description                                                               |
+| --------------- | ------------------------------------------------------------------------- |
+| **Super Admin** | Full platform control — manages admins, settings, and all data            |
+| **Admin**       | Manages users, listings, and service requests                             |
+| **User**        | Browses listings, chats, submits service requests, and processes payments |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Backend | Laravel 12, PHP 8.2 |
-| Authentication | Laravel Sanctum |
-| Real-Time | Pusher, Laravel Broadcasting |
-| Push Notifications | Firebase FCM |
-| Payments | Stripe, PayPal, Bank Transfer |
-| Frontend (Admin) | Blade, Bootstrap 5 |
-| Database | MySQL |
-| OTP | UltraMsg (WhatsApp) |
+| Layer              | Technology                    |
+| ------------------ | ----------------------------- |
+| Backend            | Laravel 12, PHP 8.2           |
+| Authentication     | Laravel Sanctum               |
+| Real-Time          | Pusher, Laravel Broadcasting  |
+| Push Notifications | Firebase FCM                  |
+| Payments           | Stripe, PayPal, Bank Transfer |
+| Frontend (Admin)   | Blade, Bootstrap 5            |
+| Database           | MySQL                         |
+| OTP                | UltraMsg (WhatsApp)           |
 
 ---
 
