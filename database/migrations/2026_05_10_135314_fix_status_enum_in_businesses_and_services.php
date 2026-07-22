@@ -1,25 +1,37 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("UPDATE `businesses` SET `status` = 'rejected' WHERE `status` = 'rejection'");
-        DB::statement("ALTER TABLE `businesses` MODIFY `status` ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending'");
+        DB::table('businesses')->where('status', 'rejection')->update(['status' => 'rejected']);
+        DB::table('services')->where('status', 'rejection')->update(['status' => 'rejected']);
 
-        DB::statement("UPDATE `services` SET `status` = 'rejected' WHERE `status` = 'rejection'");
-        DB::statement("ALTER TABLE `services` MODIFY `status` ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending'");
+        Schema::table('businesses', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->change();
+        });
+
+        Schema::table('services', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->change();
+        });
     }
 
     public function down(): void
     {
-        DB::statement("UPDATE `businesses` SET `status` = 'rejection' WHERE `status` = 'rejected'");
-        DB::statement("ALTER TABLE `businesses` MODIFY `status` ENUM('pending','approved','rejection') NOT NULL DEFAULT 'pending'");
+        DB::table('businesses')->where('status', 'rejected')->update(['status' => 'rejection']);
+        DB::table('services')->where('status', 'rejected')->update(['status' => 'rejection']);
 
-        DB::statement("UPDATE `services` SET `status` = 'rejection' WHERE `status` = 'rejected'");
-        DB::statement("ALTER TABLE `services` MODIFY `status` ENUM('pending','approved','rejection') NOT NULL DEFAULT 'pending'");
+        Schema::table('businesses', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'rejection'])->default('pending')->change();
+        });
+
+        Schema::table('services', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'rejection'])->default('pending')->change();
+        });
     }
 };

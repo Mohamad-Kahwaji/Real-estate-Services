@@ -13,8 +13,13 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
         });
 
-        DB::statement("ALTER TABLE `businesses` MODIFY `status` ENUM('pending','approved','rejected','suspended') NOT NULL DEFAULT 'pending'");
-        DB::statement("ALTER TABLE `services`   MODIFY `status` ENUM('pending','approved','rejected','suspended') NOT NULL DEFAULT 'pending'");
+        Schema::table('businesses', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'rejected', 'suspended'])->default('pending')->change();
+        });
+
+        Schema::table('services', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'rejected', 'suspended'])->default('pending')->change();
+        });
     }
 
     public function down(): void
@@ -23,10 +28,15 @@ return new class extends Migration
             $table->dropColumn('is_active');
         });
 
-        DB::statement("UPDATE `businesses` SET `status` = 'rejected' WHERE `status` = 'suspended'");
-        DB::statement("ALTER TABLE `businesses` MODIFY `status` ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending'");
+        DB::table('businesses')->where('status', 'suspended')->update(['status' => 'rejected']);
+        DB::table('services')->where('status', 'suspended')->update(['status' => 'rejected']);
 
-        DB::statement("UPDATE `services` SET `status` = 'rejected' WHERE `status` = 'suspended'");
-        DB::statement("ALTER TABLE `services`   MODIFY `status` ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending'");
+        Schema::table('businesses', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->change();
+        });
+
+        Schema::table('services', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->change();
+        });
     }
 };
