@@ -6,8 +6,8 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff;
-    --accent-soft: #eef0ff;
+    --accent: var(--role-accent);
+    --accent-soft: var(--role-accent-soft);
     --success: #28c76f;
     --success-soft: #e8f8ef;
     --danger: #ea5455;
@@ -150,7 +150,7 @@
 }
 
 /* Avatar colors */
-.av-0 { background: linear-gradient(135deg,#696cff,#8f91ff); }
+.av-0 { background: linear-gradient(135deg,var(--role-accent),#8f91ff); }
 .av-1 { background: linear-gradient(135deg,#03c3ec,#00a0cc); }
 .av-2 { background: linear-gradient(135deg,#28c76f,#1fa958); }
 .av-3 { background: linear-gradient(135deg,#ff9f43,#e08a2e); }
@@ -173,7 +173,7 @@
 /* ── Role chip on admin cards ── */
 .admin-role-chip {
     display:inline-flex; align-items:center; gap:4px;
-    background:#eef0ff; color:var(--accent);
+    background:var(--role-accent-soft); color:var(--accent);
     padding:4px 11px; border-radius:999px;
     font-size:11px; font-weight:700; white-space:nowrap;
 }
@@ -240,8 +240,8 @@
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-4">
         <div class="stat-card">
-            <div class="stat-icon" style="background:#eef0ff;">
-                <i class="ri ri-group-line" style="color:#696cff;"></i>
+            <div class="stat-icon" style="background:var(--role-accent-soft);">
+                <i class="ri ri-group-line" style="color:var(--role-accent);"></i>
             </div>
             <div>
                 <div class="stat-label">{{ __('app.total_admins') }}</div>

@@ -23,7 +23,7 @@ class Service extends Model
     public function order(){
         return $this->hasMany(Order::class);
     }
-    public function review(){
+    public function reviews(){
         return $this->hasMany(Review::class);
     }
     public function user(){

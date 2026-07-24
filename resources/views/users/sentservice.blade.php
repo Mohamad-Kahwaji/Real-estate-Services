@@ -13,13 +13,13 @@
   .req-card {
     background: #fff;
     border-radius: 20px;
-    box-shadow: 0 4px 22px rgba(105,108,255,.1);
+    box-shadow: 0 4px 22px rgba(var(--role-accent-rgb),.1);
     overflow: hidden;
     transition: transform .2s, box-shadow .2s;
     height: 100%;
     display: flex; flex-direction: column;
   }
-  .req-card:hover { transform: translateY(-4px); box-shadow: 0 12px 34px rgba(105,108,255,.18); }
+  .req-card:hover { transform: translateY(-4px); box-shadow: 0 12px 34px rgba(var(--role-accent-rgb),.18); }
 
   .req-img { height: 180px; object-fit: cover; width: 100%; display: block; }
 
@@ -53,13 +53,13 @@
   .pay-now-btn {
     display: flex; align-items: center; justify-content: center; gap: 7px;
     width: 100%; padding: 10px; border-radius: 12px;
-    background: linear-gradient(135deg, #696cff, #9c6bff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     color: #fff; font-size: 13px; font-weight: 700;
     text-decoration: none; border: none; cursor: pointer;
-    transition: .2s; box-shadow: 0 4px 14px rgba(105,108,255,.3);
+    transition: .2s; box-shadow: 0 4px 14px rgba(var(--role-accent-rgb),.3);
     margin-top: auto;
   }
-  .pay-now-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(105,108,255,.4); color: #fff; text-decoration: none; }
+  .pay-now-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(var(--role-accent-rgb),.4); color: #fff; text-decoration: none; }
 
   /* Empty state */
   .empty-state { text-align: center; padding: 60px 20px; }
@@ -139,7 +139,7 @@
           </div>
           <div class="req-row">
             <span class="lbl">{{ __('app.total_usd') }}</span>
-            <span class="val" style="color:#696cff;">${{ number_format(($req->service->price_usd ?? 0) * $qty, 2) }}</span>
+            <span class="val" style="color:var(--role-accent);">${{ number_format(($req->service->price_usd ?? 0) * $qty, 2) }}</span>
           </div>
           <div class="req-row">
             <span class="lbl">{{ __('app.total_syp') }}</span>
@@ -155,7 +155,7 @@
             <span class="val" style="text-transform:capitalize;">
               {{ str_replace('_', ' ', $req->payment->payment_method) }}
               @if($req->payment->currency)
-                <span style="font-size:10px;background:#f0f0ff;color:#696cff;border-radius:4px;padding:1px 6px;margin-left:4px;">{{ $req->payment->currency }}</span>
+                <span style="font-size:10px;background:#f0f0ff;color:var(--role-accent);border-radius:4px;padding:1px 6px;margin-left:4px;">{{ $req->payment->currency }}</span>
               @endif
             </span>
           </div>

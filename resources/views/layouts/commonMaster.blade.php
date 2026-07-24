@@ -1,4 +1,15 @@
-@php $isRtl = app()->getLocale() === 'ar'; @endphp
+@php
+    $isRtl = app()->getLocale() === 'ar';
+
+    $roleTheme = 'guest';
+    if (auth('superadmins')->check()) {
+        $roleTheme = 'superadmin';
+    } elseif (auth('admins')->check()) {
+        $roleTheme = 'admin';
+    } elseif (auth('users')->check()) {
+        $roleTheme = 'user';
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}"
       class="layout-menu-fixed layout-compact"
@@ -8,6 +19,7 @@
       data-base-url="{{ url('/') }}"
       data-framework="laravel"
       data-bs-theme="light"
+      data-role-theme="{{ $roleTheme }}"
       data-template="vertical-menu-template">
 
 <head>

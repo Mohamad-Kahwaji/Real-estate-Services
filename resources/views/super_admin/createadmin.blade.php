@@ -5,8 +5,8 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff;
-    --accent-soft: #eef0ff;
+    --accent: var(--role-accent);
+    --accent-soft: var(--role-accent-soft);
     --card-radius: 20px;
     --shadow: 0 8px 28px rgba(18,38,63,.08);
 }
@@ -22,7 +22,7 @@
 .page-card-header {
     padding: 28px 32px;
     border-bottom: 1px solid #f1f3f9;
-    background: linear-gradient(135deg, #696cff 0%, #9c9eff 100%);
+    background: linear-gradient(135deg, var(--role-accent) 0%, var(--role-accent-light) 100%);
     color: #fff;
 }
 
@@ -48,7 +48,7 @@
 }
 .form-control:focus, .form-select:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(105,108,255,.12);
+    box-shadow: 0 0 0 3px rgba(var(--role-accent-rgb),.12);
 }
 
 .perm-grid {
@@ -96,12 +96,12 @@
     padding: 13px 36px;
     font-weight: 700;
     font-size: 15px;
-    background: linear-gradient(135deg, #696cff, #8f91ff);
+    background: linear-gradient(135deg, var(--role-accent), #8f91ff);
     border: none;
-    box-shadow: 0 8px 20px rgba(105,108,255,.3);
+    box-shadow: 0 8px 20px rgba(var(--role-accent-rgb),.3);
     transition: .25s ease;
 }
-.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(105,108,255,.4); }
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(var(--role-accent-rgb),.4); }
 
 .btn-cancel {
     border-radius: 14px;
@@ -124,8 +124,8 @@
     transition:border-color .2s, background .2s, box-shadow .2s; margin-bottom:8px;
 }
 .role-card:last-child { margin-bottom:0; }
-.role-card:hover { border-color:#9c9eff; background:#fafaff; box-shadow:0 3px 12px rgba(105,108,255,.08); }
-.role-card:has(input:checked) { border-color:var(--accent); background:var(--accent-soft); box-shadow:0 0 0 4px rgba(105,108,255,.12); }
+.role-card:hover { border-color:var(--role-accent-light); background:#fafaff; box-shadow:0 3px 12px rgba(var(--role-accent-rgb),.08); }
+.role-card:has(input:checked) { border-color:var(--accent); background:var(--accent-soft); box-shadow:0 0 0 4px rgba(var(--role-accent-rgb),.12); }
 .role-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
 .role-card-icon {
     width:42px; height:42px; background:#f4f5fa; border-radius:12px;
@@ -257,7 +257,7 @@
                     <label class="select-all-box">
                         <input class="form-check-input" type="checkbox" id="selectAllCreate">
                         <span class="fw-bold" style="font-size:13px;">{{ __('app.select_all_permissions') }}</span>
-                        <span class="ms-auto badge" style="background:#eef0ff;color:#696cff;border-radius:999px;">
+                        <span class="ms-auto badge" style="background:var(--role-accent-soft);color:var(--role-accent);border-radius:999px;">
                             {{ $permissions->count() }}
                         </span>
                     </label>

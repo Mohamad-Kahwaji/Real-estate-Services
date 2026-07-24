@@ -7,12 +7,12 @@
 
 @section('content')
 <style>
-html,body{height:100%;margin:0;padding:0;}
+html,body{height:100%;margin:0;padding:0;overflow-x:hidden;}
 .auth-wrap{min-height:100vh;display:flex;font-family:'Inter',system-ui,sans-serif;}
 
 .auth-brand{
     flex:0 0 42%;
-    background:linear-gradient(145deg,#5f61e6 0%,#696cff 45%,#9c9eff 100%);
+    background:linear-gradient(145deg,var(--role-accent-light) 0%,var(--role-accent) 45%,var(--role-accent-light) 100%);
     display:flex;flex-direction:column;justify-content:center;align-items:center;
     padding:60px 52px;color:#fff;position:relative;overflow:hidden;
 }
@@ -32,17 +32,17 @@ html,body{height:100%;margin:0;padding:0;}
 .step-done{opacity:.5;}
 
 .auth-form-panel{flex:1;display:flex;align-items:center;justify-content:center;background:#f8f9fc;padding:40px 24px;}
-.auth-form-box{background:#fff;border-radius:24px;padding:48px 44px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(105,108,255,.1);}
+.auth-form-box{background:#fff;border-radius:24px;padding:48px 44px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(var(--role-accent-rgb),.1);}
 .auth-form-box .logo-wrap{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
-.auth-form-box .logo-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#696cff,#9c9eff);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.auth-form-box .logo-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));display:flex;align-items:center;justify-content:center;font-size:20px;}
 .auth-form-box .logo-name{font-size:18px;font-weight:800;color:#312d4b;}
 .auth-form-box h2{font-size:22px;font-weight:800;color:#312d4b;margin:0 0 6px;}
 .auth-form-box .sub{font-size:14px;color:#97939e;margin:0 0 24px;line-height:1.6;}
 
 .phone-chip{
     display:inline-flex;align-items:center;gap:8px;
-    background:#eef0ff;border-radius:10px;padding:8px 14px;
-    font-size:13px;font-weight:700;color:#696cff;margin-bottom:22px;
+    background:var(--role-accent-soft);border-radius:10px;padding:8px 14px;
+    font-size:13px;font-weight:700;color:var(--role-accent);margin-bottom:22px;
 }
 
 .otp-wrap{display:flex;gap:10px;margin-bottom:6px;}
@@ -51,7 +51,7 @@ html,body{height:100%;margin:0;padding:0;}
     padding:14px 4px;border:1.5px solid #e5e2ec;border-radius:12px;
     color:#312d4b;background:#faf9fc;outline:none;transition:.2s;
 }
-.otp-wrap input:focus{border-color:#696cff;background:#fff;box-shadow:0 0 0 4px rgba(105,108,255,.1);}
+.otp-wrap input:focus{border-color:var(--role-accent);background:#fff;box-shadow:0 0 0 4px rgba(var(--role-accent-rgb),.1);}
 
 .form-field{margin-bottom:16px;}
 .form-field label{display:block;font-size:13px;font-weight:700;color:#585164;margin-bottom:8px;}
@@ -59,16 +59,16 @@ html,body{height:100%;margin:0;padding:0;}
 .form-field .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#b0aab8;font-size:17px;pointer-events:none;}
 .form-field .toggle-pass{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#b0aab8;cursor:pointer;font-size:17px;}
 .form-field input{width:100%;padding:13px 42px 13px 42px;border:1.5px solid #e5e2ec;border-radius:12px;font-size:14px;color:#312d4b;background:#faf9fc;outline:none;transition:.2s;box-sizing:border-box;}
-.form-field input:focus{border-color:#696cff;background:#fff;box-shadow:0 0 0 4px rgba(105,108,255,.1);}
+.form-field input:focus{border-color:var(--role-accent);background:#fff;box-shadow:0 0 0 4px rgba(var(--role-accent-rgb),.1);}
 
 .strength-bar{height:4px;border-radius:4px;background:#eee;margin-top:6px;overflow:hidden;}
 .strength-fill{height:100%;border-radius:4px;transition:.3s;width:0;}
 
-.btn-primary-auth{width:100%;padding:14px;border-radius:13px;border:none;background:linear-gradient(135deg,#696cff,#5f61e6);color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(105,108,255,.4);transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}
-.btn-primary-auth:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(105,108,255,.45);}
+.btn-primary-auth{width:100%;padding:14px;border-radius:13px;border:none;background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(var(--role-accent-rgb),.4);transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}
+.btn-primary-auth:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(var(--role-accent-rgb),.45);}
 
 .resend-row{text-align:center;margin-top:14px;font-size:13px;color:#97939e;}
-.resend-row a{color:#696cff;font-weight:700;text-decoration:none;cursor:pointer;}
+.resend-row a{color:var(--role-accent);font-weight:700;text-decoration:none;cursor:pointer;}
 
 .alert-err{background:#fdeaea;border:1px solid rgba(234,84,85,.2);border-radius:12px;padding:12px 16px;font-size:13px;color:#a53030;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;}
 
@@ -173,7 +173,7 @@ html,body{height:100%;margin:0;padding:0;}
                 {{ __('app.didnt_receive') }}
                 <form action="{{ route('otp.resend') }}" method="POST" style="display:inline;">
                     @csrf
-                    <button type="submit" style="border:none;background:none;padding:0;color:#696cff;font-weight:700;font-size:13px;cursor:pointer;">
+                    <button type="submit" style="border:none;background:none;padding:0;color:var(--role-accent);font-weight:700;font-size:13px;cursor:pointer;">
                         {{ __('app.resend') }}
                     </button>
                 </form>

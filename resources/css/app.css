@@ -1,0 +1,150 @@
+/* ==========================================================================
+   Design tokens & role-based theming
+   Loaded last (see layouts/sections/styles.blade.php) so it safely overrides
+   the compiled Materio/Bootstrap bundle without touching the SCSS build.
+   One base hue (indigo), different shade per role:
+     - superadmin : deep / most authoritative
+     - admin      : the template's original default shade
+     - user       : lighter / friendlier
+   ========================================================================== */
+
+:root {
+    --role-accent: #696cff;
+    --role-accent-rgb: 105, 108, 255;
+    --role-accent-light: #9c9eff;
+    --role-accent-soft: #eef0ff;
+
+    --app-radius: 0.5rem;
+    --app-radius-lg: 0.75rem;
+    --app-shadow-sm: 0 2px 6px rgba(43, 40, 70, 0.06);
+    --app-shadow: 0 4px 18px rgba(43, 40, 70, 0.08);
+}
+
+html[data-role-theme="superadmin"] {
+    --role-accent: #362c7d;
+    --role-accent-rgb: 54, 44, 125;
+    --role-accent-light: #6a5bc9;
+    --role-accent-soft: #e7e4f7;
+}
+
+html[data-role-theme="admin"] {
+    --role-accent: #696cff;
+    --role-accent-rgb: 105, 108, 255;
+    --role-accent-light: #9c9eff;
+    --role-accent-soft: #eef0ff;
+}
+
+html[data-role-theme="user"] {
+    --role-accent: #8b8ffc;
+    --role-accent-rgb: 139, 143, 252;
+    --role-accent-light: #b4b7ff;
+    --role-accent-soft: #f2f3ff;
+}
+
+/* --------------------------------------------------------------------------
+   Tie Bootstrap's own "primary" system to the active role accent so native
+   components (buttons, links, badges, focus rings) follow it automatically.
+   -------------------------------------------------------------------------- */
+html[data-role-theme] {
+    --bs-primary: var(--role-accent);
+    --bs-primary-rgb: var(--role-accent-rgb);
+    --bs-link-color: var(--role-accent);
+    --bs-link-color-rgb: var(--role-accent-rgb);
+    --bs-link-hover-color: var(--role-accent);
+}
+
+html[data-role-theme] .btn-primary {
+    --bs-btn-bg: var(--role-accent);
+    --bs-btn-border-color: var(--role-accent);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--role-accent) 85%, black);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--role-accent) 85%, black);
+    --bs-btn-active-bg: color-mix(in srgb, var(--role-accent) 75%, black);
+    --bs-btn-active-border-color: color-mix(in srgb, var(--role-accent) 75%, black);
+    --bs-btn-disabled-bg: var(--role-accent);
+    --bs-btn-disabled-border-color: var(--role-accent);
+    --bs-btn-focus-shadow-rgb: var(--role-accent-rgb);
+}
+
+html[data-role-theme] .btn-outline-primary {
+    --bs-btn-color: var(--role-accent);
+    --bs-btn-border-color: var(--role-accent);
+    --bs-btn-hover-bg: var(--role-accent);
+    --bs-btn-hover-border-color: var(--role-accent);
+    --bs-btn-active-bg: var(--role-accent);
+    --bs-btn-active-border-color: var(--role-accent);
+    --bs-btn-focus-shadow-rgb: var(--role-accent-rgb);
+}
+
+html[data-role-theme] .badge.bg-primary,
+html[data-role-theme] .bg-primary {
+    background-color: var(--role-accent) !important;
+}
+
+html[data-role-theme] .text-primary {
+    color: var(--role-accent) !important;
+}
+
+html[data-role-theme] .form-check-input:checked {
+    background-color: var(--role-accent);
+    border-color: var(--role-accent);
+}
+
+html[data-role-theme] .page-item.active .page-link {
+    background-color: var(--role-accent);
+    border-color: var(--role-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Light, safe visual polish shared across every role/page.
+   -------------------------------------------------------------------------- */
+.card {
+    border-radius: var(--app-radius-lg);
+    box-shadow: var(--app-shadow-sm);
+}
+
+.table thead th {
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: #8a8d93;
+    font-weight: 700;
+}
+
+.btn {
+    border-radius: var(--app-radius);
+}
+
+/* --------------------------------------------------------------------------
+   Modest, professional form-field sizing — close to the template's own
+   default (~13.7px/16px padding, ~15px font), just a touch more comfortable.
+   Pages with their own page-style block can still override per-field.
+   -------------------------------------------------------------------------- */
+.form-control,
+.form-select {
+    min-height: 44px;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.9375rem;
+    border-radius: var(--app-radius);
+}
+
+.form-control-sm,
+.form-select-sm {
+    min-height: 36px;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8125rem;
+}
+
+textarea.form-control {
+    min-height: 100px;
+}
+
+.form-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8125rem;
+}

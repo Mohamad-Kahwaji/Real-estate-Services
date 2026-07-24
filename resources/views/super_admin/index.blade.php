@@ -717,7 +717,7 @@
         height: 38px;
         border-radius: 12px;
         background: #eef2ff;
-        color: #696cff;
+        color: var(--role-accent);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -802,7 +802,7 @@
     }
 
     .text-primary {
-        color: #696cff !important;
+        color: var(--role-accent) !important;
     }
 
     .form-control,
@@ -814,7 +814,7 @@
 
     .form-control:focus,
     .form-select:focus {
-        border-color: #696cff;
+        border-color: var(--role-accent);
         box-shadow: 0 0 0 .2rem rgba(105, 108, 255, .12);
     }
 

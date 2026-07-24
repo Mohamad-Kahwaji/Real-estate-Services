@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Route;
                 gap: 10px;
                 width: 320px;
                 max-width: 100%;
+                min-width: 0;
                 background: #f4f5ff;
                 border: 1.5px solid #e5e7ff;
                 border-radius: 10px;
@@ -52,15 +53,15 @@ use Illuminate\Support\Facades\Route;
                 cursor: pointer;
                 transition: all 0.2s ease;
                 outline: none;
-                flex-shrink: 0;
+                flex-shrink: 1;
             "
             onmouseover="this.style.background='#eef0ff';this.style.borderColor='#c5c8ff';this.style.color='#696cff';"
             onmouseout="this.style.background='#f4f5ff';this.style.borderColor='#e5e7ff';this.style.color='#94a3b8';">
-        <span style="display:flex;align-items:center;gap:8px;">
+        <span style="display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden;">
             <i class="ri ri-search-line" style="font-size:15px;color:#696cff;flex-shrink:0;"></i>
-            <span>{{ __('app.search_placeholder') }}</span>
+            <span class="d-none d-sm-inline" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ __('app.search_placeholder') }}</span>
         </span>
-        <kbd style="
+        <kbd class="d-none d-md-inline-block" style="
             background: rgba(105,108,255,.12);
             color: #696cff;
             border: 1px solid rgba(105,108,255,.2);
@@ -75,7 +76,7 @@ use Illuminate\Support\Facades\Route;
     </button>
 
     {{-- Zone 3: Right side — language switch + user dropdown --}}
-    <div style="flex:1; display:flex; justify-content:flex-end; align-items:center;">
+    <div style="flex-shrink:0; display:flex; justify-content:flex-end; align-items:center;">
         <ul class="navbar-nav flex-row align-items-center">
 
             <!-- Language Switch -->
@@ -90,7 +91,7 @@ use Illuminate\Support\Facades\Route;
                                 background:#f4f5ff;
                                 border:1.5px solid #e5e7ff;
                                 border-radius:10px;
-                                padding:7px 13px;
+                                padding:7px 10px;
                                 font-size:13px;font-weight:700;
                                 color:#696cff;
                                 cursor:pointer;
@@ -100,8 +101,8 @@ use Illuminate\Support\Facades\Route;
                             onmouseover="this.style.background='#eef0ff';this.style.borderColor='#c5c8ff';"
                             onmouseout="this.style.background='#f4f5ff';this.style.borderColor='#e5e7ff';">
                         <i class="ri ri-global-line" style="font-size:16px;"></i>
-                        <span>{{ $currentLang === 'ar' ? 'AR' : 'EN' }}</span>
-                        <i class="ri ri-arrow-down-s-line" style="font-size:14px;opacity:.7;"></i>
+                        <span class="d-none d-sm-inline">{{ $currentLang === 'ar' ? 'AR' : 'EN' }}</span>
+                        <i class="ri ri-arrow-down-s-line d-none d-sm-inline" style="font-size:14px;opacity:.7;"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" style="
                         min-width:170px;

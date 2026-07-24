@@ -363,7 +363,7 @@
                                          style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid #d4d4ff;">
                                     @else
                                     <div style="width:52px;height:52px;border-radius:12px;background:#d4d4ff;
-                                                display:flex;align-items:center;justify-content:center;font-size:22px;color:#696cff;">
+                                                display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--role-accent);">
                                         <i class="ri-building-4-line"></i>
                                     </div>
                                     @endif
@@ -516,7 +516,7 @@ const TRANS = {
 
     const serviceIcon = L.divIcon({
         className: '',
-        html: '<div style="background:#696cff;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+        html: '<div style="background:var(--role-accent);width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
         iconSize: [12, 12], iconAnchor: [6, 6],
     });
 
@@ -553,7 +553,7 @@ const TRANS = {
 
         if (filterCircle) filterMap.removeLayer(filterCircle);
         filterCircle = L.circle([filterCenter.lat, filterCenter.lng], {
-            radius: radius * 1000, color: '#696cff', fillColor: '#696cff', fillOpacity: 0.08, weight: 2
+            radius: radius * 1000, color: 'var(--role-accent)', fillColor: 'var(--role-accent)', fillOpacity: 0.08, weight: 2
         }).addTo(filterMap);
 
         let shown = 0;

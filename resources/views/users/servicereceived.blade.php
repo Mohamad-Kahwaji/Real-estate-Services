@@ -10,16 +10,16 @@
 .req-card {
     background:#fff; border-radius:20px;
     border:1px solid #f0eef8;
-    box-shadow:0 4px 20px rgba(105,108,255,.07);
+    box-shadow:0 4px 20px rgba(var(--role-accent-rgb),.07);
     overflow:hidden; height:100%;
     display:flex; flex-direction:column; transition:.25s;
 }
-.req-card:hover { transform:translateY(-4px); box-shadow:0 12px 34px rgba(105,108,255,.15); }
+.req-card:hover { transform:translateY(-4px); box-shadow:0 12px 34px rgba(var(--role-accent-rgb),.15); }
 .req-img { height:180px; object-fit:cover; width:100%; display:block; }
 .req-body { padding:18px 20px; flex:1; display:flex; flex-direction:column; }
 
 .req-user { font-size:11px; font-weight:700; color:#97939e; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
-.req-user i { color:#696cff; }
+.req-user i { color:var(--role-accent); }
 .req-title { font-size:15px; font-weight:800; color:#312d4b; margin-bottom:4px; line-height:1.3; }
 .req-cat   { font-size:12px; color:#b0aab8; margin-bottom:14px; }
 
@@ -64,16 +64,16 @@
     font-size:13px; color:#312d4b; outline:none; transition:.2s;
 }
 .review-section select:focus,
-.review-section textarea:focus { border-color:#696cff; }
+.review-section textarea:focus { border-color:var(--role-accent); }
 .btn-review {
     width:100%; margin-top:10px; padding:10px; border-radius:12px; border:none;
-    background:linear-gradient(135deg,#696cff,#5f61e6);
+    background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     color:#fff; font-size:13px; font-weight:700; cursor:pointer;
 }
 </style>
 
 <div class="page-hdr">
-    <h4><i class="ri ri-file-list-3-line" style="color:#696cff;margin-left:8px;"></i>{{ __('app.incoming_requests') }}</h4>
+    <h4><i class="ri ri-file-list-3-line" style="color:var(--role-accent);margin-left:8px;"></i>{{ __('app.incoming_requests') }}</h4>
     <p>{{ __('app.user_requests_label') }}</p>
 </div>
 
@@ -86,7 +86,7 @@
 
 @if($serviceRequests->isEmpty())
 <div style="text-align:center;padding:80px 20px;background:#fff;border-radius:20px;border:1.5px dashed #d4d5ff;">
-    <i class="ri ri-inbox-line" style="font-size:52px;color:#c5c7ff;display:block;margin-bottom:14px;"></i>
+    <i class="ri ri-inbox-line" style="font-size:52px;color:var(--role-accent-light);display:block;margin-bottom:14px;"></i>
     <h5 style="font-size:16px;font-weight:800;color:#312d4b;margin-bottom:6px;">{{ __('app.no_incoming_requests') }}</h5>
     <p style="font-size:13px;color:#97939e;">{{ __('app.no_incoming_desc') }}</p>
 </div>
@@ -129,7 +129,7 @@
                     </div>
                     <div class="req-row">
                         <span class="lbl">{{ __('app.price_usd') }}</span>
-                        <span class="val" style="color:#696cff;">${{ number_format(($request->service->price_usd ?? 0) * ($request->quantity ?? 1)) }}</span>
+                        <span class="val" style="color:var(--role-accent);">${{ number_format(($request->service->price_usd ?? 0) * ($request->quantity ?? 1)) }}</span>
                     </div>
                     @if($request->details)
                     <div class="req-row">

@@ -5,8 +5,8 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff;
-    --accent-soft: #eef0ff;
+    --accent: var(--role-accent);
+    --accent-soft: var(--role-accent-soft);
     --card-radius: 20px;
     --shadow: 0 8px 28px rgba(18,38,63,.08);
 }

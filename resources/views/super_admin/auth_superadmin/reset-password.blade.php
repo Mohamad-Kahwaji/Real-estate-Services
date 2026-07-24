@@ -10,7 +10,7 @@ body { margin: 0; padding: 0; }
 
 .al-panel {
     width: 42%;
-    background: linear-gradient(145deg, #696cff 0%, #9c9eff 60%, #c3c5ff 100%);
+    background: linear-gradient(145deg, var(--role-accent) 0%, var(--role-accent-light) 60%, #c3c5ff 100%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 60px 48px; position: relative; overflow: hidden;
 }
@@ -29,17 +29,17 @@ body { margin: 0; padding: 0; }
 .al-form-box { width:100%; max-width:440px; }
 
 .al-brand { display:flex; align-items:center; gap:12px; margin-bottom:28px; }
-.al-brand-dot { width:42px; height:42px; background:linear-gradient(135deg,#696cff,#9c9eff); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; }
+.al-brand-dot { width:42px; height:42px; background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light)); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; }
 .al-brand-name { font-size:20px; font-weight:800; color:#3b3551; }
 
 .al-heading { font-size:22px; font-weight:800; color:#3b3551; margin-bottom:6px; }
 .al-sub { font-size:14px; color:#8a859c; margin-bottom:16px; line-height:1.6; }
 
-.al-email-chip { display:inline-flex; align-items:center; gap:8px; background:#eef0ff; border-radius:10px; padding:8px 14px; font-size:13px; font-weight:700; color:#696cff; margin-bottom:22px; }
+.al-email-chip { display:inline-flex; align-items:center; gap:8px; background:var(--role-accent-soft); border-radius:10px; padding:8px 14px; font-size:13px; font-weight:700; color:var(--role-accent); margin-bottom:22px; }
 
 .otp-wrap { display:flex; gap:10px; margin-bottom:6px; }
 .otp-wrap input { flex:1; text-align:center; font-size:22px; font-weight:800; padding:14px 4px; border:1.5px solid #e4e4eb; border-radius:12px; color:#3b3551; background:#faf9fc; outline:none; transition:.2s; }
-.otp-wrap input:focus { border-color:#696cff; background:#fff; box-shadow:0 0 0 3px rgba(105,108,255,.12); }
+.otp-wrap input:focus { border-color:var(--role-accent); background:#fff; box-shadow:0 0 0 3px rgba(var(--role-accent-rgb),.12); }
 
 .al-field { margin-bottom:16px; }
 .al-field label { display:block; font-size:13px; font-weight:600; color:#3b3551; margin-bottom:7px; }
@@ -47,19 +47,19 @@ body { margin: 0; padding: 0; }
 .al-field .input-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#b0aab8; font-size:17px; pointer-events:none; }
 .al-field .toggle-pass { position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#b0aab8; cursor:pointer; font-size:17px; }
 .al-field .form-control { width:100%; padding:13px 42px; border:1.5px solid #e4e4eb; border-radius:12px; font-size:14px; background:#fff; outline:none; transition:.2s; box-sizing:border-box; }
-.al-field .form-control:focus { border-color:#696cff; box-shadow:0 0 0 3px rgba(105,108,255,.12); }
+.al-field .form-control:focus { border-color:var(--role-accent); box-shadow:0 0 0 3px rgba(var(--role-accent-rgb),.12); }
 
 .strength-bar { height:4px; border-radius:4px; background:#eee; margin-top:6px; overflow:hidden; }
 .strength-fill { height:100%; border-radius:4px; transition:.3s; width:0; }
 
-.btn-al-submit { width:100%; padding:14px; border-radius:12px; background:linear-gradient(135deg,#696cff,#9c9eff); border:none; color:#fff; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(105,108,255,.35); transition:.2s; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:8px; }
+.btn-al-submit { width:100%; padding:14px; border-radius:12px; background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light)); border:none; color:#fff; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(var(--role-accent-rgb),.35); transition:.2s; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:8px; }
 .btn-al-submit:hover { opacity:.92; transform:translateY(-1px); }
 
 .al-alert { border-radius:12px; padding:12px 16px; font-size:13px; margin-bottom:18px; display:flex; align-items:flex-start; gap:10px; }
 .al-alert-danger { background:#fdeaea; color:#c0392b; border:1px solid #f5c6c6; }
 
 .al-resend { text-align:center; margin-top:14px; font-size:13px; color:#8a859c; }
-.al-resend a { color:#696cff; font-weight:700; text-decoration:none; }
+.al-resend a { color:var(--role-accent); font-weight:700; text-decoration:none; }
 .al-resend a:hover { text-decoration:underline; }
 
 @media (max-width:768px) { .al-panel { display:none; } .al-form-side { padding:32px 16px; } }

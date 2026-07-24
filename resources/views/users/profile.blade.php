@@ -4,7 +4,7 @@
 @section('content')
 <style>
 .profile-hero {
-    background: linear-gradient(135deg,#696cff,#5f61e6);
+    background: linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     border-radius: 20px; padding: 32px 36px;
     color: #fff; display: flex; align-items: center; gap: 24px;
     margin-bottom: 28px; position: relative; overflow: hidden;
@@ -26,7 +26,7 @@
 .pf-card {
     background:#fff; border-radius:20px;
     border:1px solid #f0eef8;
-    box-shadow:0 4px 24px rgba(105,108,255,.08);
+    box-shadow:0 4px 24px rgba(var(--role-accent-rgb),.08);
     padding:28px 32px; margin-bottom:24px;
 }
 .pf-card-title {
@@ -35,7 +35,7 @@
     margin-bottom:22px; padding-bottom:14px;
     border-bottom:1px solid #f5f4f8;
 }
-.pf-card-title i { color:#696cff; font-size:18px; }
+.pf-card-title i { color:var(--role-accent); font-size:18px; }
 
 .pf-field { margin-bottom:18px; }
 .pf-field label {
@@ -50,19 +50,19 @@
     outline:none; transition:.2s;
 }
 .pf-field input:focus {
-    border-color:#696cff; background:#fff;
-    box-shadow:0 0 0 4px rgba(105,108,255,.1);
+    border-color:var(--role-accent); background:#fff;
+    box-shadow:0 0 0 4px rgba(var(--role-accent-rgb),.1);
 }
 .pf-field .hint { font-size:11px; color:#b0aab8; margin-top:5px; }
 
 .btn-save {
     padding:12px 28px; border-radius:12px; border:none;
-    background:linear-gradient(135deg,#696cff,#5f61e6);
+    background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     color:#fff; font-size:14px; font-weight:700; cursor:pointer;
-    box-shadow:0 4px 16px rgba(105,108,255,.35);
+    box-shadow:0 4px 16px rgba(var(--role-accent-rgb),.35);
     transition:.2s; display:inline-flex; align-items:center; gap:8px;
 }
-.btn-save:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(105,108,255,.4); }
+.btn-save:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(var(--role-accent-rgb),.4); }
 
 .pf-nav { display:flex; gap:4px; margin-bottom:24px; }
 .pf-nav-item {
@@ -70,7 +70,7 @@
     text-decoration:none; color:#97939e;
     transition:.15s; display:flex; align-items:center; gap:7px;
 }
-.pf-nav-item.active, .pf-nav-item:hover { background:#eef0ff; color:#696cff; }
+.pf-nav-item.active, .pf-nav-item:hover { background:var(--role-accent-soft); color:var(--role-accent); }
 
 .biz-card {
     background:#fff; border-radius:16px;
@@ -79,10 +79,10 @@
     display:flex; align-items:center; gap:16px;
     margin-bottom:12px; transition:.2s;
 }
-.biz-card:hover { border-color:#d4d5ff; box-shadow:0 6px 20px rgba(105,108,255,.1); }
+.biz-card:hover { border-color:#d4d5ff; box-shadow:0 6px 20px rgba(var(--role-accent-rgb),.1); }
 .biz-icon {
     width:48px; height:48px; border-radius:14px;
-    background:#eef0ff; display:flex; align-items:center; justify-content:center;
+    background:var(--role-accent-soft); display:flex; align-items:center; justify-content:center;
     font-size:22px; flex-shrink:0;
 }
 .biz-name { font-size:14px; font-weight:800; color:#312d4b; }
@@ -196,7 +196,7 @@
             <div style="display:flex;justify-content:space-between;align-items:center;
                         padding:10px 0;border-bottom:1px solid #f5f4f8;font-size:13px;">
                 <span style="color:#97939e;display:flex;align-items:center;gap:8px;">
-                    <i class="ri {{ $icon }}" style="color:#696cff;"></i>{{ $label }}
+                    <i class="ri {{ $icon }}" style="color:var(--role-accent);"></i>{{ $label }}
                 </span>
                 <span style="font-weight:700;color:#585164;">{{ $val }}</span>
             </div>
@@ -218,8 +218,8 @@
                 </div>
                 <div style="display:flex;gap:6px;">
                     <a href="{{ route('user.business.edit', $account->id) }}"
-                       style="width:34px;height:34px;border-radius:10px;background:#eef0ff;
-                              color:#696cff;display:flex;align-items:center;justify-content:center;
+                       style="width:34px;height:34px;border-radius:10px;background:var(--role-accent-soft);
+                              color:var(--role-accent);display:flex;align-items:center;justify-content:center;
                               text-decoration:none;">
                         <i class="ri ri-edit-line"></i>
                     </a>
@@ -241,7 +241,7 @@
                 <a href="{{ route('user.business.create') }}"
                    style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;
                           padding:9px 18px;border-radius:10px;
-                          background:linear-gradient(135deg,#696cff,#5f61e6);
+                          background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
                           color:#fff;font-size:13px;font-weight:700;text-decoration:none;">
                     <i class="ri ri-add-line"></i> {{ __('app.create_business') }}
                 </a>

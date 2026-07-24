@@ -6,12 +6,12 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff; --accent-soft: #eef0ff;
+    --accent: var(--role-accent); --accent-soft: var(--role-accent-soft);
     --success: #28c76f; --success-soft: #e8f8ef;
     --warning: #ff9f43; --warning-soft: #fff4e5;
     --danger: #ea5455; --danger-soft: #fdeaea;
     --info: #00cfe8; --info-soft: #e3f8fc;
-    --shadow: 0 4px 24px rgba(105,108,255,.10);
+    --shadow: 0 4px 24px rgba(var(--role-accent-rgb),.10);
     --radius: 16px;
 }
 .pg-header h4 { font-size: 22px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
@@ -40,7 +40,7 @@
     padding: 8px 14px 8px 36px; font-size: 13px;
     background: #fafbff; width: 100%;
 }
-.search-box input:focus { border-color: #696cff; outline: none; box-shadow: 0 0 0 3px rgba(105,108,255,.1); }
+.search-box input:focus { border-color: var(--role-accent); outline: none; box-shadow: 0 0 0 3px rgba(var(--role-accent-rgb),.1); }
 .search-box i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #8592a3; font-size: 16px; }
 
 .table { margin: 0; }
@@ -55,7 +55,7 @@
 
 .user-ava {
     width: 38px; height: 38px; border-radius: 50%;
-    background: linear-gradient(135deg, #696cff, #9c9eff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     display: flex; align-items: center; justify-content: center;
     font-size: 15px; font-weight: 800; color: #fff; flex-shrink: 0;
 }
@@ -165,7 +165,7 @@ tr.row-suspended td { opacity: .65; }
 {{-- Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-group-line me-2" style="color:#696cff;"></i>{{ __('app.all_users') }}</h6>
+        <h6><i class="ri ri-group-line me-2" style="color:var(--role-accent);"></i>{{ __('app.all_users') }}</h6>
         <form method="GET" action="{{ route('allindex.index') }}" class="d-flex align-items-center gap-2 flex-wrap">
             <div class="search-box">
                 <i class="ri ri-search-line"></i>

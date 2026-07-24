@@ -7,7 +7,7 @@
   .req-card {
     background: #fff;
     border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(105,108,255,.1);
+    box-shadow: 0 4px 24px rgba(var(--role-accent-rgb),.1);
     overflow: hidden;
   }
   .req-hdr {
@@ -31,7 +31,7 @@
   .sp-approved { background:#e8faf0; color:#28c76f; }
   .sp-rejected { background:#fdeaea; color:#ea5455; }
   .filter-btn { padding: 7px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; border: 2px solid transparent; text-decoration: none; transition: .2s; }
-  .filter-btn.active, .filter-btn:hover { border-color: #696cff; color: #696cff; background: #eef0ff; }
+  .filter-btn.active, .filter-btn:hover { border-color: var(--role-accent); color: var(--role-accent); background: var(--role-accent-soft); }
   .filter-btn:not(.active) { color: #97939e; background: #f4f5fa; }
 </style>
 @endsection
@@ -48,7 +48,7 @@
 <div class="req-card">
   <div class="req-hdr">
     <span class="req-title">
-      <i class="ri ri-file-list-3-line me-2" style="color:#696cff;"></i>Service Requests
+      <i class="ri ri-file-list-3-line me-2" style="color:var(--role-accent);"></i>Service Requests
     </span>
   </div>
 
@@ -99,7 +99,7 @@
                         style="border-radius:10px;font-weight:600;padding:9px 14px;"
                         data-bs-toggle="modal"
                         data-bs-target="#reqModal{{ $req->id }}">
-                  <i class="ri ri-eye-line me-1" style="color:#696cff;"></i>View Details
+                  <i class="ri ri-eye-line me-1" style="color:var(--role-accent);"></i>View Details
                 </button>
 
                 @if($req->status !== 'approved')
@@ -150,7 +150,7 @@
     <div class="modal-content" style="border:0;border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.18);">
       <div class="modal-header" style="border-bottom:1px solid #f0eef4;padding:20px 26px;">
         <h5 class="modal-title" style="font-weight:800;color:#312d4b;">
-          <i class="ri ri-file-list-3-line me-2" style="color:#696cff;"></i>
+          <i class="ri ri-file-list-3-line me-2" style="color:var(--role-accent);"></i>
           Request #{{ $req->id }} Details
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

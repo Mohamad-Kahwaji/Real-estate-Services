@@ -10,16 +10,16 @@
 .ad-card {
     background:#fff; border-radius:20px;
     border:1px solid #f0eef8;
-    box-shadow:0 4px 20px rgba(105,108,255,.07);
+    box-shadow:0 4px 20px rgba(var(--role-accent-rgb),.07);
     overflow:hidden; height:100%;
     display:flex; flex-direction:column; transition:.25s;
 }
-.ad-card:hover { transform:translateY(-4px); box-shadow:0 12px 34px rgba(105,108,255,.15); }
+.ad-card:hover { transform:translateY(-4px); box-shadow:0 12px 34px rgba(var(--role-accent-rgb),.15); }
 
 .ad-img { height:200px; object-fit:cover; width:100%; display:block; }
 .ad-img-placeholder {
     height:200px; width:100%; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(135deg,#f5f4ff,#ece9ff);
+    background:linear-gradient(135deg,var(--role-accent-soft),#ece9ff);
     color:#b0aacc; font-size:48px;
 }
 
@@ -30,9 +30,9 @@
 .btn-ad-link {
     display:inline-flex; align-items:center; gap:6px;
     padding:10px 20px; border-radius:12px;
-    background:linear-gradient(135deg,#696cff,#5f61e6);
+    background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     color:#fff; font-size:13px; font-weight:700; text-decoration:none;
-    transition:.15s; box-shadow:0 4px 12px rgba(105,108,255,.3);
+    transition:.15s; box-shadow:0 4px 12px rgba(var(--role-accent-rgb),.3);
 }
 .btn-ad-link:hover { color:#fff; transform:translateY(-1px); }
 
@@ -44,7 +44,7 @@
 </style>
 
 <div class="page-hdr">
-    <h4><i class="ri ri-advertisement-line me-2" style="color:#696cff;"></i>{{ __('app.ads') }}</h4>
+    <h4><i class="ri ri-advertisement-line me-2" style="color:var(--role-accent);"></i>{{ __('app.ads') }}</h4>
     <p>{{ __('app.ads_desc') }}</p>
 </div>
 

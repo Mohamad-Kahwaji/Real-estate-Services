@@ -10,11 +10,11 @@
 .fav-card {
     background:#fff; border-radius:20px;
     border:1px solid #f0eef8;
-    box-shadow:0 4px 20px rgba(105,108,255,.07);
+    box-shadow:0 4px 20px rgba(var(--role-accent-rgb),.07);
     overflow:hidden; height:100%;
     display:flex; flex-direction:column; transition:.25s;
 }
-.fav-card:hover { transform:translateY(-4px); box-shadow:0 12px 34px rgba(105,108,255,.15); }
+.fav-card:hover { transform:translateY(-4px); box-shadow:0 12px 34px rgba(var(--role-accent-rgb),.15); }
 .fav-img { height:190px; object-fit:cover; width:100%; display:block; }
 .fav-body { padding:18px 20px; flex:1; display:flex; flex-direction:column; }
 
@@ -32,11 +32,11 @@
 .fav-actions { display:flex; gap:8px; margin-top:auto; }
 .btn-request {
     flex:1; padding:10px; border-radius:12px; border:none;
-    background:linear-gradient(135deg,#696cff,#5f61e6);
+    background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     color:#fff; font-size:13px; font-weight:700; cursor:pointer;
     display:flex; align-items:center; justify-content:center; gap:6px;
     text-decoration:none; transition:.15s;
-    box-shadow:0 4px 12px rgba(105,108,255,.3);
+    box-shadow:0 4px 12px rgba(var(--role-accent-rgb),.3);
 }
 .btn-request:hover { color:#fff; transform:translateY(-1px); }
 .btn-unfav {
@@ -69,8 +69,8 @@
     <p style="font-size:13px;color:#97939e;margin-bottom:20px;">{{ __('app.no_favorites_desc') }}</p>
     <a href="{{ route('allservices.user') }}"
        style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:13px;
-              background:linear-gradient(135deg,#696cff,#5f61e6);color:#fff;font-weight:700;
-              font-size:13px;text-decoration:none;box-shadow:0 4px 14px rgba(105,108,255,.35);">
+              background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));color:#fff;font-weight:700;
+              font-size:13px;text-decoration:none;box-shadow:0 4px 14px rgba(var(--role-accent-rgb),.35);">
         <i class="ri ri-search-line"></i> {{ __('app.browse_services') }}
     </a>
 </div>
@@ -103,13 +103,13 @@
                 </div>
 
                 <div class="fav-prices">
-                    <div class="fav-price-pill" style="background:#eef0ff;">
+                    <div class="fav-price-pill" style="background:var(--role-accent-soft);">
                         <div class="cur">USD</div>
-                        <div class="amt" style="color:#696cff;">${{ number_format($service->price_usd ?? 0) }}</div>
+                        <div class="amt" style="color:var(--role-accent);">${{ number_format($service->price_usd ?? 0) }}</div>
                     </div>
                     <div class="fav-price-pill" style="background:#f4f5ff;">
                         <div class="cur">SYP</div>
-                        <div class="amt" style="color:#5f61e6;">{{ number_format($service->price_syp ?? 0) }}</div>
+                        <div class="amt" style="color:var(--role-accent-light);">{{ number_format($service->price_syp ?? 0) }}</div>
                     </div>
                 </div>
 
@@ -166,7 +166,7 @@
                                 style="border-radius:12px;">{{ __('app.cancel') }}</button>
                         <button type="submit"
                                 style="padding:11px 24px;border-radius:12px;border:none;
-                                       background:linear-gradient(135deg,#696cff,#5f61e6);
+                                       background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
                                        color:#fff;font-weight:700;font-size:14px;cursor:pointer;">
                             <i class="ri ri-send-plane-line me-1"></i>{{ __('app.submit') }}
                         </button>

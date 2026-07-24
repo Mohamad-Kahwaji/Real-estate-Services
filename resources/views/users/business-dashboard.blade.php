@@ -6,7 +6,7 @@
 <style>
 /* ── Header ── */
 .biz-header {
-  background: linear-gradient(135deg, #696cff 0%, #9c6bff 100%);
+  background: linear-gradient(135deg, var(--role-accent) 0%, var(--role-accent-light) 100%);
   border-radius: 20px;
   padding: 28px 32px;
   color: #fff;
@@ -36,10 +36,10 @@
   background: #fff;
   border-radius: 18px;
   padding: 22px 20px;
-  box-shadow: 0 4px 20px rgba(105,108,255,.08);
+  box-shadow: 0 4px 20px rgba(var(--role-accent-rgb),.08);
   transition: .2s;
 }
-.stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(105,108,255,.14); }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(var(--role-accent-rgb),.14); }
 .stat-icon {
   width: 50px; height: 50px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
@@ -55,12 +55,12 @@
   margin-bottom: 16px;
   display: flex; align-items: center; gap: 8px;
 }
-.section-title i { color: #696cff; font-size: 18px; }
+.section-title i { color: var(--role-accent); font-size: 18px; }
 
 /* ── Requests table ── */
 .req-table-wrap {
   background: #fff; border-radius: 18px;
-  box-shadow: 0 4px 20px rgba(105,108,255,.08);
+  box-shadow: 0 4px 20px rgba(var(--role-accent-rgb),.08);
   overflow: hidden;
 }
 .req-table { margin: 0; }
@@ -85,10 +85,10 @@
 /* ── Services list ── */
 .svc-card {
   background: #fff; border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(105,108,255,.08);
+  box-shadow: 0 4px 20px rgba(var(--role-accent-rgb),.08);
   overflow: hidden; transition: .2s;
 }
-.svc-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(105,108,255,.14); }
+.svc-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(var(--role-accent-rgb),.14); }
 .svc-img { height: 140px; object-fit: cover; width: 100%; }
 .svc-body { padding: 14px 16px; }
 .svc-title { font-size: 13px; font-weight: 700; color: #312d4b; margin-bottom: 6px; line-height: 1.3;
@@ -137,7 +137,7 @@
   <div class="col-6 col-md-3">
     <div class="stat-card">
       <div class="stat-icon" style="background:#eeeeff;">
-        <i class="ri-store-3-line" style="color:#696cff;"></i>
+        <i class="ri-store-3-line" style="color:var(--role-accent);"></i>
       </div>
       <div class="stat-value">{{ $stats['services'] }}</div>
       <div class="stat-label">Total Services</div>

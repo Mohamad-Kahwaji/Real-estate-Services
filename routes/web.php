@@ -9,28 +9,9 @@ use App\Http\Controllers\Auth_superadmin\RegisteredSuperAdminSessionController;
 use App\Http\Controllers\Auth\AuthenticatedUserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BusinessController;
-use App\Http\Controllers\cards\CardBasic;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
-use App\Http\Controllers\dashboard\Analytics;
-use App\Http\Controllers\extended_ui\PerfectScrollbar;
-use App\Http\Controllers\extended_ui\TextDivider;
 use App\Http\Controllers\FcmController;
-use App\Http\Controllers\form_elements\BasicInput;
-use App\Http\Controllers\form_elements\InputGroups;
-use App\Http\Controllers\form_layouts\HorizontalForm;
-use App\Http\Controllers\form_layouts\VerticalForm;
-use App\Http\Controllers\icons\RiIcons;
-use App\Http\Controllers\layouts\Blank;
-use App\Http\Controllers\layouts\Container;
-use App\Http\Controllers\layouts\Fluid;
-use App\Http\Controllers\layouts\WithoutMenu;
-use App\Http\Controllers\layouts\WithoutNavbar;
-use App\Http\Controllers\pages\AccountSettingsAccount;
-use App\Http\Controllers\pages\AccountSettingsConnections;
-use App\Http\Controllers\pages\AccountSettingsNotifications;
-use App\Http\Controllers\pages\MiscError;
-use App\Http\Controllers\pages\MiscUnderMaintenance;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -41,26 +22,6 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceRequestController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\SuperadminController;
-use App\Http\Controllers\tables\Basic as TablesBasic;
-use App\Http\Controllers\user_interface\Accordion;
-use App\Http\Controllers\user_interface\Alerts;
-use App\Http\Controllers\user_interface\Badges;
-use App\Http\Controllers\user_interface\Buttons;
-use App\Http\Controllers\user_interface\Carousel;
-use App\Http\Controllers\user_interface\Collapse;
-use App\Http\Controllers\user_interface\Dropdowns;
-use App\Http\Controllers\user_interface\Footer;
-use App\Http\Controllers\user_interface\ListGroups;
-use App\Http\Controllers\user_interface\Modals;
-use App\Http\Controllers\user_interface\Navbar;
-use App\Http\Controllers\user_interface\Offcanvas;
-use App\Http\Controllers\user_interface\PaginationBreadcrumbs;
-use App\Http\Controllers\user_interface\Progress;
-use App\Http\Controllers\user_interface\Spinners;
-use App\Http\Controllers\user_interface\TabsPills;
-use App\Http\Controllers\user_interface\Toasts;
-use App\Http\Controllers\user_interface\TooltipsPopovers;
-use App\Http\Controllers\user_interface\Typography;
 use App\Http\Controllers\BusinessDashboardController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PaymentController;
@@ -76,89 +37,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])
     ->name('language.switch')
     ->where('locale', 'en|ar');
-
-// =================================================================
-// THEME / PANEL DEMO ROUTES  (no auth — UI components only)
-// =================================================================
-
-// Layout: without sidebar menu
-Route::get('/layouts/without-menu',        [WithoutMenu::class, 'index'])->name('layouts-without-menu');
-// Layout: without top navbar
-Route::get('/layouts/without-navbar',      [WithoutNavbar::class, 'index'])->name('layouts-without-navbar');
-// Layout: full-width fluid
-Route::get('/layouts/fluid',               [Fluid::class, 'index'])->name('layouts-fluid');
-// Layout: boxed container
-Route::get('/layouts/container',           [Container::class, 'index'])->name('layouts-container');
-// Layout: completely blank canvas
-Route::get('/layouts/blank',               [Blank::class, 'index'])->name('layouts-blank');
-
-// Page: account general settings
-Route::get('/pages/account-settings-account',       [AccountSettingsAccount::class, 'index'])->name('pages-account-settings-account');
-// Page: account notification preferences
-Route::get('/pages/account-settings-notifications', [AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
-// Page: account connected apps
-Route::get('/pages/account-settings-connections',   [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
-// Page: generic error view
-Route::get('/pages/misc-error',            [MiscError::class, 'index'])->name('pages-misc-error');
-// Page: under-maintenance splash screen
-Route::get('/pages/misc-under-maintenance',[MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
-
-// UI component: basic card demo
-Route::get('/cards/basic',                 [CardBasic::class, 'index'])->name('cards-basic');
-// UI component: accordion demo
-Route::get('/ui/accordion',                [Accordion::class, 'index'])->name('ui-accordion');
-// UI component: alerts demo
-Route::get('/ui/alerts',                   [Alerts::class, 'index'])->name('ui-alerts');
-// UI component: badges demo
-Route::get('/ui/badges',                   [Badges::class, 'index'])->name('ui-badges');
-// UI component: buttons demo
-Route::get('/ui/buttons',                  [Buttons::class, 'index'])->name('ui-buttons');
-// UI component: carousel demo
-Route::get('/ui/carousel',                 [Carousel::class, 'index'])->name('ui-carousel');
-// UI component: collapse demo
-Route::get('/ui/collapse',                 [Collapse::class, 'index'])->name('ui-collapse');
-// UI component: dropdowns demo
-Route::get('/ui/dropdowns',                [Dropdowns::class, 'index'])->name('ui-dropdowns');
-// UI component: footer demo
-Route::get('/ui/footer',                   [Footer::class, 'index'])->name('ui-footer');
-// UI component: list groups demo
-Route::get('/ui/list-groups',              [ListGroups::class, 'index'])->name('ui-list-groups');
-// UI component: modals demo
-Route::get('/ui/modals',                   [Modals::class, 'index'])->name('ui-modals');
-// UI component: navbar demo
-Route::get('/ui/navbar',                   [Navbar::class, 'index'])->name('ui-navbar');
-// UI component: offcanvas demo
-Route::get('/ui/offcanvas',                [Offcanvas::class, 'index'])->name('ui-offcanvas');
-// UI component: pagination and breadcrumbs demo
-Route::get('/ui/pagination-breadcrumbs',   [PaginationBreadcrumbs::class, 'index'])->name('ui-pagination-breadcrumbs');
-// UI component: progress bars demo
-Route::get('/ui/progress',                 [Progress::class, 'index'])->name('ui-progress');
-// UI component: spinners demo
-Route::get('/ui/spinners',                 [Spinners::class, 'index'])->name('ui-spinners');
-// UI component: tabs and pills demo
-Route::get('/ui/tabs-pills',               [TabsPills::class, 'index'])->name('ui-tabs-pills');
-// UI component: toasts demo
-Route::get('/ui/toasts',                   [Toasts::class, 'index'])->name('ui-toasts');
-// UI component: tooltips and popovers demo
-Route::get('/ui/tooltips-popovers',        [TooltipsPopovers::class, 'index'])->name('ui-tooltips-popovers');
-// UI component: typography demo
-Route::get('/ui/typography',               [Typography::class, 'index'])->name('ui-typography');
-// Extended UI: perfect scrollbar demo
-Route::get('/extended/ui-perfect-scrollbar',[PerfectScrollbar::class, 'index'])->name('extended-ui-perfect-scrollbar');
-// Extended UI: text divider demo
-Route::get('/extended/ui-text-divider',    [TextDivider::class, 'index'])->name('extended-ui-text-divider');
-// Icons: Remix Icons set demo
-Route::get('/icons/icons-ri',              [RiIcons::class, 'index'])->name('icons-ri');
-// Forms: basic input elements demo
-Route::get('/forms/basic-inputs',          [BasicInput::class, 'index'])->name('forms-basic-inputs');
-// Forms: input groups demo
-Route::get('/forms/input-groups',          [InputGroups::class, 'index'])->name('forms-input-groups');
-// Forms: vertical layout demo
-Route::get('/form/layouts-vertical',       [VerticalForm::class, 'index'])->name('form-layouts-vertical');
-// Forms: horizontal layout demo
-Route::get('/form/layouts-horizontal',     [HorizontalForm::class, 'index'])->name('form-layouts-horizontal');
-// Tables: basic table demo
-Route::get('/tables/basic',                [TablesBasic::class, 'index'])->name('tables-basic');
 
 // =================================================================
 // PUBLIC AUTH  (routes are defined in auth.php — required at bottom)
@@ -180,7 +58,7 @@ Route::post('/logout', function () {
 Route::middleware('auth:superadmins')->group(function () {
 
     // Show the main analytics dashboard
-    Route::get('/',              [Analytics::class, 'index'])->name('dashboard-analytics');
+    Route::get('/',              [SuperadminController::class, 'index'])->name('dashboard-analytics');
     // Superadmin home dashboard
     Route::get('dash',           [SuperadminController::class, 'index'])->name('dash');
     // Alias for superadmin dashboard index

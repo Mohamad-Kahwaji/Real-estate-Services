@@ -9,11 +9,11 @@
   .hero-card {
     background: #fff;
     border-radius: 24px;
-    box-shadow: 0 8px 40px rgba(105,108,255,.16);
+    box-shadow: 0 8px 40px rgba(var(--role-accent-rgb),.16);
     overflow: hidden;
   }
   .hero-cover {
-    background: linear-gradient(135deg, #4a50e8 0%, #696cff 45%, #8e6fff 75%, #b06bff 100%);
+    background: linear-gradient(135deg, var(--role-accent) 0%, var(--role-accent) 45%, var(--role-accent-light) 75%, var(--role-accent-light) 100%);
     height: 160px;
     position: relative;
     overflow: hidden;
@@ -72,9 +72,9 @@
   .hero-ava {
     width: 100px; height: 100px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #696cff, #b06bff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     border: 4px solid #fff;
-    box-shadow: 0 8px 28px rgba(105,108,255,.38);
+    box-shadow: 0 8px 28px rgba(var(--role-accent-rgb),.38);
     display: flex; align-items: center; justify-content: center;
     font-size: 32px; font-weight: 800; color: #fff;
     margin-top: -50px;
@@ -94,11 +94,11 @@
     display: inline-flex; align-items: center; gap: 6px;
     padding: 8px 18px; border-radius: 12px;
     font-size: 12px; font-weight: 700;
-    background: #f5f4ff; color: #696cff;
-    border: 1.5px solid #d5d8ff; cursor: pointer;
+    background: var(--role-accent-soft); color: var(--role-accent);
+    border: 1.5px solid var(--role-accent-light); cursor: pointer;
     transition: .2s;
   }
-  .edit-profile-btn:hover { background: #696cff; color: #fff; border-color: #696cff; }
+  .edit-profile-btn:hover { background: var(--role-accent); color: #fff; border-color: var(--role-accent); }
   .hero-name {
     font-size: 22px; font-weight: 800; color: #312d4b;
     margin: 0 0 3px;
@@ -108,11 +108,11 @@
   }
   .hero-role {
     display: inline-flex; align-items: center; gap: 6px;
-    background: linear-gradient(90deg,#696cff,#9c6bff);
+    background: linear-gradient(90deg,var(--role-accent),var(--role-accent-light));
     color: #fff;
     border-radius: 30px; padding: 5px 16px;
     font-size: 12px; font-weight: 700;
-    box-shadow: 0 4px 12px rgba(105,108,255,.3);
+    box-shadow: 0 4px 12px rgba(var(--role-accent-rgb),.3);
   }
   .hero-meta {
     display: flex; flex-wrap: wrap; gap: 10px;
@@ -144,10 +144,10 @@
     color: #585164;
   }
   .hero-action-btn:hover {
-    border-color: #696cff; color: #696cff;
-    background: #eef0ff; text-decoration: none;
+    border-color: var(--role-accent); color: var(--role-accent);
+    background: var(--role-accent-soft); text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(105,108,255,.15);
+    box-shadow: 0 4px 12px rgba(var(--role-accent-rgb),.15);
   }
   .hero-action-btn i { font-size: 16px; }
 
@@ -155,15 +155,15 @@
   .s-card {
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(105,108,255,.1);
-    padding: 20px;
+    box-shadow: 0 4px 24px rgba(var(--role-accent-rgb),.1);
+    padding: 21px;
     height: 100%;
     transition: transform .2s, box-shadow .2s;
-    border: 1px solid rgba(105,108,255,.06);
+    border: 1px solid rgba(var(--role-accent-rgb),.06);
   }
   .s-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 36px rgba(105,108,255,.18);
+    box-shadow: 0 12px 36px rgba(var(--role-accent-rgb),.18);
   }
   .s-icon {
     width: 50px; height: 50px;
@@ -182,13 +182,13 @@
   .bp-green  { background: #e8faf0; color: #28c76f; }
   .bp-red    { background: #fdeaea; color: #ea5455; }
   .bp-gray   { background: #f1f0f4; color: #97939e; }
-  .bp-purple { background: #eef0ff; color: #696cff; }
+  .bp-purple { background: var(--role-accent-soft); color: var(--role-accent); }
 
   /* ── Recent Table Cards ── */
   .rc {
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(105,108,255,.09);
+    box-shadow: 0 4px 24px rgba(var(--role-accent-rgb),.09);
     overflow: hidden;
     height: 100%;
   }
@@ -200,7 +200,7 @@
   }
   .rc-title { font-size: 15px; font-weight: 700; color: #312d4b; }
   .rc-link  { font-size: 12px; color: #97939e; text-decoration: none; }
-  .rc-link:hover { color: #696cff; }
+  .rc-link:hover { color: var(--role-accent); }
   .rt th {
     font-size: 10px; font-weight: 700; letter-spacing: .6px;
     text-transform: uppercase; color: #97939e;
@@ -223,7 +223,7 @@
   .notif-card {
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(105,108,255,.09);
+    box-shadow: 0 4px 24px rgba(var(--role-accent-rgb),.09);
     overflow: hidden;
   }
   .notif-hdr {
@@ -246,7 +246,7 @@
   }
   .notif-dot-orange { background: #fff4e5; color: #ff9f43; }
   .notif-dot-green  { background: #e8faf0; color: #28c76f; }
-  .notif-dot-purple { background: #eef0ff; color: #696cff; }
+  .notif-dot-purple { background: var(--role-accent-soft); color: var(--role-accent); }
   .notif-title { font-size: 13px; font-weight: 700; color: #312d4b; margin-bottom: 2px; }
   .notif-msg   { font-size: 12px; color: #7c748a; line-height: 1.4; }
   .notif-time  { font-size: 11px; color: #b0aab8; margin-top: 3px; }
@@ -304,7 +304,7 @@
             {{ __('app.joined') }} {{ $superadmin->created_at?->format('M d, Y') ?? '-' }}
           </span>
           <span class="hero-meta-chip">
-            <i class="ri ri-time-line" style="color:#696cff;"></i>
+            <i class="ri ri-time-line" style="color:var(--role-accent);"></i>
             {{ now()->format('l, F j, Y') }}
           </span>
           <span class="hero-meta-chip">
@@ -387,7 +387,7 @@
     <a href="{{ route('allserviesad') }}" style="text-decoration:none;">
       <div class="s-card">
         <div class="d-flex justify-content-between align-items-start mb-3">
-          <div class="s-icon" style="background:#eef0ff;color:#696cff;">
+          <div class="s-icon" style="background:var(--role-accent-soft);color:var(--role-accent);">
             <i class="ri ri-tools-line"></i>
           </div>
           @if($pendingServices > 0)<span class="bp bp-purple">{{ $pendingServices }} {{ __('app.new_badge') }}</span>@endif
@@ -450,7 +450,7 @@
     <a href="{{ route('superadmin.service-requests') }}" style="text-decoration:none;">
       <div class="s-card">
         <div class="d-flex justify-content-between align-items-start mb-3">
-          <div class="s-icon" style="background:#f0f0ff;color:#8a8fff;">
+          <div class="s-icon" style="background:var(--role-accent-soft);color:var(--role-accent-light);">
             <i class="ri ri-file-list-3-line"></i>
           </div>
           @if($pendingRequests > 0)<span class="bp bp-purple">{{ $pendingRequests }}</span>@endif
@@ -472,7 +472,7 @@
   <div class="col-6 col-md-4 col-xl-4">
     <div class="s-card">
       <div class="d-flex justify-content-between align-items-start mb-3">
-        <div class="s-icon" style="background:#eef0ff;color:#696cff;">
+        <div class="s-icon" style="background:var(--role-accent-soft);color:var(--role-accent);">
           <i class="ri ri-layout-grid-line"></i>
         </div>
         <a href="{{ route('categories.index') }}" class="bp bp-purple" style="text-decoration:none;">{{ __('app.manage') }}</a>
@@ -521,7 +521,7 @@
     <div class="notif-card">
       <div class="notif-hdr">
         <span class="rc-title">
-          <i class="ri ri-notification-3-line me-2" style="color:#696cff;"></i>
+          <i class="ri ri-notification-3-line me-2" style="color:var(--role-accent);"></i>
           {{ __('app.notifications') }}
           @if($unreadCount > 0)
             <span class="bp bp-purple ms-2">{{ $unreadCount }} {{ __('app.new_badge') }}</span>
@@ -530,7 +530,7 @@
         @if($unreadCount > 0)
         <form action="{{ route('notifications.readAll') }}" method="POST">
           @csrf
-          <button type="submit" class="btn btn-sm" style="background:#eef0ff;color:#696cff;font-size:12px;font-weight:700;border-radius:10px;padding:5px 14px;">
+          <button type="submit" class="btn btn-sm" style="background:var(--role-accent-soft);color:var(--role-accent);font-size:12px;font-weight:700;border-radius:10px;padding:5px 14px;">
             <i class="ri ri-check-double-line me-1"></i>{{ __('app.mark_all_as_read') }}
           </button>
         </form>
@@ -728,7 +728,7 @@
     <div class="modal-content" style="border:0;border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.18);">
       <div class="modal-header" style="border-bottom:1px solid #f0eef4;padding:20px 26px;">
         <h5 class="modal-title" style="font-weight:800;color:#312d4b;">
-          <i class="ri ri-edit-line me-2" style="color:#696cff;"></i>{{ __('app.edit_profile') }}
+          <i class="ri ri-edit-line me-2" style="color:var(--role-accent);"></i>{{ __('app.edit_profile') }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>

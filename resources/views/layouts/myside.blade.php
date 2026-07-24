@@ -2,7 +2,7 @@
 /* ── Sidebar custom styles ── */
 #layout-menu .app-brand {
     padding: 0 !important;
-    background: linear-gradient(135deg, #696cff 0%, #9c9eff 100%);
+    background: linear-gradient(135deg, var(--role-accent, #696cff) 0%, var(--role-accent-light, #9c9eff) 100%);
     border-bottom: none !important;
 }
 
@@ -51,17 +51,26 @@
     border-radius: 10px;
     margin: 1px 10px;
     padding: 10px 14px !important;
+    font-size: 14px;
     transition: background .18s ease, color .18s ease;
+}
+
+#layout-menu .menu-text {
+    font-size: 14px;
+}
+
+#layout-menu .menu-header-text {
+    font-size: 10.5px !important;
 }
 
 #layout-menu .menu-item.active > .menu-link,
 #layout-menu .menu-item > .menu-link:hover {
-    background: #eef0ff !important;
+    background: var(--role-accent-soft, #eef0ff) !important;
 }
 
 #layout-menu .menu-item.active > .menu-link .menu-icon,
 #layout-menu .menu-item.active > .menu-link div {
-    color: #696cff !important;
+    color: var(--role-accent, #696cff) !important;
 }
 
 #layout-menu .menu-icon {
@@ -73,7 +82,7 @@
 
 /* Sub-menu indent */
 #layout-menu .menu-sub .menu-item .menu-link {
-    padding-left: 46px !important;
+    padding-left: 48px !important;
 }
 
 /* Sidebar badge pill */
@@ -90,7 +99,7 @@
     flex-shrink: 0;
 }
 
-.sb-new   { background: #eef0ff; color: #696cff; }
+.sb-new   { background: var(--role-accent-soft, #eef0ff); color: var(--role-accent, #696cff); }
 .sb-warn  { background: #fff4e5; color: #ff9f43; }
 .sb-green { background: #e8f8ef; color: #28c76f; }
 .sb-red   { background: #fdeaea; color: #ea5455; }

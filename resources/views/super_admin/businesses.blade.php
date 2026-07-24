@@ -9,7 +9,7 @@
   .biz-card {
     background: #fff;
     border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(105,108,255,.1);
+    box-shadow: 0 4px 24px rgba(var(--role-accent-rgb),.1);
     overflow: hidden;
   }
   .biz-hdr {
@@ -33,7 +33,7 @@
   .sp-approved { background:#e8faf0; color:#28c76f; }
   .sp-rejected { background:#fdeaea; color:#ea5455; }
   .filter-btn { padding: 7px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; border: 2px solid transparent; text-decoration: none; transition: .2s; }
-  .filter-btn.active, .filter-btn:hover { border-color: #696cff; color: #696cff; background: #eef0ff; }
+  .filter-btn.active, .filter-btn:hover { border-color: var(--role-accent); color: var(--role-accent); background: var(--role-accent-soft); }
   .filter-btn:not(.active) { color: #97939e; background: #f4f5fa; }
 </style>
 @endsection
@@ -82,7 +82,7 @@
         </option>
       @endforeach
     </select>
-    <button type="submit" style="padding:8px 18px;border-radius:10px;background:#696cff;color:#fff;border:none;font-size:13px;font-weight:700;">
+    <button type="submit" style="padding:8px 18px;border-radius:10px;background:var(--role-accent);color:#fff;border:none;font-size:13px;font-weight:700;">
       <i class="ri ri-filter-line me-1"></i>{{ __('app.filter') }}
     </button>
     @if(request('search') || request('city_id'))
@@ -138,7 +138,7 @@
                         style="border-radius:10px;font-weight:600;padding:9px 14px;"
                         data-bs-toggle="modal"
                         data-bs-target="#bizModal{{ $biz->id }}">
-                  <i class="ri ri-eye-line me-1" style="color:#696cff;"></i>{{ __('app.view_details') }}
+                  <i class="ri ri-eye-line me-1" style="color:var(--role-accent);"></i>{{ __('app.view_details') }}
                 </button>
 
                 @if($biz->status !== 'approved')
@@ -240,7 +240,7 @@
           @if($biz->latitude && $biz->longitude)
           <div class="col-12">
             <div style="font-size:11px;font-weight:700;color:#97939e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">
-              <i class="ri ri-map-pin-2-line me-1" style="color:#696cff;"></i>{{ __('app.location') }}
+              <i class="ri ri-map-pin-2-line me-1" style="color:var(--role-accent);"></i>{{ __('app.location') }}
               <span style="font-weight:500;color:#b0aab8;font-size:10px;margin-left:6px;">{{ $biz->latitude }}, {{ $biz->longitude }}</span>
             </div>
             <div id="biz-map-{{ $biz->id }}" style="height:260px;border-radius:14px;overflow:hidden;border:1px solid #f0eef4;"></div>

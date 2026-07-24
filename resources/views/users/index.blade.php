@@ -5,7 +5,7 @@
 <style>
 /* ── Welcome Hero ── */
 .dash-hero {
-    background: linear-gradient(135deg, #696cff 0%, #5f61e6 50%, #9c6bff 100%);
+    background: linear-gradient(135deg, var(--role-accent) 0%, var(--role-accent-light) 50%, var(--role-accent-light) 100%);
     border-radius: 20px;
     padding: 36px 40px;
     color: #fff;
@@ -68,13 +68,13 @@
     border-radius: 18px;
     padding: 24px 20px;
     border: 1px solid #f0eef8;
-    box-shadow: 0 4px 20px rgba(105,108,255,.07);
+    box-shadow: 0 4px 20px rgba(var(--role-accent-rgb),.07);
     display: flex; align-items: center; gap: 18px;
     transition: .25s;
 }
 .stat-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(105,108,255,.13);
+    box-shadow: 0 10px 30px rgba(var(--role-accent-rgb),.13);
 }
 .stat-icon {
     width: 52px; height: 52px;
@@ -91,7 +91,7 @@
     border-radius: 18px;
     padding: 22px 20px;
     border: 1px solid #f0eef8;
-    box-shadow: 0 4px 20px rgba(105,108,255,.06);
+    box-shadow: 0 4px 20px rgba(var(--role-accent-rgb),.06);
     text-align: center;
     text-decoration: none;
     display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -99,7 +99,7 @@
 }
 .qa-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(105,108,255,.15);
+    box-shadow: 0 12px 32px rgba(var(--role-accent-rgb),.15);
     border-color: #d4d5ff; color: #312d4b;
 }
 .qa-icon {
@@ -116,7 +116,7 @@
     margin: 0 0 16px;
     display: flex; align-items: center; gap: 10px;
 }
-.sec-title i { color: #696cff; font-size: 18px; }
+.sec-title i { color: var(--role-accent); font-size: 18px; }
 
 /* ── Services mini cards ── */
 .mini-service {
@@ -128,7 +128,7 @@
     margin-bottom: 10px;
     transition: .2s;
 }
-.mini-service:hover { border-color: #d4d5ff; box-shadow: 0 4px 16px rgba(105,108,255,.1); }
+.mini-service:hover { border-color: #d4d5ff; box-shadow: 0 4px 16px rgba(var(--role-accent-rgb),.1); }
 .mini-service img {
     width: 52px; height: 52px;
     border-radius: 12px; object-fit: cover; flex-shrink: 0;
@@ -172,8 +172,8 @@
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background:#eef0ff;">
-                <i class="ri ri-store-3-line" style="color:#696cff;"></i>
+            <div class="stat-icon" style="background:var(--role-accent-soft);">
+                <i class="ri ri-store-3-line" style="color:var(--role-accent);"></i>
             </div>
             <div>
                 <div class="stat-val">{{ $totalServices }}</div>
@@ -221,7 +221,7 @@
 <div class="row g-3 mb-4">
     <div class="col-4 col-lg-2">
         <a href="{{ route('allservices.user') }}" class="qa-card">
-            <div class="qa-icon" style="background:#eef0ff;">🔍</div>
+            <div class="qa-icon" style="background:var(--role-accent-soft);">🔍</div>
             <div class="qa-label">{{ __('app.browse') }}</div>
         </a>
     </div>
@@ -293,7 +293,7 @@
         @if($services->count() > 6)
         <a href="{{ route('allservices.user') }}"
            style="display:block;text-align:center;padding:12px;border-radius:12px;
-                  background:#f4f5ff;color:#696cff;font-weight:700;font-size:13px;
+                  background:#f4f5ff;color:var(--role-accent);font-weight:700;font-size:13px;
                   text-decoration:none;margin-top:8px;">
             {{ __('app.view_all_services') }} ({{ $services->count() }})
             <i class="ri ri-arrow-left-line ms-1"></i>
@@ -304,11 +304,11 @@
     <div class="col-12 col-lg-5">
         <div class="sec-title"><i class="ri ri-user-3-line"></i> {{ __('app.my_info') }}</div>
         <div style="background:#fff;border-radius:18px;padding:24px;border:1px solid #f0eef8;
-                    box-shadow:0 4px 20px rgba(105,108,255,.07);">
+                    box-shadow:0 4px 20px rgba(var(--role-accent-rgb),.07);">
             <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
                 <div style="
                     width:60px;height:60px;border-radius:50%;
-                    background:linear-gradient(135deg,#696cff,#9c9eff);
+                    background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
                     color:#fff;font-size:24px;font-weight:800;
                     display:flex;align-items:center;justify-content:center;
                 ">{{ strtoupper(mb_substr($user->name,0,1)) }}</div>
@@ -326,7 +326,7 @@
             <div style="display:flex;justify-content:space-between;align-items:center;
                         padding:10px 0;border-bottom:1px solid #f5f4f8;font-size:13px;">
                 <span style="color:#97939e;display:flex;align-items:center;gap:8px;">
-                    <i class="ri {{ $icon }}" style="color:#696cff;"></i>{{ $label }}
+                    <i class="ri {{ $icon }}" style="color:var(--role-accent);"></i>{{ $label }}
                 </span>
                 <span style="font-weight:700;color:#585164;">{{ $val }}</span>
             </div>
@@ -335,9 +335,9 @@
             <a href="{{ route('profile.edit') }}"
                style="display:flex;align-items:center;justify-content:center;gap:8px;
                       margin-top:18px;padding:11px;border-radius:12px;
-                      background:linear-gradient(135deg,#696cff,#5f61e6);
+                      background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
                       color:#fff;font-size:13px;font-weight:700;text-decoration:none;
-                      box-shadow:0 4px 14px rgba(105,108,255,.3);">
+                      box-shadow:0 4px 14px rgba(var(--role-accent-rgb),.3);">
                 <i class="ri ri-edit-line"></i> {{ __('app.edit_profile') }}
             </a>
         </div>

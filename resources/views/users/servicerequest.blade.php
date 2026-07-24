@@ -11,12 +11,12 @@
   .req-card {
     background: #fff;
     border-radius: 20px;
-    box-shadow: 0 4px 22px rgba(105,108,255,.1);
+    box-shadow: 0 4px 22px rgba(var(--role-accent-rgb),.1);
     overflow: hidden;
     transition: transform .2s, box-shadow .2s;
     height: 100%; display: flex; flex-direction: column;
   }
-  .req-card:hover { transform: translateY(-4px); box-shadow: 0 12px 34px rgba(105,108,255,.16); }
+  .req-card:hover { transform: translateY(-4px); box-shadow: 0 12px 34px rgba(var(--role-accent-rgb),.16); }
 
   .req-img { height: 170px; object-fit: cover; width: 100%; display: block; }
 
@@ -43,12 +43,12 @@
   /* Requester info */
   .requester-row {
     display: flex; align-items: center; gap: 8px;
-    background: #f5f4ff; border-radius: 10px; padding: 8px 12px;
+    background: var(--role-accent-soft); border-radius: 10px; padding: 8px 12px;
     margin-bottom: 10px;
   }
   .requester-ava {
     width: 30px; height: 30px; border-radius: 50%;
-    background: linear-gradient(135deg, #696cff, #9c6bff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     display: flex; align-items: center; justify-content: center;
     font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0;
   }
@@ -65,7 +65,7 @@
   /* Payment method chip */
   .method-chip {
     display: inline-flex; align-items: center; gap: 4px;
-    background: #eef0ff; color: #696cff;
+    background: var(--role-accent-soft); color: var(--role-accent);
     border-radius: 20px; padding: 3px 10px;
     font-size: 11px; font-weight: 700;
   }
@@ -73,13 +73,13 @@
   /* Proof image link */
   .proof-link {
     display: flex; align-items: center; gap: 6px;
-    background: #f5f4ff; border: 1px solid #d5d8ff;
+    background: var(--role-accent-soft); border: 1px solid #d5d8ff;
     border-radius: 10px; padding: 8px 12px;
-    font-size: 12px; font-weight: 700; color: #696cff;
+    font-size: 12px; font-weight: 700; color: var(--role-accent);
     text-decoration: none; margin-bottom: 12px;
     transition: .2s;
   }
-  .proof-link:hover { background: #eef0ff; color: #696cff; text-decoration: none; }
+  .proof-link:hover { background: var(--role-accent-soft); color: var(--role-accent); text-decoration: none; }
   .proof-link i { font-size: 16px; }
 
   /* Action buttons */

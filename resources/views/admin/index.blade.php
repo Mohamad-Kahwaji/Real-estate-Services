@@ -6,8 +6,8 @@
 @section('page-style')
 <style>
 :root {
-    --accent:      #696cff;
-    --accent-soft: #eef0ff;
+    --accent:      var(--role-accent);
+    --accent-soft: var(--role-accent-soft);
     --green:       #28c76f;
     --green-soft:  #e8f8ef;
     --orange:      #ff9f43;
@@ -22,7 +22,7 @@
 
 /* ── Welcome Banner ─────────────────────────────────── */
 .welcome-banner {
-    background: linear-gradient(135deg, #696cff 0%, #8f91ff 60%, #9c9eff 100%);
+    background: linear-gradient(135deg, var(--role-accent) 0%, var(--role-accent-light) 60%, var(--role-accent-light) 100%);
     border-radius: var(--card-radius);
     padding: 28px 32px;
     color: #fff;
@@ -361,7 +361,7 @@
         @if($unreadCount > 0)
         <form action="{{ route('admin.notifications.read-all') }}" method="POST" style="display:inline;">
             @csrf
-            <button type="submit" style="border:none;background:none;font-size:12px;color:#696cff;font-weight:700;cursor:pointer;padding:0;">
+            <button type="submit" style="border:none;background:none;font-size:12px;color:var(--role-accent);font-weight:700;cursor:pointer;padding:0;">
                 <i class="ri ri-check-double-line me-1"></i>{{ __('app.mark_all_as_read') }}
             </button>
         </form>
@@ -375,12 +375,12 @@
         <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 20px;border-bottom:1px solid #f8f9fc;">
             <div style="width:40px;height:40px;border-radius:12px;background:
                 @if(($d['data']['type'] ?? '') === 'business_account_request') #fff4e5
-                @elseif(($d['data']['type'] ?? '') === 'service_request') #eef0ff
+                @elseif(($d['data']['type'] ?? '') === 'service_request') var(--role-accent-soft)
                 @else #fdeaea @endif
                 ;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <i class="ri
                     @if(($d['data']['type'] ?? '') === 'business_account_request') ri-building-2-line" style="color:#ff9f43;
-                    @elseif(($d['data']['type'] ?? '') === 'service_request') ri-tools-line" style="color:#696cff;
+                    @elseif(($d['data']['type'] ?? '') === 'service_request') ri-tools-line" style="color:var(--role-accent);
                     @else ri-flag-line" style="color:#ea5455; @endif
                     font-size:18px;"></i>
             </div>
@@ -392,7 +392,7 @@
                 </div>
             </div>
             @if(! $notif->read_at)
-            <div style="width:8px;height:8px;border-radius:50%;background:#696cff;margin-top:6px;flex-shrink:0;"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--role-accent);margin-top:6px;flex-shrink:0;"></div>
             @endif
         </div>
         @endforeach
@@ -412,7 +412,7 @@
     <div class="modal-content" style="border:0;border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.18);">
       <div class="modal-header" style="border-bottom:1px solid #f1f3f9;padding:20px 26px;">
         <h5 class="modal-title" style="font-weight:800;color:#1e293b;">
-          <i class="ri ri-edit-line me-2" style="color:#696cff;"></i>{{ __('app.edit_profile') }}
+          <i class="ri ri-edit-line me-2" style="color:var(--role-accent);"></i>{{ __('app.edit_profile') }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>

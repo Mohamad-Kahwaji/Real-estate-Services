@@ -6,13 +6,13 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff;
-    --accent-soft: #eef0ff;
+    --accent: var(--role-accent);
+    --accent-soft: var(--role-accent-soft);
     --success: #28c76f;
     --success-soft: #e8f8ef;
     --danger: #ea5455;
     --danger-soft: #fdeaea;
-    --shadow: 0 4px 24px rgba(105,108,255,.10);
+    --shadow: 0 4px 24px rgba(var(--role-accent-rgb),.10);
     --radius: 16px;
 }
 
@@ -74,12 +74,12 @@
 .badge-success { background: var(--success-soft); color: var(--success); }
 
 .btn-add {
-    background: linear-gradient(135deg,#696cff,#9c9eff);
+    background: linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     border: none; color: #fff;
     padding: 10px 20px; border-radius: 12px;
     font-size: 13px; font-weight: 700;
     cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-    box-shadow: 0 4px 14px rgba(105,108,255,.3);
+    box-shadow: 0 4px 14px rgba(var(--role-accent-rgb),.3);
     transition: opacity .2s;
 }
 .btn-add:hover { opacity: .88; color: #fff; }
@@ -89,8 +89,8 @@
     display: inline-flex; align-items: center; justify-content: center;
     border: none; cursor: pointer; font-size: 16px; transition: .2s;
 }
-.btn-edit   { background: #eef0ff; color: #696cff; }
-.btn-edit:hover   { background: #696cff; color: #fff; }
+.btn-edit   { background: var(--role-accent-soft); color: var(--role-accent); }
+.btn-edit:hover   { background: var(--role-accent); color: #fff; }
 .btn-delete { background: #fdeaea; color: #ea5455; }
 .btn-delete:hover { background: #ea5455; color: #fff; }
 
@@ -109,7 +109,7 @@
 
 .form-label     { font-size: 13px; font-weight: 600; color: #3b3551; }
 .form-control   { border-radius: 12px; border: 1.5px solid #e4e4eb; padding: 11px 14px; font-size: 14px; }
-.form-control:focus { border-color: #696cff; box-shadow: 0 0 0 3px rgba(105,108,255,.12); }
+.form-control:focus { border-color: var(--role-accent); box-shadow: 0 0 0 3px rgba(var(--role-accent-rgb),.12); }
 
 .al-alert {
     border-radius: 12px; padding: 12px 16px;
@@ -144,8 +144,8 @@
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background:#eef0ff;">
-                <i class="ri ri-layout-grid-line" style="color:#696cff;"></i>
+            <div class="stat-icon" style="background:var(--role-accent-soft);">
+                <i class="ri ri-layout-grid-line" style="color:var(--role-accent);"></i>
             </div>
             <div>
                 <div class="stat-label">{{ __('app.total_categories') }}</div>
@@ -169,7 +169,7 @@
 {{-- Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-layout-grid-line me-2" style="color:#696cff;"></i>{{ __('app.categories') }}</h6>
+        <h6><i class="ri ri-layout-grid-line me-2" style="color:var(--role-accent);"></i>{{ __('app.categories') }}</h6>
     </div>
     <div class="table-responsive">
         <table class="table">
@@ -239,7 +239,7 @@
             <form action="{{ route('categories.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-add-circle-line me-2" style="color:#696cff;"></i>{{ __('app.add_category') }}</h5>
+                    <h5 class="modal-title"><i class="ri ri-add-circle-line me-2" style="color:var(--role-accent);"></i>{{ __('app.add_category') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -273,7 +273,7 @@
             <form action="{{ route('categories.update', $category->id) }}" method="POST">
                 @csrf @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:#696cff;"></i>{{ __('app.edit_category') }}</h5>
+                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:var(--role-accent);"></i>{{ __('app.edit_category') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">

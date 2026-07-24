@@ -71,7 +71,7 @@
     <ul class="menu-inner py-1">
 
         <li class="menu-header mt-4">
-            <span class="menu-header-text" style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;">
+            <span class="menu-header-text" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;">
                 {{ $navUser->name ?? '' }}
             </span>
         </li>
@@ -81,13 +81,13 @@
         <li class="menu-item {{ $active }}">
             <a href="{{ route($item['route']) }}" class="menu-link">
                 <i class="menu-icon icon-base {{ $item['icon'] }}"></i>
-                <div>{{ $item['label'] }}</div>
+                <div class="menu-text">{{ $item['label'] }}</div>
             </a>
         </li>
         @endforeach
 
         <li class="menu-header mt-4">
-            <span class="menu-header-text" style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;">
+            <span class="menu-header-text" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;">
                 {{ __('app.settings') }}
             </span>
         </li>
@@ -96,7 +96,7 @@
             <a href="javascript:void(0);" class="menu-link"
                onclick="event.preventDefault(); document.getElementById('sidebar-logout').submit();">
                 <i class="menu-icon icon-base ri ri-logout-box-r-line" style="color:#ea5455;"></i>
-                <div style="color:#ea5455;">{{ __('app.logout') }}</div>
+                <div class="menu-text" style="color:#ea5455;">{{ __('app.logout') }}</div>
             </a>
             <form id="sidebar-logout" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf

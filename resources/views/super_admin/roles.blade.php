@@ -5,12 +5,12 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff;
-    --accent-soft: #eef0ff;
+    --accent: var(--role-accent);
+    --accent-soft: var(--role-accent-soft);
     --success: #28c76f;
     --danger: #ea5455;
     --warning: #ff9f43;
-    --shadow: 0 4px 24px rgba(105,108,255,.10);
+    --shadow: 0 4px 24px rgba(var(--role-accent-rgb),.10);
     --radius: 16px;
 }
 
@@ -89,15 +89,15 @@
     border-radius: 10px; font-size: 16px; border: none;
     transition: .2s ease; text-decoration: none; cursor: pointer;
 }
-.action-btn-edit   { background: #eef0ff; color: #696cff; }
+.action-btn-edit   { background: var(--role-accent-soft); color: var(--role-accent); }
 .action-btn-delete { background: #fdeaea; color: #ea5455; }
-.action-btn-edit:hover   { background: #696cff; color: #fff; }
+.action-btn-edit:hover   { background: var(--role-accent); color: #fff; }
 .action-btn-delete:hover { background: #ea5455; color: #fff; }
 
 /* Create button */
 .btn-create {
     display: inline-flex; align-items: center; gap: 8px;
-    background: linear-gradient(135deg, #696cff, #9c9eff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     color: #fff; border: none; border-radius: 12px;
     padding: 10px 20px; font-weight: 700; font-size: 14px;
     text-decoration: none; transition: .2s ease;
@@ -115,7 +115,7 @@
 
 /* Guard badges */
 .guard-web   { background: #e3f8fc; color: #00cfe8; border-radius: 8px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
-.guard-admin { background: #eef0ff; color: #696cff; border-radius: 8px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.guard-admin { background: var(--role-accent-soft); color: var(--role-accent); border-radius: 8px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
 </style>
 @endsection
 
@@ -130,7 +130,7 @@
 {{-- Page Header --}}
 <div class="pg-header d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4><i class="ri ri-shield-star-line me-2" style="color:#696cff;"></i>{{ __('app.roles_permissions') }}</h4>
+        <h4><i class="ri ri-shield-star-line me-2" style="color:var(--role-accent);"></i>{{ __('app.roles_permissions') }}</h4>
         <p>{{ __('app.roles_permissions_desc') }}</p>
     </div>
     <div class="d-flex gap-2">
@@ -147,8 +147,8 @@
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background:#eef0ff;">
-                <i class="ri ri-shield-star-line" style="color:#696cff;"></i>
+            <div class="stat-icon" style="background:var(--role-accent-soft);">
+                <i class="ri ri-shield-star-line" style="color:var(--role-accent);"></i>
             </div>
             <div>
                 <div class="stat-label">{{ __('app.total_roles') }}</div>
@@ -194,7 +194,7 @@
 {{-- Roles Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-shield-star-line me-2" style="color:#696cff;"></i>{{ __('app.all_roles') }}</h6>
+        <h6><i class="ri ri-shield-star-line me-2" style="color:var(--role-accent);"></i>{{ __('app.all_roles') }}</h6>
         <span style="font-size:12px;color:#8592a3;font-weight:600;">{{ $roles->count() }} role{{ $roles->count() !== 1 ? 's' : '' }} defined</span>
     </div>
     <div class="table-responsive">
@@ -285,9 +285,9 @@
 {{-- ── Create Role Modal ────────────────────────────────── --}}
 <div class="modal fade" id="createRoleModal" tabindex="-1" aria-labelledby="createRoleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content" style="border-radius:20px;border:0;box-shadow:0 20px 60px rgba(105,108,255,.18);">
+        <div class="modal-content" style="border-radius:20px;border:0;box-shadow:0 20px 60px rgba(var(--role-accent-rgb),.18);">
 
-            <div class="modal-header" style="background:linear-gradient(135deg,#696cff,#9c9eff);border-radius:20px 20px 0 0;border:0;padding:20px 28px;">
+            <div class="modal-header" style="background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));border-radius:20px 20px 0 0;border:0;padding:20px 28px;">
                 <h5 class="modal-title" id="createRoleModalLabel" style="color:#fff;font-weight:800;font-size:17px;">
                     <i class="ri ri-shield-star-line me-2"></i>{{ __('app.create_new_role') }}
                 </h5>
@@ -301,7 +301,7 @@
                     {{-- Role Name --}}
                     <div class="mb-4">
                         <label class="form-label" style="font-weight:700;color:#1e293b;font-size:13px;">
-                            <i class="ri ri-shield-star-line me-1" style="color:#696cff;"></i>Role Name <span style="color:#ea5455;">*</span>
+                            <i class="ri ri-shield-star-line me-1" style="color:var(--role-accent);"></i>Role Name <span style="color:#ea5455;">*</span>
                         </label>
                         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
                                placeholder="e.g. content-manager"
@@ -320,7 +320,7 @@
                             </label>
                             <div class="d-flex gap-2">
                                 <button type="button" onclick="toggleAll(true)"
-                                        style="font-size:11px;font-weight:700;color:#696cff;background:#eef0ff;border:0;border-radius:8px;padding:4px 12px;cursor:pointer;">
+                                        style="font-size:11px;font-weight:700;color:var(--role-accent);background:var(--role-accent-soft);border:0;border-radius:8px;padding:4px 12px;cursor:pointer;">
                                     {{ __('app.select_all') }}
                                 </button>
                                 <button type="button" onclick="toggleAll(false)"
@@ -338,10 +338,10 @@
                                     @foreach($permissions as $perm)
                                     <div class="col-6 col-md-4">
                                         <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;cursor:pointer;border:1.5px solid #e8eaf2;background:#fff;transition:.15s;width:100%;"
-                                               onmouseover="this.style.borderColor='#696cff';this.style.background='#f2f0ff'"
+                                               onmouseover="this.style.borderColor='var(--role-accent)';this.style.background='var(--role-accent-soft)'"
                                                onmouseout="if(!this.querySelector('input').checked){this.style.borderColor='#e8eaf2';this.style.background='#fff';}">
                                             <input type="checkbox" name="permissions[]" value="{{ $perm->name }}"
-                                                   style="accent-color:#696cff;width:16px;height:16px;flex-shrink:0;"
+                                                   style="accent-color:var(--role-accent);width:16px;height:16px;flex-shrink:0;"
                                                    onchange="updateLabel(this)"
                                                    {{ is_array(old('permissions')) && in_array($perm->name, old('permissions')) ? 'checked' : '' }}>
                                             <span style="font-size:12px;font-weight:600;color:#1e293b;line-height:1.3;">{{ $perm->name }}</span>
@@ -382,8 +382,8 @@ function toggleAll(check) {
 function updateLabel(cb) {
     const label = cb.closest('label');
     if (cb.checked) {
-        label.style.borderColor = '#696cff';
-        label.style.background  = '#f2f0ff';
+        label.style.borderColor = 'var(--role-accent)';
+        label.style.background  = 'var(--role-accent-soft)';
     } else {
         label.style.borderColor = '#e8eaf2';
         label.style.background  = '#fff';

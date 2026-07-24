@@ -9,21 +9,21 @@
 .btn-add {
     display:inline-flex; align-items:center; gap:8px;
     padding:11px 22px; border-radius:13px; border:none;
-    background:linear-gradient(135deg,#696cff,#5f61e6);
+    background:linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     color:#fff; font-size:13px; font-weight:700; cursor:pointer;
     text-decoration:none;
-    box-shadow:0 4px 14px rgba(105,108,255,.35); transition:.2s;
+    box-shadow:0 4px 14px rgba(var(--role-accent-rgb),.35); transition:.2s;
 }
-.btn-add:hover { transform:translateY(-1px); color:#fff; box-shadow:0 8px 22px rgba(105,108,255,.4); }
+.btn-add:hover { transform:translateY(-1px); color:#fff; box-shadow:0 8px 22px rgba(var(--role-accent-rgb),.4); }
 
 .svc-card {
     background:#fff; border-radius:20px;
     border:1px solid #f0eef8;
-    box-shadow:0 4px 20px rgba(105,108,255,.07);
+    box-shadow:0 4px 20px rgba(var(--role-accent-rgb),.07);
     overflow:hidden; height:100%;
     display:flex; flex-direction:column; transition:.25s;
 }
-.svc-card:hover { transform:translateY(-4px); box-shadow:0 12px 34px rgba(105,108,255,.15); }
+.svc-card:hover { transform:translateY(-4px); box-shadow:0 12px 34px rgba(var(--role-accent-rgb),.15); }
 
 .svc-img { height:200px; object-fit:cover; width:100%; display:block; }
 .svc-img-placeholder {
@@ -65,8 +65,8 @@
     display:flex; align-items:center; justify-content:center; gap:6px;
     text-decoration:none; transition:.15s;
 }
-.btn-edit { background:#eef0ff; color:#696cff; }
-.btn-edit:hover { background:#696cff; color:#fff; }
+.btn-edit { background:var(--role-accent-soft); color:var(--role-accent); }
+.btn-edit:hover { background:var(--role-accent); color:#fff; }
 .btn-del  { background:#fdeaea; color:#ea5455; }
 .btn-del:hover { background:#ea5455; color:#fff; }
 
@@ -75,14 +75,14 @@
     background:#fff; border-radius:20px;
     border:1.5px dashed #d4d5ff;
 }
-.empty-state i { font-size:52px; color:#c5c7ff; display:block; margin-bottom:14px; }
+.empty-state i { font-size:52px; color:var(--role-accent-light); display:block; margin-bottom:14px; }
 .empty-state h5 { font-size:16px; font-weight:800; color:#312d4b; margin-bottom:6px; }
 .empty-state p  { font-size:13px; color:#97939e; margin-bottom:20px; }
 </style>
 
 <div class="page-hdr">
     <div>
-        <h4><i class="ri ri-store-3-line" style="color:#696cff;margin-left:8px;"></i> {{ __('app.my_services') }}</h4>
+        <h4><i class="ri ri-store-3-line" style="color:var(--role-accent);margin-left:8px;"></i> {{ __('app.my_services') }}</h4>
         <p>{{ __('app.no_services_desc') }}</p>
     </div>
     <a href="{{ route('user.service.create') }}" class="btn-add">
@@ -145,13 +145,13 @@
                 </div>
 
                 <div class="svc-price-row">
-                    <div class="price-pill" style="background:#eef0ff;">
+                    <div class="price-pill" style="background:var(--role-accent-soft);">
                         <div class="cur">USD</div>
-                        <div class="amt" style="color:#696cff;">${{ number_format($service->price_usd ?? 0) }}</div>
+                        <div class="amt" style="color:var(--role-accent);">${{ number_format($service->price_usd ?? 0) }}</div>
                     </div>
                     <div class="price-pill" style="background:#f4f5ff;">
                         <div class="cur">SYP</div>
-                        <div class="amt" style="color:#5f61e6;">{{ number_format($service->price_syp ?? 0) }}</div>
+                        <div class="amt" style="color:var(--role-accent-light);">{{ number_format($service->price_syp ?? 0) }}</div>
                     </div>
                 </div>
 

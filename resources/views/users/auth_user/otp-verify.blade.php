@@ -38,7 +38,7 @@
                         <p class="text-muted mb-0" style="font-size:14px;">
                             {{ __('app.otp_sent_to') }}
                         </p>
-                        <p style="font-size:15px;font-weight:700;color:#696cff;direction:ltr;">
+                        <p style="font-size:15px;font-weight:700;color:var(--role-accent);direction:ltr;">
                             {{ $phone }}
                         </p>
                     </div>
@@ -126,7 +126,7 @@
     boxes.forEach((box, i) => {
         box.addEventListener('input', function () {
             this.value = this.value.replace(/\D/g, '').slice(-1);
-            this.style.borderColor = this.value ? '#696cff' : '#e5e7ff';
+            this.style.borderColor = this.value ? 'var(--role-accent)' : '#e5e7ff';
             if (this.value && i < boxes.length - 1) boxes[i + 1].focus();
             syncCode();
         });
@@ -149,7 +149,7 @@
                 pasted.split('').forEach((ch, idx) => {
                     if (boxes[idx]) {
                         boxes[idx].value = ch;
-                        boxes[idx].style.borderColor = '#696cff';
+                        boxes[idx].style.borderColor = 'var(--role-accent)';
                     }
                 });
                 if (boxes[pasted.length - 1]) boxes[pasted.length - 1].focus();

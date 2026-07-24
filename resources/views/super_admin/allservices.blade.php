@@ -72,7 +72,7 @@
     gap: 5px;
     margin-bottom: 6px;
 }
-.biz-label i { color: #696cff; }
+.biz-label i { color: var(--role-accent); }
 
 .svc-title {
     font-size: 17px;
@@ -110,7 +110,7 @@
 .creator-ava {
     width: 30px; height: 30px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #696cff, #9c9eff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     color: #fff;
     font-size: 12px;
     font-weight: 800;
@@ -165,7 +165,7 @@
     padding: 11px;
     font-weight: 700;
     font-size: 14px;
-    background: linear-gradient(135deg, #696cff, #9c9eff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     border: none;
     color: #fff;
     transition: .2s ease;
@@ -196,7 +196,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: .06em;
-    color: #696cff;
+    color: var(--role-accent);
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -216,8 +216,8 @@
 
 /* Creator card in modal */
 .creator-card-modal {
-    background: linear-gradient(135deg, #696cff15, #9c9eff15);
-    border: 1px solid #696cff30;
+    background: linear-gradient(135deg, var(--role-accent)15, var(--role-accent-light)15);
+    border: 1px solid var(--role-accent)30;
     border-radius: 16px;
     padding: 18px 20px;
     margin-bottom: 16px;
@@ -228,7 +228,7 @@
 .creator-ava-lg {
     width: 50px; height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #696cff, #9c9eff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     color: #fff;
     font-size: 20px;
     font-weight: 800;
@@ -264,7 +264,7 @@
 
 /* Page header */
 .page-header {
-    background: linear-gradient(135deg, #696cff, #9c9eff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     border-radius: 20px;
     padding: 28px 32px;
     color: #fff;
@@ -330,7 +330,7 @@
 
 @if(request('search'))
     <div class="mb-3" style="font-size:13px;color:#8592a3;">
-        Showing results for <strong style="color:#696cff;">"{{ request('search') }}"</strong>
+        Showing results for <strong style="color:var(--role-accent);">"{{ request('search') }}"</strong>
         — {{ $services->total() }} {{ Str::plural('result', $services->total()) }}
         @if($services->total() > 0 && !\App\Models\Service::where('title','like','%'.request('search').'%')->exists())
             <span class="badge bg-warning text-dark ms-2">Similar results</span>

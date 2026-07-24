@@ -83,8 +83,8 @@
     min-width: 0;
 }
 .action-btn:hover { transform: translateY(-1px); }
-.btn-reviewed { background: #eef0ff; color: #696cff; }
-.btn-reviewed:hover { background: #696cff; color: #fff; }
+.btn-reviewed { background: var(--role-accent-soft); color: var(--role-accent); }
+.btn-reviewed:hover { background: var(--role-accent); color: #fff; }
 .btn-resolved { background: #e8f8ef; color: #28c76f; }
 .btn-resolved:hover { background: #28c76f; color: #fff; }
 .btn-del { background: #fdeaea; color: #ea5455; }

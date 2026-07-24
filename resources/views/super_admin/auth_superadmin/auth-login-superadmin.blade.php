@@ -17,7 +17,7 @@ body { margin: 0; padding: 0; }
 /* Left panel */
 .al-panel {
     width: 42%;
-    background: linear-gradient(145deg, #696cff 0%, #9c9eff 60%, #c3c5ff 100%);
+    background: linear-gradient(145deg, var(--role-accent) 0%, var(--role-accent-light) 60%, #c3c5ff 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -112,7 +112,7 @@ body { margin: 0; padding: 0; }
 
 .al-brand-dot {
     width: 42px; height: 42px;
-    background: linear-gradient(135deg,#696cff,#9c9eff);
+    background: linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     font-size: 20px; color: #fff;
@@ -143,12 +143,19 @@ body { margin: 0; padding: 0; }
 }
 
 .al-field .form-control:focus {
-    border-color: #696cff;
-    box-shadow: 0 0 0 3px rgba(105,108,255,.12);
+    border-color: var(--role-accent);
+    box-shadow: 0 0 0 3px rgba(var(--role-accent-rgb),.12);
     outline: none;
 }
 
+.al-field .input-group {
+    display: flex;
+    align-items: stretch;
+}
+
 .al-field .input-group .form-control {
+    flex: 1;
+    min-width: 0;
     border-right: none;
     border-radius: 12px 0 0 12px;
 }
@@ -164,12 +171,12 @@ body { margin: 0; padding: 0; }
     transition: color .2s;
 }
 
-.al-field .input-group-text:hover { color: #696cff; }
+.al-field .input-group-text:hover { color: var(--role-accent); }
 .al-field .input-group:focus-within .form-control {
-    border-color: #696cff;
-    box-shadow: 0 0 0 3px rgba(105,108,255,.12);
+    border-color: var(--role-accent);
+    box-shadow: 0 0 0 3px rgba(var(--role-accent-rgb),.12);
 }
-.al-field .input-group:focus-within .input-group-text { border-color: #696cff; }
+.al-field .input-group:focus-within .input-group-text { border-color: var(--role-accent); }
 
 .al-forgot {
     display: flex; justify-content: flex-end;
@@ -177,7 +184,7 @@ body { margin: 0; padding: 0; }
 }
 
 .al-forgot a {
-    font-size: 13px; font-weight: 600; color: #696cff;
+    font-size: 13px; font-weight: 600; color: var(--role-accent);
     text-decoration: none;
 }
 .al-forgot a:hover { text-decoration: underline; }
@@ -186,14 +193,14 @@ body { margin: 0; padding: 0; }
     width: 100%;
     padding: 14px;
     border-radius: 12px;
-    background: linear-gradient(135deg,#696cff,#9c9eff);
+    background: linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     border: none;
     color: #fff;
     font-size: 15px; font-weight: 700;
     letter-spacing: .3px;
     cursor: pointer;
     transition: opacity .2s, transform .15s;
-    box-shadow: 0 6px 20px rgba(105,108,255,.35);
+    box-shadow: 0 6px 20px rgba(var(--role-accent-rgb),.35);
 }
 
 .btn-al-login:hover { opacity: .92; transform: translateY(-1px); }

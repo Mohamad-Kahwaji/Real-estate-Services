@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Auth')</title>
 
+    @vite(['resources/css/app.css'])
+
     @hasSection('page-style')
         @yield('page-style')
     @endif

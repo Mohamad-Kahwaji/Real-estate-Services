@@ -5,9 +5,9 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff;
-    --accent-soft: #eef0ff;
-    --shadow: 0 4px 24px rgba(105,108,255,.10);
+    --accent: var(--role-accent);
+    --accent-soft: var(--role-accent-soft);
+    --shadow: 0 4px 24px rgba(var(--role-accent-rgb),.10);
     --radius: 16px;
 }
 
@@ -18,7 +18,7 @@
     text-decoration: none; margin-bottom: 20px;
     transition: color .2s;
 }
-.back-link:hover { color: #696cff; }
+.back-link:hover { color: var(--role-accent); }
 
 /* Form card */
 .form-card {
@@ -27,7 +27,7 @@
 }
 
 .form-card-banner {
-    background: linear-gradient(135deg, #696cff 0%, #9c9eff 100%);
+    background: linear-gradient(135deg, var(--role-accent) 0%, var(--role-accent-light) 100%);
     padding: 28px 32px; position: relative; overflow: hidden;
 }
 .form-card-banner::before {
@@ -60,7 +60,7 @@
 }
 .form-control:focus, .form-select:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(105,108,255,.12);
+    box-shadow: 0 0 0 3px rgba(var(--role-accent-rgb),.12);
     background: #fff; outline: none;
 }
 .form-control.is-invalid { border-color: #ea5455; }
@@ -85,7 +85,7 @@
 .guard-card:has(input:checked) {
     border-color: var(--accent); background: var(--accent-soft);
 }
-.guard-card:hover { border-color: #c5c7ff; }
+.guard-card:hover { border-color: var(--role-accent-light); }
 .guard-card input { display: none; }
 .guard-icon {
     width: 44px; height: 44px; border-radius: 12px;
@@ -111,7 +111,7 @@
 /* Buttons */
 .btn-submit {
     display: inline-flex; align-items: center; gap: 8px;
-    background: linear-gradient(135deg, #696cff, #9c9eff);
+    background: linear-gradient(135deg, var(--role-accent), var(--role-accent-light));
     color: #fff; border: none; border-radius: 12px;
     padding: 12px 28px; font-weight: 700; font-size: 14px;
     transition: .2s ease; cursor: pointer;
@@ -149,9 +149,9 @@
     transition: .15s; cursor: default;
 }
 .perm-item.role-match {
-    background: #eef0ff; border-color: #696cff; cursor: pointer;
+    background: var(--role-accent-soft); border-color: var(--role-accent); cursor: pointer;
 }
-.perm-item.role-match .perm-dot { background: #696cff; }
+.perm-item.role-match .perm-dot { background: var(--role-accent); }
 .perm-item.manually-excluded {
     opacity: .45; background: #fff5f5; border-color: #fca5a5; cursor: pointer;
 }
@@ -239,8 +239,8 @@
                             <label class="guard-card w-100" for="guard_admin">
                                 <input type="radio" id="guard_admin" name="guard_name" value="admins"
                                        {{ old('guard_name', 'admins') === 'admins' ? 'checked' : '' }}>
-                                <div class="guard-icon" style="background:#eef0ff;">
-                                    <i class="ri ri-user-settings-line" style="color:#696cff;"></i>
+                                <div class="guard-icon" style="background:var(--role-accent-soft);">
+                                    <i class="ri ri-user-settings-line" style="color:var(--role-accent);"></i>
                                 </div>
                                 <div style="flex:1;">
                                     <div class="guard-name">{{ __('app.admin_guard') }}</div>
@@ -278,11 +278,11 @@
                         <div class="col-6 col-md-4">
                             <label style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;
                                           cursor:pointer;border:1.5px solid #e8eaf2;background:#fafbff;transition:.15s;width:100%;"
-                                   onmouseover="this.style.borderColor='#696cff';this.style.background='#f2f0ff'"
+                                   onmouseover="this.style.borderColor='var(--role-accent)';this.style.background='var(--role-accent-soft)'"
                                    onmouseout="if(!this.querySelector('input').checked){this.style.borderColor='#e8eaf2';this.style.background='#fafbff';}">
                                 <input type="checkbox" name="roles[]" value="{{ $role->name }}"
                                        data-permissions="{{ json_encode($role->permissions->pluck('name')) }}"
-                                       style="accent-color:#696cff;width:16px;height:16px;flex-shrink:0;"
+                                       style="accent-color:var(--role-accent);width:16px;height:16px;flex-shrink:0;"
                                        onchange="highlightRole(this); filterPermsByRoles();"
                                        {{ is_array(old('roles')) && in_array($role->name, old('roles')) ? 'checked' : '' }}>
                                 <div>
@@ -295,7 +295,7 @@
                     </div>
                     @else
                     <div style="background:#fafbff;border-radius:12px;padding:16px;color:#8592a3;font-size:13px;margin-bottom:16px;">
-                        {{ __('app.create_roles_first') }} <a href="{{ route('roleindex') }}" style="color:#696cff;">{{ __('app.create_role') }}</a>
+                        {{ __('app.create_roles_first') }} <a href="{{ route('roleindex') }}" style="color:var(--role-accent);">{{ __('app.create_role') }}</a>
                     </div>
                     @endif
 
@@ -317,14 +317,14 @@
         @if(isset($permissions) && $permissions->count() > 0)
         <div class="list-card">
             <div class="list-card-header">
-                <h6><i class="ri ri-key-2-line me-2" style="color:#696cff;"></i>{{ __('app.existing_permissions_list') }}</h6>
+                <h6><i class="ri ri-key-2-line me-2" style="color:var(--role-accent);"></i>{{ __('app.existing_permissions_list') }}</h6>
                 <span id="permCount" style="font-size:12px;color:#8592a3;font-weight:600;">{{ __('app.x_total', ['count' => $permissions->count()]) }}</span>
             </div>
             <div class="perm-grid">
                 @foreach($permissions as $perm)
                 <div class="perm-item" data-perm="{{ $perm->name }}">
                     <div class="perm-dot"
-                         style="background:{{ $perm->guard_name === 'admins' ? '#696cff' : '#00cfe8' }};"></div>
+                         style="background:{{ $perm->guard_name === 'admins' ? 'var(--role-accent)' : '#00cfe8' }};"></div>
                     <div>
                         <div class="perm-name">{{ $perm->name }}</div>
                         <div class="perm-guard">{{ $perm->guard_name }}</div>
@@ -336,7 +336,7 @@
         @elseif(isset($permissions))
         <div class="list-card">
             <div class="list-card-header">
-                <h6><i class="ri ri-key-2-line me-2" style="color:#696cff;"></i>{{ __('app.existing_permissions_list') }}</h6>
+                <h6><i class="ri ri-key-2-line me-2" style="color:var(--role-accent);"></i>{{ __('app.existing_permissions_list') }}</h6>
             </div>
             <div class="empty-perm">
                 <i class="ri ri-key-2-line"></i>
@@ -353,8 +353,8 @@
 function highlightRole(cb) {
     const label = cb.closest('label');
     if (cb.checked) {
-        label.style.borderColor = '#696cff';
-        label.style.background  = '#f2f0ff';
+        label.style.borderColor = 'var(--role-accent)';
+        label.style.background  = 'var(--role-accent-soft)';
     } else {
         label.style.borderColor = '#e8eaf2';
         label.style.background  = '#fafbff';

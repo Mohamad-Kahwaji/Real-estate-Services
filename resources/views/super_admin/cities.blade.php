@@ -6,10 +6,10 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff; --accent-soft: #eef0ff;
+    --accent: var(--role-accent); --accent-soft: var(--role-accent-soft);
     --info: #00cfe8; --info-soft: #e3f8fc;
     --danger: #ea5455; --danger-soft: #fdeaea;
-    --shadow: 0 4px 24px rgba(105,108,255,.10);
+    --shadow: 0 4px 24px rgba(var(--role-accent-rgb),.10);
     --radius: 16px;
 }
 .pg-header h4 { font-size: 22px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
@@ -53,11 +53,11 @@
 .badge-info   { background: var(--info-soft);   color: var(--info); }
 
 .btn-add {
-    background: linear-gradient(135deg,#696cff,#9c9eff);
+    background: linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     border: none; color: #fff; padding: 10px 20px; border-radius: 12px;
     font-size: 13px; font-weight: 700; cursor: pointer;
     display: inline-flex; align-items: center; gap: 6px;
-    box-shadow: 0 4px 14px rgba(105,108,255,.3); transition: opacity .2s;
+    box-shadow: 0 4px 14px rgba(var(--role-accent-rgb),.3); transition: opacity .2s;
 }
 .btn-add:hover { opacity: .88; color: #fff; }
 
@@ -66,8 +66,8 @@
     display: inline-flex; align-items: center; justify-content: center;
     border: none; cursor: pointer; font-size: 16px; transition: .2s;
 }
-.btn-edit   { background: #eef0ff; color: #696cff; }
-.btn-edit:hover   { background: #696cff; color: #fff; }
+.btn-edit   { background: var(--role-accent-soft); color: var(--role-accent); }
+.btn-edit:hover   { background: var(--role-accent); color: #fff; }
 .btn-delete { background: #fdeaea; color: #ea5455; }
 .btn-delete:hover { background: #ea5455; color: #fff; }
 
@@ -82,7 +82,7 @@
 .modal-title   { font-weight: 800; font-size: 16px; }
 .form-label    { font-size: 13px; font-weight: 600; color: #3b3551; }
 .form-control  { border-radius: 12px; border: 1.5px solid #e4e4eb; padding: 11px 14px; font-size: 14px; }
-.form-control:focus { border-color: #696cff; box-shadow: 0 0 0 3px rgba(105,108,255,.12); }
+.form-control:focus { border-color: var(--role-accent); box-shadow: 0 0 0 3px rgba(var(--role-accent-rgb),.12); }
 
 .al-alert { border-radius: 12px; padding: 12px 16px; font-size: 13px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 .al-alert-success { background: #e8f8ef; color: #1a7a45; border: 1px solid #c3e9d4; }
@@ -127,7 +127,7 @@
 {{-- Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-map-pin-2-line me-2" style="color:#696cff;"></i>{{ __('app.cities') }}</h6>
+        <h6><i class="ri ri-map-pin-2-line me-2" style="color:var(--role-accent);"></i>{{ __('app.cities') }}</h6>
     </div>
     <div class="table-responsive">
         <table class="table">
@@ -150,7 +150,7 @@
                     <td>
                         <button type="button"
                                 class="badge-pill"
-                                style="background:#eef0ff;color:#696cff;border:none;cursor:pointer;"
+                                style="background:var(--role-accent-soft);color:var(--role-accent);border:none;cursor:pointer;"
                                 data-bs-toggle="modal"
                                 data-bs-target="#svcModal{{ $city->id }}"
                                 title="View services">
@@ -197,7 +197,7 @@
             <form action="{{ route('cities.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-map-pin-add-line me-2" style="color:#696cff;"></i>{{ __('app.add_city') }}</h5>
+                    <h5 class="modal-title"><i class="ri ri-map-pin-add-line me-2" style="color:var(--role-accent);"></i>{{ __('app.add_city') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -231,7 +231,7 @@
             <form action="{{ route('cities.update', $city->id) }}" method="POST">
                 @csrf @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:#696cff;"></i>{{ __('app.edit_city') }}</h5>
+                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:var(--role-accent);"></i>{{ __('app.edit_city') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -265,7 +265,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="ri ri-store-2-line me-2" style="color:#696cff;"></i>
+                    <i class="ri ri-store-2-line me-2" style="color:var(--role-accent);"></i>
                     {{ app()->getLocale() === 'ar' ? ($city->name_ar ?: $city->name_en) : ($city->name_en ?: $city->name_ar) }} — {{ __('app.services') }}
                     <span style="font-size:13px;font-weight:600;color:#8592a3;margin-right:6px;">({{ $city->services_count }})</span>
                 </h5>
@@ -308,8 +308,8 @@
                             </div>
                             @if($svc->services_type)
                             <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
-                                background:{{ $svc->services_type === 'sale' ? '#eef0ff' : '#e3f8fc' }};
-                                color:{{ $svc->services_type === 'sale' ? '#696cff' : '#00cfe8' }};">
+                                background:{{ $svc->services_type === 'sale' ? 'var(--role-accent-soft)' : '#e3f8fc' }};
+                                color:{{ $svc->services_type === 'sale' ? 'var(--role-accent)' : '#00cfe8' }};">
                                 {{ __('app.' . $svc->services_type) }}
                             </span>
                             @endif

@@ -6,11 +6,11 @@
 @section('page-style')
 <style>
 :root {
-    --accent: #696cff; --accent-soft: #eef0ff;
+    --accent: var(--role-accent); --accent-soft: var(--role-accent-soft);
     --success: #28c76f; --success-soft: #e8f8ef;
     --warning: #ff9f43; --warning-soft: #fff4e5;
     --danger: #ea5455; --danger-soft: #fdeaea;
-    --shadow: 0 4px 24px rgba(105,108,255,.10);
+    --shadow: 0 4px 24px rgba(var(--role-accent-rgb),.10);
     --radius: 16px;
 }
 .pg-header h4 { font-size: 22px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
@@ -56,11 +56,11 @@
 .badge-gray     { background: #f1f0f4; color: #585164; }
 
 .btn-add {
-    background: linear-gradient(135deg,#696cff,#9c9eff);
+    background: linear-gradient(135deg,var(--role-accent),var(--role-accent-light));
     border: none; color: #fff; padding: 10px 20px; border-radius: 12px;
     font-size: 13px; font-weight: 700; cursor: pointer;
     display: inline-flex; align-items: center; gap: 6px;
-    box-shadow: 0 4px 14px rgba(105,108,255,.3); transition: opacity .2s;
+    box-shadow: 0 4px 14px rgba(var(--role-accent-rgb),.3); transition: opacity .2s;
 }
 .btn-add:hover { opacity: .88; color: #fff; }
 
@@ -69,8 +69,8 @@
     display: inline-flex; align-items: center; justify-content: center;
     border: none; cursor: pointer; font-size: 16px; transition: .2s;
 }
-.btn-edit   { background: #eef0ff; color: #696cff; }
-.btn-edit:hover   { background: #696cff; color: #fff; }
+.btn-edit   { background: var(--role-accent-soft); color: var(--role-accent); }
+.btn-edit:hover   { background: var(--role-accent); color: #fff; }
 .btn-delete { background: #fdeaea; color: #ea5455; }
 .btn-delete:hover { background: #ea5455; color: #fff; }
 
@@ -85,15 +85,15 @@
 .modal-title   { font-weight: 800; font-size: 16px; }
 .form-label    { font-size: 13px; font-weight: 600; color: #3b3551; }
 .form-control, .form-select { border-radius: 12px; border: 1.5px solid #e4e4eb; padding: 11px 14px; font-size: 14px; }
-.form-control:focus, .form-select:focus { border-color: #696cff; box-shadow: 0 0 0 3px rgba(105,108,255,.12); }
+.form-control:focus, .form-select:focus { border-color: var(--role-accent); box-shadow: 0 0 0 3px rgba(var(--role-accent-rgb),.12); }
 
 /* Dynamic Fields */
 .fields-section {
     background: #fafbff; border-radius: 14px;
-    border: 1.5px dashed #c5c7ff; padding: 16px; margin-top: 8px;
+    border: 1.5px dashed var(--role-accent-light); padding: 16px; margin-top: 8px;
 }
 .fields-section-title {
-    font-size: 12px; font-weight: 700; color: #696cff;
+    font-size: 12px; font-weight: 700; color: var(--role-accent);
     text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px;
     display: flex; align-items: center; justify-content: space-between;
 }
@@ -115,18 +115,18 @@
 .btn-remove-field:hover { background: #ea5455; color: #fff; }
 .btn-add-field {
     width: 100%; padding: 9px; border-radius: 10px;
-    border: 1.5px dashed #696cff; background: transparent;
-    color: #696cff; font-size: 13px; font-weight: 700;
+    border: 1.5px dashed var(--role-accent); background: transparent;
+    color: var(--role-accent); font-size: 13px; font-weight: 700;
     cursor: pointer; transition: .2s; margin-top: 10px;
     display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.btn-add-field:hover { background: #eef0ff; }
+.btn-add-field:hover { background: var(--role-accent-soft); }
 .type-badge {
     display: inline-block; padding: 2px 8px; border-radius: 6px;
     font-size: 11px; font-weight: 700; text-transform: uppercase;
 }
 .type-text    { background: #e3f8fc; color: #00cfe8; }
-.type-number  { background: #eef0ff; color: #696cff; }
+.type-number  { background: var(--role-accent-soft); color: var(--role-accent); }
 .type-date    { background: #e8f8ef; color: #28c76f; }
 .type-select  { background: #fff4e5; color: #ff9f43; }
 
@@ -159,8 +159,8 @@
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
         <div class="stat-card">
-            <div class="stat-icon" style="background:#eef0ff;">
-                <i class="ri ri-list-check-2" style="color:#696cff;"></i>
+            <div class="stat-icon" style="background:var(--role-accent-soft);">
+                <i class="ri ri-list-check-2" style="color:var(--role-accent);"></i>
             </div>
             <div>
                 <div class="stat-label">Total Subcategories</div>
@@ -195,7 +195,7 @@
 {{-- Table --}}
 <div class="table-card">
     <div class="table-card-header">
-        <h6><i class="ri ri-list-check-2 me-2" style="color:#696cff;"></i>All Subcategories</h6>
+        <h6><i class="ri ri-list-check-2 me-2" style="color:var(--role-accent);"></i>All Subcategories</h6>
     </div>
     <div class="table-responsive">
         <table class="table">
@@ -281,7 +281,7 @@
             <form action="{{ route('subcategories.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-add-circle-line me-2" style="color:#696cff;"></i>Add Subcategory</h5>
+                    <h5 class="modal-title"><i class="ri ri-add-circle-line me-2" style="color:var(--role-accent);"></i>Add Subcategory</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -336,7 +336,7 @@
             <form action="{{ route('subcategories.update', $sub->id) }}" method="POST">
                 @csrf @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:#696cff;"></i>Edit Subcategory</h5>
+                    <h5 class="modal-title"><i class="ri ri-pencil-line me-2" style="color:var(--role-accent);"></i>Edit Subcategory</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">

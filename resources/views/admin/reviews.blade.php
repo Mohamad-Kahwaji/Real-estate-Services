@@ -7,11 +7,11 @@
 .rev-card {
     background: #fff;
     border-radius: 18px;
-    box-shadow: 0 4px 20px rgba(105,108,255,.08);
+    box-shadow: 0 4px 20px rgba(var(--role-accent-rgb),.08);
     overflow: hidden;
     transition: .2s;
 }
-.rev-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(105,108,255,.13); }
+.rev-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(var(--role-accent-rgb),.13); }
 
 .rev-header { padding: 18px 20px 14px; border-bottom: 1px solid #f1f3f9; }
 .rev-service-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 3px; }
@@ -77,7 +77,7 @@
             <div class="rev-header d-flex justify-content-between align-items-start">
                 <div>
                     <div class="rev-service-title">
-                        <i class="ri ri-store-3-line me-1" style="color:#696cff;"></i>
+                        <i class="ri ri-store-3-line me-1" style="color:var(--role-accent);"></i>
                         {{ auto_translate($review->service->title ?? '') ?: __('app.unknown_service') }}
                     </div>
                     @php
