@@ -27,6 +27,42 @@ A full-stack real estate services platform built with Laravel 12, connecting pro
 
 ---
 
+## 📸 Screenshots
+
+Each role gets its own accent color on top of a shared design system — deep indigo for Super Admin, the base brand indigo for Admin, and a lighter indigo for regular Users.
+
+### Super Admin
+
+<p align="center">
+  <img src="screenshots/01-superadmin-dashboard.png" width="49%" alt="Super Admin Dashboard" />
+  <img src="screenshots/02-superadmin-permissions.png" width="49%" alt="Super Admin Permissions" />
+</p>
+<p align="center">
+  <img src="screenshots/03-superadmin-categories.png" width="32%" alt="Super Admin Categories" />
+  <img src="screenshots/04-superadmin-roles.png" width="32%" alt="Super Admin Roles" />
+  <img src="screenshots/05-superadmin-cities.png" width="32%" alt="Super Admin Cities" />
+</p>
+
+### Admin
+
+<p align="center">
+  <img src="screenshots/06-admin-dashboard.png" width="49%" alt="Admin Dashboard" />
+  <img src="screenshots/07-admin-ads.png" width="49%" alt="Admin Ads Management" />
+</p>
+
+### User
+
+<p align="center">
+  <img src="screenshots/09-user-dashboard.png" width="49%" alt="User Dashboard" />
+  <img src="screenshots/10-user-business-dashboard.png" width="49%" alt="User Business Dashboard" />
+</p>
+<p align="center">
+  <img src="screenshots/11-user-browse-services.png" width="49%" alt="Browse Services" />
+  <img src="screenshots/12-user-favorites.png" width="49%" alt="Favorites" />
+</p>
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer              | Technology                    |
