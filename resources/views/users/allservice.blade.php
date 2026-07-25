@@ -104,8 +104,8 @@
                 <h5 class="card-title mb-1">{{ $service->title }}</h5>
 
                 @php
-                    $avgRating   = round($service->review_avg_rating ?? 0, 1);
-                    $reviewCount = $service->review_count ?? 0;
+                    $avgRating   = round($service->reviews_avg_rating ?? 0, 1);
+                    $reviewCount = $service->reviews_count ?? 0;
                     $fullStars   = (int) floor($avgRating);
                     $halfStar    = ($avgRating - $fullStars) >= 0.5;
                 @endphp

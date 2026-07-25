@@ -22,7 +22,7 @@ class ServiceController extends Controller
         $term = $request->search ? '%' . $request->search . '%' : null;
 
         $query = Service::with(['business.city', 'category', 'subcategory'])
-            ->withAvg('review', 'rating')
+            ->withAvg('reviews', 'rating')
             ->when($request->status, fn($q) => $q->where('status', $request->status))
             ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
             ->when($request->subcategory_id, fn($q) => $q->where('subcategory_id', $request->subcategory_id))
@@ -40,7 +40,7 @@ class ServiceController extends Controller
         if ($services->isEmpty() && $request->search) {
             $words = array_filter(explode(' ', $request->search));
             $services = Service::with(['business.city', 'category', 'subcategory'])
-                ->withAvg('review', 'rating')
+                ->withAvg('reviews', 'rating')
                 ->where(function($q) use ($words) {
                     foreach ($words as $word) {
                         $q->orWhere('title', 'like', '%' . $word . '%');

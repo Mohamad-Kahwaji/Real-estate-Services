@@ -397,7 +397,7 @@
                     </div>
 
                     {{-- متوسط التقييم --}}
-                    @php $avgRating = round($service->review_avg_rating ?? 0, 1); @endphp
+                    @php $avgRating = round($service->reviews_avg_rating ?? 0, 1); @endphp
                     <div class="position-absolute bottom-0 start-0 m-2">
                         <div class="svc-rating-badge">
                             <i class="ri-star-fill me-1" style="color:#fbbf24;font-size:12px;"></i>
