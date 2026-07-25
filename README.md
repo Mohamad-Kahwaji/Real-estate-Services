@@ -31,6 +31,14 @@ A full-stack real estate services platform built with Laravel 12, connecting pro
 
 Each role gets its own accent color on top of a shared design system — deep indigo for Super Admin, the base brand indigo for Admin, and a lighter indigo for regular Users.
 
+### Public Home Page
+
+A bilingual (EN/AR, full RTL support) landing page with platform stats, how-it-works, and real featured services — no account required to look around.
+
+<p align="center">
+  <img src="screenshots/00-home-page.png" width="100%" alt="Public Home Page" />
+</p>
+
 ### Super Admin
 
 <p align="center">

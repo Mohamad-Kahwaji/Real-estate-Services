@@ -31,7 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->redirectUsersTo(function (Request $request) {
             if (Auth::guard('superadmins')->check()) {
-                return route('dashboard-analytics');
+                return route('indexsuperadmin');
             }
             if (Auth::guard('admins')->check()) {
                 return route('admin.dashboard');

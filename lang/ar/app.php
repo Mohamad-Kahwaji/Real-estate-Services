@@ -565,4 +565,63 @@ return [
     'update'               => 'تحديث',
     'account_info'         => 'معلومات الحساب',
     'personal_info'        => 'المعلومات الشخصية',
+
+    // ── Home / Landing Page ─────────────────────────────────────────────────
+    'home_nav_how_it_works'  => 'كيف تعمل المنصة',
+    'home_nav_services'      => 'الخدمات',
+    'home_nav_categories'    => 'الفئات',
+    'home_nav_login'         => 'تسجيل الدخول',
+    'home_nav_get_started'   => 'ابدأ الآن',
+
+    'home_hero_title'        => 'اعثر على خدمات عقارية تقدر تثق فيها',
+    'home_hero_subtitle'     => 'تصفح شركات موثوقة بكل سوريا — من عرض العقارات لغاية الترميم والصيانة وغيرها. اطلب الخدمة وتواصل مباشرة مع مزوّدها.',
+    'home_hero_cta_browse'   => 'تصفح الخدمات',
+    'home_hero_cta_start'    => 'إنشاء حساب مجاني',
+
+    'home_stat_services'     => 'خدمة نشطة',
+    'home_stat_businesses'   => 'شركة موثوقة',
+    'home_stat_cities'       => 'مدينة مغطاة',
+    'home_stat_categories'   => 'فئة خدمات',
+
+    'home_how_title'         => 'كيف تعمل المنصة',
+    'home_how_subtitle'      => 'الحصول على الخدمة يلي بدك ياها بياخد بس كم خطوة',
+    'home_how_step1_title'   => 'تصفح الخدمات',
+    'home_how_step1_desc'    => 'استكشف الخدمات العقارية حسب الفئة أو المدينة أو السعر — بدون ما تحتاج حساب للتصفح.',
+    'home_how_step2_title'   => 'أرسل طلب',
+    'home_how_step2_desc'    => 'لقيت يلي بدك ياه؟ اعمل حساب مجاني وقدّم طلب خدمة بثواني.',
+    'home_how_step3_title'   => 'تواصل مع مزوّد الخدمة',
+    'home_how_step3_desc'    => 'راسل الشركة مباشرة، اسأل أسئلتك، واتفقوا على التفاصيل.',
+    'home_how_step4_title'   => 'استلم خدمتك',
+    'home_how_step4_desc'    => 'ادفع بأمان عبر المنصة وقيّم تجربتك بعد ما تخلص.',
+
+    'home_why_title'         => 'ليش تستخدم منصتنا',
+    'home_why_1_title'       => 'شركات موثوقة',
+    'home_why_1_desc'        => 'كل شركة بتنراجع وتنوافق عليها من فريقنا قبل ما تظهر عالمنصة.',
+    'home_why_2_title'       => 'تواصل مباشر',
+    'home_why_2_desc'        => 'تواصل مع مزوّدي الخدمة بشكل لحظي — بدون اتصالات مفقودة ولا وسطاء.',
+    'home_why_3_title'       => 'دفع آمن',
+    'home_why_3_desc'        => 'ادفع بالبطاقة أو تحويل بنكي وعمليتك محمية بالكامل.',
+    'home_why_4_title'       => 'تقييمات حقيقية',
+    'home_why_4_desc'        => 'التقييمات بتيجي بس من زبائن طلبوا الخدمة فعلياً.',
+
+    'home_services_title'    => 'خدمات مميزة',
+    'home_services_subtitle' => 'عينة من الخدمات المتوفرة عالمنصة هلق',
+    'home_services_cta'      => 'سجّل لتشوف كل الخدمات',
+    'home_services_empty'    => 'عم نضيف خدمات جديدة — ارجع تفقّد قريباً.',
+
+    'home_categories_title'  => 'تصفح حسب الفئة',
+    'home_categories_subtitle' => 'كل الخدمات منظّمة حتى تلاقي يلي بدك ياه بسرعة',
+
+    'home_cta_title'         => 'جاهز تبلش؟',
+    'home_cta_subtitle'      => 'اعمل حساب مجاني وابعت أول طلب خدمة اليوم.',
+    'home_cta_button'        => 'إنشاء حساب مجاني',
+
+    'home_footer_tagline'    => 'بنربط أصحاب العقارات ومزوّدي الخدمات والزبائن بكل سوريا.',
+    'home_footer_platform'   => 'المنصة',
+    'home_footer_company'    => 'الشركة',
+    'home_footer_login_superadmin' => 'دخول سوبر أدمن',
+    'home_footer_login_admin'      => 'دخول أدمن',
+    'home_footer_rights'     => 'كل الحقوق محفوظة.',
+
+    'subcategories_count'    => ':count فئة فرعية',
 ];

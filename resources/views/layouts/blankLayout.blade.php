@@ -1,11 +1,17 @@
+@php $isRtl = app()->getLocale() === 'ar'; @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Auth')</title>
 
+    @vite(['resources/assets/vendor/fonts/iconify/iconify.css'])
     @vite(['resources/css/app.css'])
+
+    @if($isRtl)
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    @endif
 
     @hasSection('page-style')
         @yield('page-style')

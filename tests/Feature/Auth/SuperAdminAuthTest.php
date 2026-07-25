@@ -146,16 +146,16 @@ describe('Superadmin logout', function () {
         $this->assertGuest('superadmins');
     });
 
-    it('unauthenticated access to superadmin analytics dashboard is redirected', function () {
-        $this->get(route('dashboard-analytics'))
+    it('unauthenticated access to superadmin dashboard is redirected', function () {
+        $this->get(route('indexsuperadmin'))
              ->assertRedirect();
     });
 
-    it('authenticated superadmin can access the analytics dashboard', function () {
+    it('authenticated superadmin can access the dashboard', function () {
         $sa = makeSuperadmin();
 
         $this->actingAs($sa, 'superadmins')
-             ->get(route('dashboard-analytics'))
+             ->get(route('indexsuperadmin'))
              ->assertStatus(200);
     });
 

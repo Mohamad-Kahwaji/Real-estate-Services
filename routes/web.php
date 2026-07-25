@@ -12,6 +12,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\FcmController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -28,6 +29,13 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+// =================================================================
+// PUBLIC HOME (no auth needed)
+// =================================================================
+
+// Public landing page — platform intro, how it works, featured services
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // =================================================================
 // LANGUAGE SWITCH (public — no auth needed)
@@ -57,8 +65,6 @@ Route::post('/logout', function () {
 // =================================================================
 Route::middleware('auth:superadmins')->group(function () {
 
-    // Show the main analytics dashboard
-    Route::get('/',              [SuperadminController::class, 'index'])->name('dashboard-analytics');
     // Superadmin home dashboard
     Route::get('dash',           [SuperadminController::class, 'index'])->name('dash');
     // Alias for superadmin dashboard index

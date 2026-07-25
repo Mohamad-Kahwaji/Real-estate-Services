@@ -565,4 +565,63 @@ return [
     'update'               => 'Update',
     'account_info'         => 'Account Information',
     'personal_info'        => 'Personal Information',
+
+    // ── Home / Landing Page ─────────────────────────────────────────────────
+    'home_nav_how_it_works'  => 'How It Works',
+    'home_nav_services'      => 'Services',
+    'home_nav_categories'    => 'Categories',
+    'home_nav_login'         => 'Login',
+    'home_nav_get_started'   => 'Get Started',
+
+    'home_hero_title'        => 'Find Real Estate Services You Can Trust',
+    'home_hero_subtitle'     => 'Browse verified businesses across Syria — from property listings to renovation, maintenance, and more. Request a service and chat directly with the provider.',
+    'home_hero_cta_browse'   => 'Explore Services',
+    'home_hero_cta_start'    => 'Create Free Account',
+
+    'home_stat_services'     => 'Active Services',
+    'home_stat_businesses'   => 'Verified Businesses',
+    'home_stat_cities'       => 'Cities Covered',
+    'home_stat_categories'   => 'Service Categories',
+
+    'home_how_title'         => 'How It Works',
+    'home_how_subtitle'      => 'Getting the service you need takes just a few steps',
+    'home_how_step1_title'   => 'Browse Services',
+    'home_how_step1_desc'    => 'Explore real estate services by category, city, or price — no account needed to look around.',
+    'home_how_step2_title'   => 'Send a Request',
+    'home_how_step2_desc'    => 'Found what you need? Create a free account and submit a service request in seconds.',
+    'home_how_step3_title'   => 'Chat With the Provider',
+    'home_how_step3_desc'    => 'Message the business directly, ask questions, and agree on the details.',
+    'home_how_step4_title'   => 'Get It Done',
+    'home_how_step4_desc'    => 'Pay securely through the platform and rate your experience when it is complete.',
+
+    'home_why_title'         => 'Why Use Our Platform',
+    'home_why_1_title'       => 'Verified Businesses',
+    'home_why_1_desc'        => 'Every business is reviewed and approved by our team before going live.',
+    'home_why_2_title'       => 'Direct Messaging',
+    'home_why_2_desc'        => 'Chat with providers in real time — no phone tag, no middlemen.',
+    'home_why_3_title'       => 'Secure Payments',
+    'home_why_3_desc'        => 'Pay by card or bank transfer with your transaction protected end-to-end.',
+    'home_why_4_title'       => 'Real Reviews',
+    'home_why_4_desc'        => 'Ratings come only from customers who actually requested the service.',
+
+    'home_services_title'    => 'Featured Services',
+    'home_services_subtitle' => 'A sample of what is available on the platform right now',
+    'home_services_cta'      => 'Sign Up to See All Services',
+    'home_services_empty'    => 'New services are being added — check back soon.',
+
+    'home_categories_title'  => 'Browse by Category',
+    'home_categories_subtitle' => 'Every listing is organized so you can find what you need fast',
+
+    'home_cta_title'         => 'Ready to Get Started?',
+    'home_cta_subtitle'      => 'Create a free account and send your first service request today.',
+    'home_cta_button'        => 'Create Free Account',
+
+    'home_footer_tagline'    => 'Connecting property owners, service providers, and customers across Syria.',
+    'home_footer_platform'   => 'Platform',
+    'home_footer_company'    => 'Company',
+    'home_footer_login_superadmin' => 'Super Admin Login',
+    'home_footer_login_admin'      => 'Admin Login',
+    'home_footer_rights'     => 'All rights reserved.',
+
+    'subcategories_count'    => ':count subcategories',
 ];
